@@ -1,0 +1,8 @@
+version: "1.0.7"
+dependencies:
+  espressif/esp_lcd_panel_io_additions: "^1"
+  espressif/esp_lcd_touch_ft5x06: "^1"
+  espressif/esp_codec_dev: "^1"
+  lvgl/lvgl: ">=8,<10"
+  espressif/esp_lvgl_port: "^2"
+  waveshare/esp_lcd_sh8601: "^1"

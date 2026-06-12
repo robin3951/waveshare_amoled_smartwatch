@@ -1,0 +1,69 @@
+dependencies:
+  espressif/cmake_utilities:
+    component_hash: 351350613ceafba240b761b4ea991e0f231ac7a9f59a9ee901f751bddc0bb18f
+    source:
+      service_url: https://api.components.espressif.com/
+      type: service
+    version: 0.5.3
+  espressif/esp_codec_dev:
+    component_hash: 896c67360ae1f8dedaf8a53dfe48c015317fa455f061a5165307892296990028
+    source:
+      service_url: https://api.components.espressif.com/
+      type: service
+    version: 1.5.10
+  espressif/esp_io_expander:
+    component_hash: 7b7f91270172e46ca4597e3874f48d8412e280e8c295559f5922ec38656e3e5f
+    source:
+      service_url: https://api.components.espressif.com/
+      type: service
+    version: 1.2.1
+  espressif/esp_lcd_panel_io_additions:
+    component_hash: 1856c8b2c11aaa8a9fd67481582162bcad25f7064661a995f35c2ee8dd10ebcc
+    source:
+      service_url: https://api.components.espressif.com/
+      type: service
+    version: 1.0.1~1
+  espressif/esp_lcd_touch:
+    component_hash: 3f85a7d95af876f1a6ecca8eb90a81614890d0f03a038390804e5a77e2caf862
+    source:
+      service_url: https://api.components.espressif.com/
+      type: service
+    version: 1.2.1
+  espressif/esp_lcd_touch_ft5x06:
+    component_hash: 8ae101b4a321b6327d98751b049e3c7fff2718ad04d676259369ff85d4edbcdf
+    source:
+      service_url: https://api.components.espressif.com/
+      type: service
+    version: 1.1.0~1
+  espressif/esp_lvgl_port:
+    component_hash: fb6c1fdfe70d4ca39a035d63ca394a35f17ec84ce16ff98ecb13a54155d75da4
+    source:
+      service_url: https://api.components.espressif.com/
+      type: service
+    version: 2.8.0~1
+  idf:
+    component_hash: null
+    source:
+      type: idf
+    version: 5.3.0
+  lvgl/lvgl:
+    component_hash: 184e532558c1c45fefed631f3e235423d22582aafb4630f3e8885c35281a49ae
+    source:
+      service_url: https://api.components.espressif.com/
+      type: service
+    version: 9.5.0
+  waveshare/esp32_s3_touch_amoled_2_06:
+    component_hash: null
+    source:
+      path: /workspaces/waveshare_amoled_smartwatch/components/waveshare__esp32_s3_touch_amoled_2_06
+      type: local
+    version: 1.0.7
+  waveshare/esp_lcd_sh8601:
+    component_hash: 1a2829e9db4e0515bad6ce83368f199dec60519fbba40251d6c8249f5d070ae1
+    source:
+      service_url: https://api.components.espressif.com/
+      type: service
+    version: 1.0.2
+manifest_hash: cd90cc7c7207b28f8f51b514c6078e00cc785caf90651e5b58ed58c5399e57f5
+target: esp32s3
+version: 1.0.0
