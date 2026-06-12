@@ -3,5 +3,8 @@
     "idf.openOcdConfigs": [
         "board/esp32s3-builtin.cfg"
     ],
-    "idf.flashType": "JTAG"
+    "idf.flashType": "JTAG",
+    "conventionalCommits.scopes": [
+        "ui"
+    ]
 }
