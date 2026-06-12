@@ -1,0 +1,41 @@
+{
+  "name": "ESP-IDF · Waveshare AMOLED 2.06",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+
+  "remoteEnv": {
+    "IDF_TARGET": "esp32s3"
+  },
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "espressif.esp-idf-extension",
+        "wokwi.wokwi-vscode",
+        "ms-vscode.cpptools",
+        "twxs.cmake",
+        "vivaxy.vscode-conventional-commits"
+      ],
+      "settings": {
+        "idf.espIdfPath": "/opt/esp/idf",
+        "idf.customExtraPaths": "/opt/esp/tools/bin",
+        "idf.toolsPath": "/opt/esp/tools",
+        "idf.adapterTargetName": "esp32s3",
+        "idf.flashBaudRate": "460800",
+        "terminal.integrated.defaultProfile.linux": "bash"
+      }
+    }
+  },
+
+  "mounts": [
+    "source=/dev,target=/dev,type=bind,consistency=cached"
+  ],
+
+  "runArgs": [
+    "--privileged"
+    
+  ],
+
+  "postCreateCommand": "idf.py --version && echo 'ESP-IDF ready'"
+}
