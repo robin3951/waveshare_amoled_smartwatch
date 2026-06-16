@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="32dp">
+
+    <TextView
+        android:id="@+id/statusText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nicht verbunden"
+        android:textSize="18sp"
+        android:textAlignment="center"
+        android:layout_marginBottom="12dp" />
+
+    <TextView
+        android:id="@+id/listenerStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Benachrichtigungs-Listener: ?"
+        android:textSize="14sp"
+        android:textAlignment="center"
+        android:layout_marginBottom="32dp" />
+
+    <Button
+        android:id="@+id/connectButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Smartwatch verbinden"
+        android:layout_marginBottom="16dp" />
+
+    <Button
+        android:id="@+id/testButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Test-Nachricht senden" />
+
+    <TextView
+        android:id="@+id/logText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="12sp"
+        android:fontFamily="monospace"
+        android:layout_marginTop="24dp"
+        android:maxLines="8" />
+
+</LinearLayout>

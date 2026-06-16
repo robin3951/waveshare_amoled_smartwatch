@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">WatchNotify</string>
+    <string name="accessibility_label">WatchNotify Navigation</string>
+    <string name="accessibility_description">Liest Google Maps Navigationshinweise (Richtung, Distanz, Straße, Ankunftszeit) und sendet sie an die Smartwatch.</string>
+</resources>
