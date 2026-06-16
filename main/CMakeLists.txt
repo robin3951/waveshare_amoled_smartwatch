@@ -7,4 +7,6 @@ idf_component_register(
         lvgl
         SensorLib
         XPowersLib
+        ui
+        ble_chronos
 )
