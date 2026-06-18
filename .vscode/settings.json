@@ -11,5 +11,17 @@
     "lvglPreview.displayHeight": 502,
     "lvglPreview.lvglVersion": "9.4.0",
     "lvglPreview.emccOptimization": "-O1",
-    "lvglPreview.autoReload": true
+    "lvglPreview.autoReload": true,
+    "clangd.arguments": [
+        "--compile-commands-dir=${workspaceFolder}/build",
+        "--background-index",
+        "--clang-tidy",
+        "--header-insertion=never"
+    ],
+    "clangd.fallbackFlags": [
+        "-I${workspaceFolder}/components/ui",
+        "-I${workspaceFolder}/components/ui/fonts"
+    ],
+    "C_Cpp.intelliSenseEngine": "disabled",
+    "cppcheck.cppcheckPath": "C:\\Program Files\\Cppcheck\\cppcheck.exe"
 }
