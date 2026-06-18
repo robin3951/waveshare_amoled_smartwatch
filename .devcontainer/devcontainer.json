@@ -45,7 +45,11 @@
         "redhat.vscode-yaml",
         "ms-vscode.hexeditor",
         "DiemasMichiels.emulate",
-        "themastercoder007.lvgl-live-preview"
+        "themastercoder007.lvgl-live-preview",
+        "cschlosser.doxdocgen",
+        "betwo.vscode-doxygen-runner",
+        "pflannery.vscode-versionlens",
+        "abhiagr.logcat"
       ],
       "settings": {
         "idf.espIdfPath": "/opt/esp/idf",

@@ -7,7 +7,11 @@ RUN apt-get update && apt-get install -y \
     git \
     python3-pip \
     clang-format \
+    clangd \
     cppcheck \
+    doxygen \
+    graphviz \
+    openjdk-17-jdk \
     udev \
     && rm -rf /var/lib/apt/lists/*
 

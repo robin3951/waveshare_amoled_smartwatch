@@ -1,0 +1,49 @@
+PROJECT_NAME           = "Waveshare AMOLED Smartwatch"
+PROJECT_BRIEF          = "ESP32-S3 Smartwatch Firmware with BLE and LVGL UI"
+OUTPUT_DIRECTORY       = docs
+
+INPUT                  = ./main ./components/ui ./components/ble_chronos
+RECURSIVE              = YES
+FILE_PATTERNS          = *.c *.h *.cpp
+
+EXTRACT_ALL            = YES
+EXTRACT_PRIVATE        = NO
+EXTRACT_STATIC         = YES
+
+GENERATE_HTML          = YES
+HTML_OUTPUT            = html
+GENERATE_LATEX         = NO
+
+HTML_EXTRA_STYLESHEET  = doxygen-awesome-css/doxygen-awesome.css \
+                         doxygen-awesome-css/doxygen-awesome-sidebar-only.css
+HTML_EXTRA_FILES       = doxygen-awesome-css/doxygen-awesome-darkmode-toggle.js \
+                         doxygen-awesome-css/doxygen-awesome-fragment-copy-button.js \
+                         doxygen-awesome-css/doxygen-awesome-interactive-toc.js
+HTML_HEADER            = doxygen-awesome-css/header.html
+HTML_COLORSTYLE        = LIGHT
+GENERATE_TREEVIEW      = YES
+DISABLE_INDEX          = NO
+FULL_SIDEBAR           = NO
+HTML_DYNAMIC_SECTIONS  = YES
+DOT_TRANSPARENT        = YES
+
+HAVE_DOT               = YES
+DOT_IMAGE_FORMAT       = svg
+CALL_GRAPH             = YES
+CALLER_GRAPH           = YES
+INCLUDE_GRAPH          = YES
+
+QUIET                  = YES
+WARNINGS               = YES
+WARN_IF_UNDOCUMENTED   = NO
+
+EXCLUDE_PATTERNS       = */managed_components/* \
+                         */build/* \
+                         */SensorLib/* \
+                         */XPowersLib/*
+
+JAVADOC_AUTOBRIEF      = YES
+OPTIMIZE_OUTPUT_FOR_C  = YES
+SHOW_USED_FILES        = NO
+SHOW_FILES             = YES
+SHOW_NAMESPACES        = NO

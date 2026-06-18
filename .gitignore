@@ -1,6 +1,7 @@
 build
 managed_components
 sdkconfig
+docs/html
 
 # Android
 android-companion/.gradle/
