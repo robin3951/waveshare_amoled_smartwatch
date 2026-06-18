@@ -32,3 +32,15 @@ void ui_set_ble_status(bool connected)
 {
     screens_set_ble_status(connected);
 }
+
+#ifdef LVGL_LIVE_PREVIEW
+void lvgl_live_preview_init(void)
+{
+    ui_init();
+    ui_update_clock(14, 30, 0, 18, 6, 2026);
+    ui_update_battery(75, false, 3.85f);
+    ui_set_ble_status(true);
+    ui_add_notification("WhatsApp", "Hey, wie geht's?");
+    ui_add_notification("Gmail", "Neue Nachricht von Max Mustermann");
+}
+#endif

@@ -1,0 +1,18 @@
+{
+  "mainFile": "components/ui/ui.c",
+  "dependencies": [
+    "components/ui/screens.c",
+    "components/ui/styles.c",
+    "components/ui/actions.c",
+    "components/ui/vars.c",
+    "components/ui/images.c",
+    "components/ui/fonts/fonts.c",
+    "components/ui/fonts/lv_font_montserrat_14_ext.c",
+    "components/ui/fonts/lv_font_montserrat_16_ext.c"
+  ],
+  "includePaths": [
+    "./components/ui",
+    "./components/ui/fonts"
+  ],
+  "defines": []
+}

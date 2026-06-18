@@ -3,7 +3,9 @@
         {
             "name": "Linux",
             "includePath": [
-                "${workspaceFolder}/**"
+                "${workspaceFolder}/**",
+                "/root/.vscode-server/data/User/globalStorage/themastercoder007.lvgl-live-preview/lvgl/9.4.0",
+                "/root/.vscode-server/data/User/globalStorage/themastercoder007.lvgl-live-preview/lvgl/9.4.0/src"
             ],
             "defines": [],
             "compilerPath": "/opt/esp/tools/xtensa-esp-elf/esp-13.2.0_20240530/xtensa-esp-elf/bin/xtensa-esp32s3-elf-gcc",

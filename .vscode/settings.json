@@ -6,5 +6,10 @@
     "idf.flashType": "JTAG",
     "conventionalCommits.scopes": [
         "ui"
-    ]
+    ],
+    "lvglPreview.displayWidth": 410,
+    "lvglPreview.displayHeight": 502,
+    "lvglPreview.lvglVersion": "9.4.0",
+    "lvglPreview.emccOptimization": "-O1",
+    "lvglPreview.autoReload": true
 }
