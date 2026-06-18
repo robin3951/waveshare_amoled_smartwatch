@@ -63,7 +63,8 @@
   },
 
   "mounts": [
-    "source=/dev,target=/dev,type=bind,consistency=cached"
+    "source=/dev,target=/dev,type=bind,consistency=cached",
+    "source=emsdk-cache,target=/root/.emsdk,type=volume"
   ],
 
   "runArgs": [
