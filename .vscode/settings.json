@@ -16,7 +16,8 @@
         "--compile-commands-dir=${workspaceFolder}/build",
         "--background-index",
         "--clang-tidy",
-        "--header-insertion=never"
+        "--header-insertion=never",
+        "--query-driver=/opt/esp/tools/**/xtensa-esp*-elf-gcc,/opt/esp/tools/**/xtensa-esp*-elf-g++,C:/Users/robin/.espressif/tools/xtensa-esp-elf/*/xtensa-esp-elf/bin/xtensa-esp*-elf-gcc.exe,C:/Users/robin/.espressif/tools/xtensa-esp-elf/*/xtensa-esp-elf/bin/xtensa-esp*-elf-g++.exe"
     ],
     "clangd.fallbackFlags": [
         "-I${workspaceFolder}/components/ui",

@@ -1,0 +1,32 @@
+CompileFlags:
+  Add:
+    # Required for XPowersLib to expose begin(i2c_master_bus_handle_t, addr)
+    # This define comes from sdkconfig.h which clangd may not resolve before first build
+    - -DCONFIG_XPOWERS_ESP_IDF_NEW_API=1
+  Remove:
+    # Xtensa/ESP32-specific flags unknown to host clang
+    - -mlongcalls
+    - -mtext-section-literals
+    - -mfix-esp32-psram-cache-issue
+    - -mfix-esp32-psram-cache-strategy=*
+    - -mdisable-hardware-atomics
+    - -mno-target-align
+    # GCC-only flags not supported by clang
+    - -fno-shrink-wrap
+    - -fstrict-volatile-bitfields
+    - -fno-tree-switch-conversion
+    - -fno-exceptions
+    - -fno-rtti
+    # GCC-specific warning flags
+    - -Wno-frame-address
+    - -Wno-maybe-uninitialized
+    # GCC-specific parameter syntax
+    - --param=max-inline-insns-single=*
+
+Diagnostics:
+  Suppress:
+    # Missing cross-compilation system headers (resolved via --query-driver)
+    - pp_file_not_found
+    # Suppress unknown-argument errors that slip through
+    - drv_unknown_argument
+    - drv_unknown_argument_with_suggestion
