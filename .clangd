@@ -1,32 +1,57 @@
 CompileFlags:
   Add:
-    # Required for XPowersLib to expose begin(i2c_master_bus_handle_t, addr)
-    # This define comes from sdkconfig.h which clangd may not resolve before first build
     - -DCONFIG_XPOWERS_ESP_IDF_NEW_API=1
+    # clangd (apt.llvm.org) has no Xtensa backend; query-driver returns
+    # "xtensa-esp32s3-elf" which causes "Couldn't build compiler instance".
+    # Force a known target so clangd can parse; Xtensa system-includes from
+    # --query-driver still apply, giving correct ESP-IDF header resolution.
+    - --target=x86_64-linux-gnu
   Remove:
-    # Xtensa/ESP32-specific flags unknown to host clang
+    # Xtensa-specific machine flags — unknown to x86_64 clang
     - -mlongcalls
     - -mtext-section-literals
     - -mfix-esp32-psram-cache-issue
     - -mfix-esp32-psram-cache-strategy=*
     - -mdisable-hardware-atomics
     - -mno-target-align
-    # GCC-only flags not supported by clang
+    # GCC-only optimisation flags
     - -fno-shrink-wrap
     - -fstrict-volatile-bitfields
     - -fno-tree-switch-conversion
+    - -fno-jump-tables
     - -fno-exceptions
     - -fno-rtti
-    # GCC-specific warning flags
+    # GCC-only warning flags — clang emits -Wunknown-warning-option for these,
+    # which becomes a fatal error under -Werror=all and prevents AST creation.
     - -Wno-frame-address
     - -Wno-maybe-uninitialized
-    # GCC-specific parameter syntax
+    - -Wno-old-style-declaration
+    # GCC param syntax
     - --param=max-inline-insns-single=*
 
 Diagnostics:
   Suppress:
-    # Missing cross-compilation system headers (resolved via --query-driver)
     - pp_file_not_found
-    # Suppress unknown-argument errors that slip through
     - drv_unknown_argument
     - drv_unknown_argument_with_suggestion
+
+# Requires clangd 22+ (Documentation/CommentFormat key); parses Doxygen tags
+# (@brief, @param, @return, ...) into structured, formatted hover output
+# instead of showing the raw comment text.
+Documentation:
+  CommentFormat: Doxygen
+
+---
+# clangd uses x86_64 clang to parse Xtensa-targeted code; suppress the
+# resulting false positives across all project source files.
+If:
+  PathMatch:
+    - ".*/main/.*\\.(c|cpp|h|hpp)"
+    - ".*/components/.*\\.(c|cpp|h|hpp)"
+    - ".*/managed_components/.*\\.(c|cpp|h|hpp)"
+Diagnostics:
+  Suppress:
+    - unknown_typename
+    - undeclared_var_use
+    - undeclared_var_use_suggest
+    - no_member

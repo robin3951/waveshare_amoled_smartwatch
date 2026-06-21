@@ -39,7 +39,6 @@
         "ms-vscode-remote.remote-containers",
         "aaron-bond.better-comments",
         "hediet.vscode-drawio",
-        "fwcd.kotlin",
         "JetBrains.kotlin-server",
         "redhat.java",
         "redhat.vscode-yaml",
@@ -64,7 +63,8 @@
 
   "mounts": [
     "source=/dev,target=/dev,type=bind,consistency=cached",
-    "source=emsdk-cache,target=/root/.emsdk,type=volume"
+    "source=emsdk-cache,target=/root/.emsdk,type=volume",
+    "source=vscode-server-cache,target=/root/.vscode-server,type=volume"
   ],
 
   "runArgs": [
@@ -72,5 +72,5 @@
     
   ],
 
-  "postCreateCommand": "idf.py --version && echo 'ESP-IDF ready'"
+  "postCreateCommand": "bash -c 'source /opt/esp/idf/export.sh > /dev/null 2>&1 && idf.py --version && echo ESP-IDF ready'"
 }

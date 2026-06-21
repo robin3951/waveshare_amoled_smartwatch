@@ -18,6 +18,13 @@ void ui_update_clock(int hour, int min, int sec, int day, int month, int year)
     screens_set_date(day, month, year);
 }
 
+/**
+ * @brief Updates the battery status display
+ * 
+ * @param percent Battery percentage (0-100)
+ * @param charging True if the device is currently charging, false otherwise
+ * @param voltage Current battery voltage in volts (e.g., 3.85 for 3850mV)
+ */
 void ui_update_battery(int percent, bool charging, float voltage)
 {
     screens_set_battery(percent, charging, voltage);

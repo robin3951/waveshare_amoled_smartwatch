@@ -1,0 +1,15 @@
+{
+    "folders": [
+        {
+            "name": "Firmware (ESP-IDF)",
+            "path": "."
+        },
+        {
+            "name": "Android Companion App",
+            "path": "android-companion"
+        }
+    ],
+    "settings": {
+        "intellij.trace.server": "verbose"
+    }
+}

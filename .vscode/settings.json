@@ -17,12 +17,17 @@
         "--background-index",
         "--clang-tidy",
         "--header-insertion=never",
-        "--query-driver=/opt/esp/tools/**/xtensa-esp*-elf-gcc,/opt/esp/tools/**/xtensa-esp*-elf-g++,C:/Users/robin/.espressif/tools/xtensa-esp-elf/*/xtensa-esp-elf/bin/xtensa-esp*-elf-gcc.exe,C:/Users/robin/.espressif/tools/xtensa-esp-elf/*/xtensa-esp-elf/bin/xtensa-esp*-elf-g++.exe"
+        "--query-driver=/opt/esp/tools/xtensa-esp-elf/*/xtensa-esp-elf/bin/xtensa-esp*-elf-gcc,/opt/esp/tools/xtensa-esp-elf/*/xtensa-esp-elf/bin/xtensa-esp*-elf-g++,C:/Users/robin/.espressif/tools/xtensa-esp-elf/*/xtensa-esp-elf/bin/xtensa-esp*-elf-gcc.exe,C:/Users/robin/.espressif/tools/xtensa-esp-elf/*/xtensa-esp-elf/bin/xtensa-esp*-elf-g++.exe"
     ],
     "clangd.fallbackFlags": [
         "-I${workspaceFolder}/components/ui",
-        "-I${workspaceFolder}/components/ui/fonts"
+        "-I${workspaceFolder}/components/ui/fonts",
+        "-I${workspaceFolder}/components/SensorLib/src",
+        "-I${workspaceFolder}/components/XPowersLib/src"
     ],
     "C_Cpp.intelliSenseEngine": "disabled",
-    "cppcheck.cppcheckPath": "C:\\Program Files\\Cppcheck\\cppcheck.exe"
+    "cppcheck.cppcheckPath": "C:\\Program Files\\Cppcheck\\cppcheck.exe",
+    "files.exclude": {
+        "android-companion": true
+    }
 }

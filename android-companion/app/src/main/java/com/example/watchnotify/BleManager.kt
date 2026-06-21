@@ -21,6 +21,12 @@ private val CCCD_UUID   = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb"
 
 private const val DEVICE_NAME = "Chronos"
 
+/**
+ * Manages BLE connection to the watch and sending notification packets.
+ * Uses Nordic UART Service (NUS) for communication.
+ * MainActivity and WatchForegroundService can both subscribe to status updates.
+ * Reconnects automatically if connection is lost.
+ */
 @SuppressLint("MissingPermission")
 class BleManager private constructor() {
 
@@ -59,7 +65,11 @@ class BleManager private constructor() {
     }
 
     // ── Scan & connect ────────────────────────────────────────────────────
-
+    /**
+     * Starts scanning for the watch device.
+     * 
+     * @param context Any valid Context, used for BluetoothManager and GATT connection. Application context is used internally to avoid leaks.
+     */
     fun startScan(context: Context) {
         appContext = context.applicationContext
         val btManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
@@ -210,7 +220,7 @@ class BleManager private constructor() {
             desc.value = value
             g.writeDescriptor(desc)
         }
-    }
+    } 
 
     // ── Icon mapping: Android package name → Chronos icon byte ───────────
 
