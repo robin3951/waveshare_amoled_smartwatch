@@ -29,5 +29,13 @@
     "cppcheck.cppcheckPath": "C:\\Program Files\\Cppcheck\\cppcheck.exe",
     "files.exclude": {
         "android-companion": true
+    },
+    "[c]": {
+        "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd",
+        "editor.formatOnSave": true
+    },
+    "[cpp]": {
+        "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd",
+        "editor.formatOnSave": true
     }
 }
