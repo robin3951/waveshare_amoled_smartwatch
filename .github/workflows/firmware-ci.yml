@@ -34,12 +34,17 @@ concurrency:
   group: firmware-ci-${{ github.ref }}
   cancel-in-progress: true
 
-# Components that are actually ours. Vendored libraries (SensorLib,
-# XPowersLib, waveshare__esp32_s3_touch_amoled_2_06) and managed_components/
+# Components that are actually ours, hand-written, and meant to be
+# style-checked. Vendored libraries (SensorLib, XPowersLib,
+# waveshare__esp32_s3_touch_amoled_2_06) and managed_components/
 # (auto-downloaded by the ESP-IDF component manager) are intentionally never
 # linted/analyzed — we didn't write that code and don't own its quality.
+# components/ui is excluded too, even though it's "ours": it's SquareLine
+# Studio-generated LVGL UI code (screens.c, fonts/, font-converter output
+# etc.), never hand-formatted and overwritten wholesale on every UI export —
+# clang-format/clang-tidy findings there would be noise, not signal.
 env:
-  OWN_FIRMWARE_PATHS: "main components/ble_chronos components/ui"
+  OWN_FIRMWARE_PATHS: "main components/ble_chronos"
 
 jobs:
   # ── Fast, no-Docker checks: don't need the ESP-IDF toolchain at all ───────
@@ -53,7 +58,7 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y cppcheck
 
       - name: Run cppcheck on our own firmware code
-        # Scope limited to main/ + ble_chronos + ui (see OWN_FIRMWARE_PATHS
+        # Scope limited to main/ + ble_chronos (see OWN_FIRMWARE_PATHS
         # above). missingInclude(System) is suppressed because cppcheck
         # can't see ESP-IDF's headers outside a real build — that would
         # otherwise drown real findings in noise. --error-exitcode=1 makes

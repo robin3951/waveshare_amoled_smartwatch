@@ -21,7 +21,10 @@ concurrency:
   cancel-in-progress: false   # never cancel a release build mid-way
 
 env:
-  OWN_FIRMWARE_PATHS: "main components/ble_chronos components/ui"
+  # Kept in sync with firmware-ci.yml: components/ui is excluded even
+  # though it's "ours" — it's SquareLine Studio-generated LVGL UI code,
+  # never hand-formatted, see firmware-ci.yml for the full reasoning.
+  OWN_FIRMWARE_PATHS: "main components/ble_chronos"
 
 jobs:
   # ── Quality gate: cppcheck only (fast). Style/clang-tidy are enforced ─────
