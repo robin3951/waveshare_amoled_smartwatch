@@ -29,11 +29,33 @@ private val ONGOING_ALLOWED_CATEGORIES = setOf(
     Notification.CATEGORY_CALL,
 )
 
+/**
+ * System-wide [NotificationListenerService] that mirrors relevant phone
+ * notifications to the smartwatch via [BleManager].
+ *
+ * Must be enabled by the user under Settings → Notification access (checked
+ * in [MainActivity.isNotificationListenerEnabled]). Filters out noise (system
+ * UI, ongoing progress notifications, grouped summaries), picks the most
+ * informative text field out of the several Android offers, and deduplicates
+ * per-package so rapidly-updating notifications (e.g. Maps ETA) don't flood
+ * the BLE link.
+ */
 class NotificationService : NotificationListenerService() {
 
     // Suppress repeated identical notifications from the same app (e.g. Maps ETA updates)
     private val lastSent = mutableMapOf<String, String>()
 
+    /**
+     * Called by the system whenever any app posts or updates a notification.
+     *
+     * Applies several filters (package blocklist, category blocklist, ongoing
+     * events outside [ONGOING_ALLOWED_CATEGORIES]), extracts the best
+     * available title/body combination, deduplicates against the last
+     * notification sent for that package, and forwards the result to
+     * [BleManager.sendNotification].
+     *
+     * @param sbn The status bar notification posted by the system.
+     */
     override fun onNotificationPosted(sbn: StatusBarNotification) {
         val pkg   = sbn.packageName
         val notif = sbn.notification
@@ -113,6 +135,17 @@ class NotificationService : NotificationListenerService() {
         BleManager.instance.sendNotification(pkg, cleanSender, cleanBody)
     }
 
+    /**
+     * Logs every extra field of a Google Maps notification for debugging.
+     *
+     * Maps' navigation-notification layout varies by version/locale, so this
+     * helper makes it possible to see at runtime (via [BleManager.log] / Logcat)
+     * which extras actually carry the turn instruction, distance, etc.
+     *
+     * @param pkg Source package name (used only for the log line).
+     * @param extras The notification's extras [Bundle].
+     * @param notif The full [Notification], used for category/ticker info.
+     */
     private fun dumpExtras(pkg: String, extras: Bundle, notif: Notification) {
         val sb = StringBuilder()
         sb.append("category=${notif.category} ticker=${notif.tickerText}\n")
@@ -127,6 +160,16 @@ class NotificationService : NotificationListenerService() {
         BleManager.instance.log("🗺 $preview")
     }
 
+    /**
+     * Maps a package name to a short, human-readable sender label.
+     *
+     * Used as a fallback "sender" when a notification has no usable title,
+     * e.g. Maps' ongoing navigation notification.
+     *
+     * @param pkg Android package name of the notifying app.
+     * @return A short display name, falling back to the capitalized last
+     *   segment of the package name if no special case matches.
+     */
     private fun appLabel(pkg: String): String = when {
         pkg.contains("maps")      -> "Maps"
         pkg.contains("db")        -> "DB Navigator"

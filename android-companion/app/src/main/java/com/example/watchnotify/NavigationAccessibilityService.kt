@@ -11,18 +11,45 @@ private const val MAPS_PKG = "com.google.android.apps.maps"
 // Minimum time between two identical navigation updates sent to the watch
 private const val DEBOUNCE_MS = 4_000L
 
+/**
+ * [AccessibilityService] dedicated to extracting live Google Maps navigation
+ * instructions and forwarding them to the watch via [BleManager].
+ *
+ * [NotificationService] alone is not sufficient for navigation: Maps often
+ * updates its ongoing notification or screen content without re-posting a
+ * notification the listener would see. This service instead reads Maps'
+ * accessibility events/view tree directly, so turn-by-turn info (direction,
+ * distance, street, ETA) reaches the watch even while Maps is in the
+ * foreground and not posting fresh notifications. Must be enabled by the
+ * user under Settings → Accessibility (checked in
+ * [MainActivity.isAccessibilityEnabled]).
+ */
 class NavigationAccessibilityService : AccessibilityService() {
 
+    /** Last payload sent, used to suppress duplicate sends. */
     private var lastPayload  = ""
+
+    /** Timestamp (epoch ms) of the last successful send, used for [DEBOUNCE_MS]. */
     private var lastSentTime = 0L
 
     // ── AccessibilityService callbacks ────────────────────────────────────
 
+    /** Logs that the service is up and running once Android binds it. */
     override fun onServiceConnected() {
         Log.i(TAG, "NavigationAccessibilityService connected")
         BleManager.instance.log("🗺 AccessibilityService aktiv")
     }
 
+    /**
+     * Entry point for every accessibility event system-wide.
+     *
+     * Immediately discards events from anything other than Google Maps, then
+     * dispatches to [handleNotificationEvent] (for announced/heads-up turn
+     * instructions) or [handleWindowChange] (for live on-screen navigation
+     * UI) depending on the event type.
+     *
+     * @param event The accessibility event delivered by the system.
+     */
     override fun onAccessibilityEvent(event: AccessibilityEvent) {
         val pkg = event.packageName?.toString() ?: return
         if (!pkg.contains("maps")) return
@@ -35,10 +62,18 @@ class NavigationAccessibilityService : AccessibilityService() {
         }
     }
 
+    /** Required override; navigation extraction doesn't need interrupt handling. */
     override fun onInterrupt() {}
 
     // ── Notification event (heads-up, announced turns) ────────────────────
 
+    /**
+     * Handles a [AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED] event
+     * from Maps by concatenating its announced text segments and forwarding
+     * them as a single payload via [send].
+     *
+     * @param event The notification-state-changed accessibility event.
+     */
     private fun handleNotificationEvent(event: AccessibilityEvent) {
         val texts = event.text
             .map { it.toString().trim() }
@@ -51,6 +86,14 @@ class NavigationAccessibilityService : AccessibilityService() {
 
     // ── Window traversal (Maps in foreground) ─────────────────────────────
 
+    /**
+     * Handles a [AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED] event by
+     * walking Maps' current view hierarchy and building a navigation payload.
+     *
+     * Debounced via [DEBOUNCE_MS] because window-content-changed events fire
+     * very frequently (effectively on every pixel of UI animation), and bails
+     * out early if Maps is not the currently active window.
+     */
     private fun handleWindowChange() {
         // Debounce: window content changes fire very frequently
         val now = System.currentTimeMillis()
@@ -72,6 +115,18 @@ class NavigationAccessibilityService : AccessibilityService() {
 
     // ── View-tree traversal ───────────────────────────────────────────────
 
+    /**
+     * Recursively collects displayable text from a view node and its children.
+     *
+     * Prefers [AccessibilityNodeInfo.getText]; falls back to
+     * [AccessibilityNodeInfo.getContentDescription] for non-text elements like
+     * the turn-arrow icon, which exposes its meaning only as a description.
+     * Single-character strings are skipped as noise.
+     *
+     * @param node Current node to inspect (recycled by the caller after the
+     *   top-level call returns; child nodes are recycled here).
+     * @param out Mutable list accumulating collected text values, in tree order.
+     */
     private fun collectTexts(node: AccessibilityNodeInfo, out: MutableList<String>) {
         val text = node.text?.toString()?.trim()
         val desc = node.contentDescription?.toString()?.trim()
@@ -94,6 +149,22 @@ class NavigationAccessibilityService : AccessibilityService() {
 
     // ── Payload builder ───────────────────────────────────────────────────
 
+    /**
+     * Reconstructs a coherent navigation message from the unordered, raw
+     * texts scraped out of Maps' view tree by [collectTexts].
+     *
+     * Maps' UI scatters direction, distance, street name, arrival time and
+     * remaining time across many small, unlabeled views, so this uses regex
+     * heuristics to classify each text fragment by shape (e.g. `"200 m"`
+     * matches a distance pattern) rather than by position, then reassembles
+     * them in a fixed, readable order.
+     *
+     * @param texts All text/content-description fragments found in the
+     *   current Maps window, in arbitrary view-tree order.
+     * @return A single human-readable payload like
+     *   `"links abbiegen · 200 m · Musterstraße"`, or an empty string if no
+     *   recognizable fragments were found.
+     */
     private fun buildNavPayload(texts: List<String>): String {
         val distRx    = Regex("""^\d+[.,]?\d*\s*(m|km|mi|ft)$""",         RegexOption.IGNORE_CASE)
         val timeRx    = Regex("""^\d+\s*(min|h|Std\.?|Sek\.?)$""",        RegexOption.IGNORE_CASE)
@@ -120,6 +191,13 @@ class NavigationAccessibilityService : AccessibilityService() {
 
     // ── Dedup + forward ───────────────────────────────────────────────────
 
+    /**
+     * Sends a navigation payload to the watch unless it is identical to the
+     * last one sent (regardless of which handler produced it).
+     *
+     * @param sender Display name shown as the notification sender on the watch.
+     * @param payload The navigation text to send; deduplicated against [lastPayload].
+     */
     private fun send(sender: String, payload: String) {
         if (payload == lastPayload) return
         lastPayload  = payload
