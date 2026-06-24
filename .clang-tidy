@@ -1,0 +1,32 @@
+# clang-tidy configuration for this project.
+#
+# Scope: only run against our own components (components/ble_chronos,
+# components/ui) via an explicit file list in CI — vendored libraries
+# (SensorLib, XPowersLib, waveshare__esp32_s3_touch_amoled_2_06) and
+# managed_components/ are never passed to clang-tidy, so their checks
+# don't matter, but we still keep this config repo-wide and simple.
+#
+# Deliberately moderate for a first rollout: readability/modernize/bugprone
+# checks that tend to be high-signal, without the more opinionated/noisy
+# groups (e.g. cppcoreguidelines, llvmlibc, fuchsia) that would mostly
+# flag embedded-C idioms (raw pointers, switch fallthrough, magic numbers)
+# that are normal and intentional in this codebase.
+Checks: >
+  -*,
+  bugprone-*,
+  -bugprone-easily-swappable-parameters,
+  performance-*,
+  readability-*,
+  -readability-magic-numbers,
+  -readability-identifier-length,
+  -readability-function-cognitive-complexity,
+  modernize-*,
+  -modernize-use-trailing-return-type,
+  -modernize-avoid-c-arrays
+
+# Don't fail the build on warnings from system/IDF headers that leak in
+# despite our file filter; only our own .c files are ever passed to
+# clang-tidy directly, but they still #include ESP-IDF headers.
+HeaderFilterRegex: 'components/(ble_chronos|ui)/.*'
+
+WarningsAsErrors: ''
