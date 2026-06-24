@@ -1,24 +1,19 @@
-set(src_dirs 
+# Trimmed 2026-06-24: this project only uses SensorPCF85063 (RTC) and
+# SensorQMI8658 (IMU, planned pedometer feature) from upstream SensorLib.
+# Removed: src/touch (board uses esp_lcd_touch_ft5x06 instead),
+# src/bosch/* (BHI260/BHI360/BMM150/BMA4xx sensor-hub chips, not on this
+# board — also the source of ~45MB of unused firmware blob headers),
+# src/pmic (SY6970/BQ25896 chargers, not used — PMU is AXP2101 via
+# XPowersLib), src/haptic_drivers, src/platform/arduino (Arduino-only,
+# this is a pure ESP-IDF project), and assorted unused sensor headers
+# (other RTC chips, magnetometers, light sensors, IO expanders).
+set(src_dirs
     src
-    src/touch
     src/platform
-    src/bosch
-    src/bosch/BMM150
-    src/bosch/bma4xx
-    src/bosch/bhi260x
-    src/bosch/bhi36x
 )
-set(include_dirs 
+set(include_dirs
     src
-    src/touch
     src/platform
-    src/bosch
-    src/bosch/firmware/bhi260
-    src/bosch/firmware/bhi360
-    src/bosch/BMM150
-    src/bosch/bma4xx
-    src/bosch/bhi260x
-    src/bosch/bhi36x
     src/sensor
 )
 
