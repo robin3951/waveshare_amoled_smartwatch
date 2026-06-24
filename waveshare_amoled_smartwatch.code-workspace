@@ -10,6 +10,32 @@
         }
     ],
     "settings": {
-        "intellij.trace.server": "verbose"
+        "idf.currentSetup": "/opt/esp/idf",
+        "idf.openOcdConfigs": [
+            "board/esp32s3-builtin.cfg"
+        ],
+        "idf.flashType": "JTAG",
+        "conventionalCommits.scopes": [
+            "ui"
+        ],
+        "lvglPreview.displayWidth": 410,
+        "lvglPreview.displayHeight": 502,
+        "lvglPreview.lvglVersion": "9.4.0",
+        "lvglPreview.emccOptimization": "-O1",
+        "lvglPreview.autoReload": true,
+        "clangd.arguments": [
+            "--compile-commands-dir=/workspaces/waveshare_amoled_smartwatch/build",
+            "--background-index",
+            "--clang-tidy",
+            "--header-insertion=never"
+        ],
+        "clangd.fallbackFlags": [
+            "-I/workspaces/waveshare_amoled_smartwatch/components/ui",
+            "-I/workspaces/waveshare_amoled_smartwatch/components/ui/fonts",
+            "-I/workspaces/waveshare_amoled_smartwatch/components/SensorLib/src",
+            "-I/workspaces/waveshare_amoled_smartwatch/components/XPowersLib/src"
+        ],
+        "C_Cpp.intelliSenseEngine": "disabled",
+        "cppcheck.cppcheckPath": "C:\\Program Files\\Cppcheck\\cppcheck.exe"
     }
 }
