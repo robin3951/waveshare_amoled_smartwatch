@@ -129,7 +129,7 @@ jobs:
         # commit message prefixes, and over fully-manual tagging because
         # we want a release on every successful main push.
         id: tag
-        uses: anothrNick/github-tag-action@1.71.0
+        uses: anothrNick/github-tag-action@1.75.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WITH_V: true
