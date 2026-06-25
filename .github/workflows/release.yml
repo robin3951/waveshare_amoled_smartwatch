@@ -53,17 +53,24 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Build firmware with ESP-IDF v5.3 (target esp32s3)
+        # merge-bin and size run in this same action invocation, not as
+        # separate run: steps — idf.py only exists inside this action's
+        # Docker container, never on the bare runner itself (see
+        # firmware-ci.yml for the "idf.py: command not found" this caused
+        # when split out).
+        #
+        # `-o merged_firmware.bin` (not `-o build/merged_firmware.bin`):
+        # merge-bin cds into build/ internally, so a path containing
+        # `build/` resolves to the non-existent build/build/... — verified
+        # locally, see firmware-ci.yml for the exact FileNotFoundError.
         uses: espressif/esp-idf-ci-action@v1
         with:
           esp_idf_version: v5.3
           target: esp32s3
-          command: idf.py build
-
-      - name: Merge bootloader + partition table + app into one flashable image
-        run: idf.py merge-bin -o build/merged_firmware.bin
-
-      - name: Verify the app binary still fits its flash partition
-        run: idf.py size
+          command: |
+            idf.py build && \
+            idf.py merge-bin -o merged_firmware.bin && \
+            idf.py size
 
       - name: Upload firmware artifact
         uses: actions/upload-artifact@v4
