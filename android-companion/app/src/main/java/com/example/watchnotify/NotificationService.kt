@@ -56,6 +56,8 @@ class NotificationService : NotificationListenerService() {
      *
      * @param sbn The status bar notification posted by the system.
      */
+    // A guard-clause filter chain over notification extras, not genuinely tangled logic.
+    @Suppress("CyclomaticComplexMethod", "ReturnCount")
     override fun onNotificationPosted(sbn: StatusBarNotification) {
         val pkg   = sbn.packageName
         val notif = sbn.notification

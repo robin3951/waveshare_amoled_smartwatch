@@ -40,12 +40,16 @@ tasks.dokkaHtml {
     }
 }
 
-// Deliberately no custom config/detekt/detekt.yml for the first rollout —
-// detekt's built-in default ruleset (complexity, style, potential-bugs,
-// coroutines, exceptions rule sets) is reasonable out of the box. Add a
-// custom config file later if specific rules turn out to be too noisy.
+// First rollout used pure defaults (no config file) — the first real CI run
+// surfaced 42 weighted issues, almost all MagicNumber/ReturnCount findings
+// that don't fit this codebase's style (BLE protocol byte literals, Kotlin
+// guard-clause early returns). config/detekt/detekt.yml overrides just
+// those two rules on top of the default ruleset (buildUponDefaultConfig).
 detekt {
     buildUponDefaultConfig = true
+    // $projectDir here is android-companion/app/, but config/detekt/ lives
+    // at the android-companion/ Gradle-project root — use $rootDir.
+    config.setFrom(files("$rootDir/config/detekt/detekt.yml"))
     // Fail the build only on real findings, not on every minor style nit —
     // detekt's default severity threshold already does this; this is just
     // making that explicit/discoverable here.

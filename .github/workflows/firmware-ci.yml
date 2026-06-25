@@ -13,7 +13,6 @@ on:
       - 'sdkconfig.defaults'
       - 'CMakeLists.txt'
       - '.clang-format'
-      - '.clang-tidy'
       - '.github/workflows/firmware-ci.yml'
   pull_request:
     branches: [ main ]
@@ -24,7 +23,6 @@ on:
       - 'sdkconfig.defaults'
       - 'CMakeLists.txt'
       - '.clang-format'
-      - '.clang-tidy'
       - '.github/workflows/firmware-ci.yml'
   workflow_dispatch:
 
@@ -42,7 +40,7 @@ concurrency:
 # components/ui is excluded too, even though it's "ours": it's SquareLine
 # Studio-generated LVGL UI code (screens.c, fonts/, font-converter output
 # etc.), never hand-formatted and overwritten wholesale on every UI export —
-# clang-format/clang-tidy findings there would be noise, not signal.
+# clang-format findings there would be noise, not signal.
 env:
   OWN_FIRMWARE_PATHS: "main components/ble_chronos"
 
@@ -97,40 +95,40 @@ jobs:
         # nothing in CI ever actually compiled the firmware — only the
         # Android APK was built automatically. A broken firmware build was
         # only caught when someone happened to build locally.
+        #
+        # No clang-tidy here (tried it, reverted): plain clang-tidy against
+        # a GCC-generated compile_commands.json doesn't work for Xtensa
+        # targets — clang's frontend rejects GCC/Xtensa-specific flags
+        # (-mlongcalls, -fstrict-volatile-bitfields, -mdisable-hardware-
+        # atomics, ...) as "unknown argument" errors, and can't find
+        # toolchain-specific headers like machine/endian.h. ESP-IDF's own
+        # fix for this is `idf.py clang-check`, which requires building the
+        # whole project with a separate esp-clang toolchain instead of GCC —
+        # meaningful extra CI complexity/time for a hobby project. cppcheck
+        # (in the static-analysis job above) already covers this gap.
+        #
+        # merge-bin and size also run here, in the SAME action invocation —
+        # idf.py only exists inside the action's Docker container (where
+        # ESP-IDF's export.sh has run); a separate `run:` step afterwards
+        # executes directly on the bare GitHub runner, which never had
+        # ESP-IDF installed at all ("idf.py: command not found"). Only
+        # steps that need no ESP-IDF environment (esptool, upload-artifact)
+        # are safe to keep as separate steps below.
+        #
+        # `-o merged_firmware.bin` (not `-o build/merged_firmware.bin`):
+        # `idf.py merge-bin` internally cds into build/ before invoking
+        # esptool, so an output path already containing `build/` resolves
+        # to the non-existent build/build/merged_firmware.bin. Verified
+        # locally — the previous version failed with exactly that
+        # FileNotFoundError.
         uses: espressif/esp-idf-ci-action@v1
         with:
           esp_idf_version: v5.3
           target: esp32s3
-          command: idf.py build
-
-      - name: Install clang-tidy
-        run: sudo apt-get update && sudo apt-get install -y clang-tidy
-
-      - name: Run clang-tidy on our own firmware code
-        # idf.py build (previous step) generates build/compile_commands.json
-        # with the exact include paths/defines ESP-IDF used, which clang-tidy
-        # needs to parse the code correctly. We still explicitly list only
-        # our own .c files here (-p points at the compile DB, the file list
-        # is the actual analysis scope) so vendored/managed_components code
-        # is never analyzed, even though it's technically in the same DB.
-        run: |
-          find $OWN_FIRMWARE_PATHS -name '*.c' | \
-            xargs clang-tidy -p build --quiet
-
-      - name: Merge bootloader + partition table + app into one flashable image
-        # idf.py build alone produces three separate .bin files (bootloader,
-        # partition table, app). merge-bin combines them into a single image
-        # that can be flashed at offset 0x0 in one step — much more
-        # convenient for a release artifact than three separate files plus
-        # manual offset bookkeeping.
-        run: idf.py merge-bin -o build/merged_firmware.bin
-
-      - name: Verify the app binary still fits its flash partition
-        # idf.py size prints (and fails the command on) the app binary's
-        # size relative to the partition reserved for it in partitions.csv.
-        # Catching an overflow here is far cheaper than discovering it only
-        # when flashing the real watch and the bootloader refuses to boot.
-        run: idf.py size
+          command: |
+            idf.py build && \
+            idf.py merge-bin -o merged_firmware.bin && \
+            idf.py size
 
       - name: Validate the merged firmware image
         # A cheap sanity check that the merged .bin is actually a

@@ -1,8 +1,17 @@
 package com.example.watchnotify
 
 import android.annotation.SuppressLint
-import android.bluetooth.*
-import android.bluetooth.le.*
+import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothGatt
+import android.bluetooth.BluetoothGattCallback
+import android.bluetooth.BluetoothGattCharacteristic
+import android.bluetooth.BluetoothGattDescriptor
+import android.bluetooth.BluetoothManager
+import android.bluetooth.BluetoothProfile
+import android.bluetooth.le.ScanCallback
+import android.bluetooth.le.ScanFilter
+import android.bluetooth.le.ScanResult
+import android.bluetooth.le.ScanSettings
 import android.content.Context
 import android.os.Build
 import android.os.Handler
@@ -121,7 +130,8 @@ class BleManager private constructor() {
     /**
      * Starts scanning for the watch device.
      * 
-     * @param context Any valid Context, used for BluetoothManager and GATT connection. Application context is used internally to avoid leaks.
+     * @param context Any valid Context, used for BluetoothManager and GATT
+     *   connection. Application context is used internally to avoid leaks.
      */
     fun startScan(context: Context) {
         appContext = context.applicationContext
@@ -359,6 +369,7 @@ class BleManager private constructor() {
      * @return The Chronos icon code, or `0x00` ("none"/generic) if no
      *   specific app is recognized.
      */
+    @Suppress("CyclomaticComplexMethod") // flat package-name -> icon-byte lookup table, not genuine logic complexity
     private fun packageToIcon(pkg: String): Byte {
         val code = when {
             pkg.contains("whatsapp") -> 0x0A

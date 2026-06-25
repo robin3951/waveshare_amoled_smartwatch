@@ -52,12 +52,13 @@ class MainActivity : AppCompatActivity() {
         connectButton  = findViewById(R.id.connectButton)
         testButton     = findViewById(R.id.testButton)
 
-        // Start foreground service to keep process alive in background
-        try {
-            startForegroundService(Intent(this, WatchForegroundService::class.java))
-        } catch (e: Exception) {
-            android.util.Log.e("MainActivity", "Foreground service start failed: ${e.message}")
-        }
+        // Ask for POST_NOTIFICATIONS before the foreground service tries to post
+        // its status notification (Android 13+ requires this runtime grant; the
+        // call doesn't crash without it, but the notification is silently
+        // dropped, so the user would never see the connection status).
+        requestNotificationPermissionIfNeeded()
+
+        startForegroundServiceSafely()
 
         BleManager.instance.onStatusChange = { msg ->
             runOnUiThread { statusText.text = msg }
@@ -83,6 +84,25 @@ class MainActivity : AppCompatActivity() {
                 text        = "Hallo von der WatchNotify App! Dies ist eine längere Testnachricht."
             )
             logText.append("\n→ Test gesendet")
+        }
+    }
+
+    /**
+     * Starts [WatchForegroundService], logging and swallowing any failure
+     * instead of crashing the app.
+     *
+     * The catch is deliberately broad ([Exception], not a specific type):
+     * `startForegroundService` can fail in OS-version-specific ways (e.g.
+     * missing notification permission, background-start restrictions on
+     * newer Android versions) that aren't worth enumerating individually —
+     * any failure here should be logged, not fatal.
+     */
+    @Suppress("TooGenericExceptionCaught")
+    private fun startForegroundServiceSafely() {
+        try {
+            startForegroundService(Intent(this, WatchForegroundService::class.java))
+        } catch (e: Exception) {
+            android.util.Log.e("MainActivity", "Foreground service start failed: ${e.message}")
         }
     }
 
@@ -193,6 +213,25 @@ class MainActivity : AppCompatActivity() {
         ActivityCompat.requestPermissions(this, needed.toTypedArray(), REQ_PERMS)
     }
 
+    /**
+     * Requests [Manifest.permission.POST_NOTIFICATIONS] on Android 13+ (API 33)
+     * if not already granted. No-op on older versions, where the permission
+     * doesn't exist and notifications need no runtime grant.
+     *
+     * Fire-and-forget: unlike [requestBlePermissions], nothing needs to wait
+     * on the result here, so this doesn't go through [pendingAction]/
+     * [onRequestPermissionsResult] — the system dialog shows on its own
+     * request code and the user's answer just determines whether the status
+     * notification becomes visible.
+     */
+    private fun requestNotificationPermissionIfNeeded() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return
+        if (hasPermission(Manifest.permission.POST_NOTIFICATIONS)) return
+        ActivityCompat.requestPermissions(
+            this, arrayOf(Manifest.permission.POST_NOTIFICATIONS), REQ_NOTIF_PERMS
+        )
+    }
+
     /** @return `true` if permission [p] is currently granted to this app. */
     private fun hasPermission(p: String) =
         ContextCompat.checkSelfPermission(this, p) == PackageManager.PERMISSION_GRANTED
@@ -218,5 +257,8 @@ class MainActivity : AppCompatActivity() {
     companion object {
         /** Request code used for the runtime BLE/location permission dialog. */
         private const val REQ_PERMS = 1001
+
+        /** Request code used for the runtime POST_NOTIFICATIONS dialog. */
+        private const val REQ_NOTIF_PERMS = 1002
     }
 }
