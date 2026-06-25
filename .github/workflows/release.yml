@@ -73,7 +73,7 @@ jobs:
             idf.py size
 
       - name: Upload firmware artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: firmware
           path: build/merged_firmware.bin
@@ -100,7 +100,7 @@ jobs:
         run: gradle assembleDebug
 
       - name: Upload APK artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: apk
           path: android-companion/app/build/outputs/apk/debug/*.apk

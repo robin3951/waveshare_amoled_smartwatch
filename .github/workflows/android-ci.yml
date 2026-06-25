@@ -57,7 +57,7 @@ jobs:
 
       - name: Upload lint/detekt reports
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: android-lint-detekt-reports
           path: |
@@ -99,7 +99,7 @@ jobs:
           echo "### APK size: ${SIZE_KB} KiB" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload APK artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: apk
           path: android-companion/app/build/outputs/apk/debug/*.apk
