@@ -6,6 +6,10 @@
     <uses-permission android:name="android.permission.BLUETOOTH"       android:maxSdkVersion="30" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" android:maxSdkVersion="30" />
+    <!-- Lint (CoarseFineLocation) requires COARSE alongside FINE regardless
+         of maxSdkVersion scoping; both stay limited to Android ≤11 here,
+         same as the BLE-scan-needs-location requirement they back. -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" android:maxSdkVersion="30" />
 
     <!-- BLE – Android 12+ -->
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN"
@@ -19,6 +23,9 @@
 
     <!-- Auto-start after reboot -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <!-- Posting the foreground-service status notification – Android 13+ -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:allowBackup="true"
