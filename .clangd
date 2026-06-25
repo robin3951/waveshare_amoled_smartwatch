@@ -44,11 +44,17 @@ Documentation:
 ---
 # clangd uses x86_64 clang to parse Xtensa-targeted code; suppress the
 # resulting false positives across all project source files.
+# NOTE: PathMatch matches the path RELATIVE to this .clangd file's directory
+# (e.g. "main/foo.cpp"), not the absolute filesystem path — no leading
+# slash before the top-level directory name. Also: regex alternation tries
+# branches in order, so longer extensions (cpp/hpp) must come before their
+# prefixes (c/h), otherwise e.g. "foo.cpp" only matches "c" and the
+# overall pattern fails on the trailing "pp".
 If:
   PathMatch:
-    - ".*/main/.*\\.(c|cpp|h|hpp)"
-    - ".*/components/.*\\.(c|cpp|h|hpp)"
-    - ".*/managed_components/.*\\.(c|cpp|h|hpp)"
+    - 'main/.*\.(cpp|hpp|c|h)'
+    - 'components/.*\.(cpp|hpp|c|h)'
+    - 'managed_components/.*\.(cpp|hpp|c|h)'
 Diagnostics:
   Suppress:
     - unknown_typename

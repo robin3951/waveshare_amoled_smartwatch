@@ -14,6 +14,19 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 
+/**
+ * Single-screen UI for the companion app.
+ *
+ * Responsibilities:
+ * - Starts [WatchForegroundService] so the BLE connection survives once this
+ *   activity is closed/backgrounded.
+ * - Wires [BleManager] status/log callbacks to on-screen [TextView]s.
+ * - Lets the user trigger a BLE scan/connect ([BleManager.startScan]) and
+ *   send a test notification ([BleManager.sendNotification]).
+ * - Checks and, if missing, prompts the user to grant the
+ *   [NotificationService] and [NavigationAccessibilityService] system
+ *   permissions, plus runtime Bluetooth/location permissions.
+ */
 class MainActivity : AppCompatActivity() {
 
     private lateinit var statusText: TextView
@@ -21,8 +34,14 @@ class MainActivity : AppCompatActivity() {
     private lateinit var logText: TextView
     private lateinit var connectButton: Button
     private lateinit var testButton: Button
+
+    /** Action to run once pending runtime permissions are granted, or `null` if none pending. */
     private var pendingAction: (() -> Unit)? = null
 
+    /**
+     * Initializes the views, starts the foreground service, subscribes to
+     * [BleManager] callbacks, and wires up the connect/test buttons.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -67,11 +86,20 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /** Re-checks listener/accessibility permission status every time the screen becomes visible. */
     override fun onResume() {
         super.onResume()
         updateListenerStatus()
     }
 
+    /**
+     * Updates the on-screen permission status text and, if either the
+     * notification-listener or accessibility-service permission is missing,
+     * shows a dialog guiding the user to the relevant system settings screen.
+     *
+     * The accessibility dialog is only shown once the notification-listener
+     * permission is already granted, to avoid stacking two dialogs at once.
+     */
     private fun updateListenerStatus() {
         val notifOk = isNotificationListenerEnabled()
         val accessOk = isAccessibilityEnabled()
@@ -105,6 +133,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Checks whether the user has enabled [NotificationService] as a
+     * notification listener, by inspecting the system's
+     * `enabled_notification_listeners` secure setting (there is no direct
+     * API for this check).
+     *
+     * @return `true` if this app's [NotificationService] is in the enabled list.
+     */
     private fun isNotificationListenerEnabled(): Boolean {
         val flat = Settings.Secure.getString(
             contentResolver, "enabled_notification_listeners"
@@ -114,6 +150,12 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
+    /**
+     * Checks whether the user has enabled [NavigationAccessibilityService],
+     * by inspecting the system's `enabled_accessibility_services` secure setting.
+     *
+     * @return `true` if this app's [NavigationAccessibilityService] is in the enabled list.
+     */
     private fun isAccessibilityEnabled(): Boolean {
         val flat = Settings.Secure.getString(
             contentResolver, "enabled_accessibility_services"
@@ -123,6 +165,18 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
+    /**
+     * Requests whichever Bluetooth/location runtime permissions are missing
+     * for BLE scanning, then runs [onGranted] — immediately if nothing is
+     * missing, or once [onRequestPermissionsResult] confirms the grant.
+     *
+     * Uses [Manifest.permission.BLUETOOTH_SCAN]/`BLUETOOTH_CONNECT` on
+     * Android 12+ (API 31), and falls back to
+     * [Manifest.permission.ACCESS_FINE_LOCATION] on older versions where BLE
+     * scanning required location permission instead.
+     *
+     * @param onGranted Callback invoked once all required permissions are granted.
+     */
     private fun requestBlePermissions(onGranted: () -> Unit) {
         val needed = mutableListOf<String>()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -139,9 +193,15 @@ class MainActivity : AppCompatActivity() {
         ActivityCompat.requestPermissions(this, needed.toTypedArray(), REQ_PERMS)
     }
 
+    /** @return `true` if permission [p] is currently granted to this app. */
     private fun hasPermission(p: String) =
         ContextCompat.checkSelfPermission(this, p) == PackageManager.PERMISSION_GRANTED
 
+    /**
+     * Receives the result of the runtime permission dialog triggered by
+     * [requestBlePermissions], and invokes [pendingAction] if and only if
+     * every requested permission was granted.
+     */
     override fun onRequestPermissionsResult(
         requestCode: Int, permissions: Array<out String>, grantResults: IntArray
     ) {
@@ -156,6 +216,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
+        /** Request code used for the runtime BLE/location permission dialog. */
         private const val REQ_PERMS = 1001
     }
 }

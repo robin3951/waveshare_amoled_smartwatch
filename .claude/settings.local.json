@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(docker exec funny_swirles *)",
+      "Bash(powershell *)"
+    ]
+  }
+}

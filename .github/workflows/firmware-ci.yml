@@ -1,0 +1,153 @@
+name: Firmware CI
+
+# Only run when firmware-relevant paths change — keeps PRs that only touch
+# the Android app from spinning up the (comparatively heavy) ESP-IDF Docker
+# container.
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'main/**'
+      - 'components/**'
+      - 'partitions.csv'
+      - 'sdkconfig.defaults'
+      - 'CMakeLists.txt'
+      - '.clang-format'
+      - '.clang-tidy'
+      - '.github/workflows/firmware-ci.yml'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'main/**'
+      - 'components/**'
+      - 'partitions.csv'
+      - 'sdkconfig.defaults'
+      - 'CMakeLists.txt'
+      - '.clang-format'
+      - '.clang-tidy'
+      - '.github/workflows/firmware-ci.yml'
+  workflow_dispatch:
+
+# Cancel superseded runs on the same branch/PR so we don't burn CI minutes
+# on stale pushes (e.g. several quick fixup commits in a row).
+concurrency:
+  group: firmware-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+# Components that are actually ours, hand-written, and meant to be
+# style-checked. Vendored libraries (SensorLib, XPowersLib,
+# waveshare__esp32_s3_touch_amoled_2_06) and managed_components/
+# (auto-downloaded by the ESP-IDF component manager) are intentionally never
+# linted/analyzed — we didn't write that code and don't own its quality.
+# components/ui is excluded too, even though it's "ours": it's SquareLine
+# Studio-generated LVGL UI code (screens.c, fonts/, font-converter output
+# etc.), never hand-formatted and overwritten wholesale on every UI export —
+# clang-format/clang-tidy findings there would be noise, not signal.
+env:
+  OWN_FIRMWARE_PATHS: "main components/ble_chronos"
+
+jobs:
+  # ── Fast, no-Docker checks: don't need the ESP-IDF toolchain at all ───────
+  static-analysis:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install cppcheck
+        run: sudo apt-get update && sudo apt-get install -y cppcheck
+
+      - name: Run cppcheck on our own firmware code
+        # Scope limited to main/ + ble_chronos (see OWN_FIRMWARE_PATHS
+        # above). missingInclude(System) is suppressed because cppcheck
+        # can't see ESP-IDF's headers outside a real build — that would
+        # otherwise drown real findings in noise. --error-exitcode=1 makes
+        # this step (and therefore the job) fail on genuine error-severity
+        # findings, which blocks the PR from being merged.
+        run: |
+          cppcheck \
+            --enable=warning,performance,portability \
+            --inline-suppr \
+            --suppress=missingIncludeSystem \
+            --suppress=missingInclude \
+            --error-exitcode=1 \
+            $OWN_FIRMWARE_PATHS
+
+      - name: Install clang-format
+        run: sudo apt-get update && sudo apt-get install -y clang-format
+
+      - name: Check formatting against .clang-format
+        # --dry-run + -Werror turns formatting violations into a non-zero
+        # exit code instead of silently doing nothing; -i would rewrite
+        # files in place, which we don't want in CI (formatting is the
+        # contributor's job, CI only verifies it).
+        run: |
+          find $OWN_FIRMWARE_PATHS -name '*.c' -o -name '*.h' -o -name '*.cpp' | \
+            xargs clang-format --dry-run --Werror
+
+  # ── Heavier checks that need the real ESP-IDF toolchain/Docker image ──────
+  build-and-analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Build firmware with ESP-IDF v5.3 (target esp32s3)
+        # This alone is a meaningful addition: before this workflow existed,
+        # nothing in CI ever actually compiled the firmware — only the
+        # Android APK was built automatically. A broken firmware build was
+        # only caught when someone happened to build locally.
+        uses: espressif/esp-idf-ci-action@v1
+        with:
+          esp_idf_version: v5.3
+          target: esp32s3
+          command: idf.py build
+
+      - name: Install clang-tidy
+        run: sudo apt-get update && sudo apt-get install -y clang-tidy
+
+      - name: Run clang-tidy on our own firmware code
+        # idf.py build (previous step) generates build/compile_commands.json
+        # with the exact include paths/defines ESP-IDF used, which clang-tidy
+        # needs to parse the code correctly. We still explicitly list only
+        # our own .c files here (-p points at the compile DB, the file list
+        # is the actual analysis scope) so vendored/managed_components code
+        # is never analyzed, even though it's technically in the same DB.
+        run: |
+          find $OWN_FIRMWARE_PATHS -name '*.c' | \
+            xargs clang-tidy -p build --quiet
+
+      - name: Merge bootloader + partition table + app into one flashable image
+        # idf.py build alone produces three separate .bin files (bootloader,
+        # partition table, app). merge-bin combines them into a single image
+        # that can be flashed at offset 0x0 in one step — much more
+        # convenient for a release artifact than three separate files plus
+        # manual offset bookkeeping.
+        run: idf.py merge-bin -o build/merged_firmware.bin
+
+      - name: Verify the app binary still fits its flash partition
+        # idf.py size prints (and fails the command on) the app binary's
+        # size relative to the partition reserved for it in partitions.csv.
+        # Catching an overflow here is far cheaper than discovering it only
+        # when flashing the real watch and the bootloader refuses to boot.
+        run: idf.py size
+
+      - name: Validate the merged firmware image
+        # A cheap sanity check that the merged .bin is actually a
+        # well-formed, flashable ESP32 image — esptool can parse its headers
+        # and report chip type before this image is ever attached to a
+        # release. Catches a malformed merge step early.
+        run: |
+          pip install esptool
+          esptool.py image_info build/merged_firmware.bin
+
+      - name: Upload firmware artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: firmware
+          path: |
+            build/merged_firmware.bin
+            build/waveshare_amoled_smartwatch.bin
+            build/bootloader/bootloader.bin
+            build/partition_table/partition-table.bin
+          retention-days: 30

@@ -35,6 +35,12 @@ void ui_update_battery(int percent, bool charging, float voltage) {
   screens_set_battery(percent, charging, voltage);
 }
 
+/**
+ * @brief Adds a new notification to the display
+ *
+ * @param app The name of the app sending the notification (e.g., "WhatsApp")
+ * @param msg The message content of the notification
+ */
 void ui_add_notification(const char* app, const char* msg) {
   screens_add_notification(app, msg);
 }

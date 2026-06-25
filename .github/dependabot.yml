@@ -1,0 +1,25 @@
+# Dependabot configuration.
+#
+# Known gap: ESP-IDF's component manager (idf_component.yml, e.g. the
+# waveshare/esp32_s3_touch_amoled_2_06, lvgl/lvgl, espressif/esp_lvgl_port
+# dependencies) is NOT a Dependabot-supported ecosystem. There is no
+# "esp-idf" or "idf-component-manager" package-ecosystem value as of this
+# writing — Dependabot simply cannot watch main/idf_component.yml for
+# updates. That dependency set needs to be checked manually/periodically
+# (e.g. `idf.py update-dependencies` or checking the component registry)
+# until/unless Dependabot adds support for it. Documenting this here
+# instead of silently omitting it.
+version: 2
+updates:
+  # Android app dependencies (build.gradle implementation/plugin versions).
+  - package-ecosystem: "gradle"
+    directory: "/android-companion"
+    schedule:
+      interval: "weekly"
+
+  # Versions pinned in the GitHub Actions workflow files themselves
+  # (e.g. actions/checkout@v4, espressif/esp-idf-ci-action@v1).
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"

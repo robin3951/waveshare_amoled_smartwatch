@@ -1,0 +1,106 @@
+name: Android CI
+
+# Only run when the companion app changes — keeps firmware-only PRs from
+# spinning up a JDK/Gradle environment for no reason.
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'android-companion/**'
+      - '.github/workflows/android-ci.yml'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'android-companion/**'
+      - '.github/workflows/android-ci.yml'
+  workflow_dispatch:
+
+# Cancel superseded runs on the same branch/PR so quick fixup pushes don't
+# queue up redundant Gradle runs behind each other.
+concurrency:
+  group: android-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint-and-static-analysis:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Set up Gradle 8.4
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.4'
+
+      - name: Run Android Lint
+        # Catches Android-specific issues that a Kotlin-only linter can't:
+        # missing/incorrect manifest declarations (relevant here, since
+        # NotificationService/NavigationAccessibilityService both need
+        # exact manifest entries to work), unused resources, API-level
+        # mismatches against minSdk 26 / targetSdk 34.
+        working-directory: android-companion
+        run: gradle lint
+
+      - name: Run detekt static analysis
+        # Kotlin-specific: complexity (e.g. the regex-heavy
+        # buildNavPayload heuristics), style consistency, common bug
+        # patterns. Complements Android Lint rather than overlapping it.
+        working-directory: android-companion
+        run: gradle detekt
+
+      - name: Upload lint/detekt reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-lint-detekt-reports
+          path: |
+            android-companion/app/build/reports/lint-results-debug.html
+            android-companion/app/build/reports/detekt/detekt.html
+          retention-days: 30
+
+  build-debug-apk:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Set up Gradle 8.4
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.4'
+
+      - name: Assemble debug APK
+        working-directory: android-companion
+        run: gradle assembleDebug
+
+      - name: Report APK size
+        # No previous-build comparison (that would need to check out and
+        # build the base branch too, which roughly doubles this job's
+        # runtime) — just surfaces the current size in the run summary so
+        # an unexpected jump (e.g. an accidentally bundled large resource)
+        # is visible at a glance without downloading the artifact.
+        run: |
+          APK_PATH=android-companion/app/build/outputs/apk/debug/app-debug.apk
+          SIZE_BYTES=$(stat -c%s "$APK_PATH")
+          SIZE_KB=$((SIZE_BYTES / 1024))
+          echo "### APK size: ${SIZE_KB} KiB" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: apk
+          path: android-companion/app/build/outputs/apk/debug/*.apk
+          retention-days: 30
