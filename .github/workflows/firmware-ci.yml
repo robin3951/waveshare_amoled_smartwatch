@@ -13,7 +13,6 @@ on:
       - 'sdkconfig.defaults'
       - 'CMakeLists.txt'
       - '.clang-format'
-      - '.clang-tidy'
       - '.github/workflows/firmware-ci.yml'
   pull_request:
     branches: [ main ]
@@ -24,7 +23,6 @@ on:
       - 'sdkconfig.defaults'
       - 'CMakeLists.txt'
       - '.clang-format'
-      - '.clang-tidy'
       - '.github/workflows/firmware-ci.yml'
   workflow_dispatch:
 
@@ -42,7 +40,7 @@ concurrency:
 # components/ui is excluded too, even though it's "ours": it's SquareLine
 # Studio-generated LVGL UI code (screens.c, fonts/, font-converter output
 # etc.), never hand-formatted and overwritten wholesale on every UI export —
-# clang-format/clang-tidy findings there would be noise, not signal.
+# clang-format findings there would be noise, not signal.
 env:
   OWN_FIRMWARE_PATHS: "main components/ble_chronos"
 
@@ -92,37 +90,27 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Build firmware and run clang-tidy (ESP-IDF v5.3, target esp32s3)
+      - name: Build firmware with ESP-IDF v5.3 (target esp32s3)
         # This alone is a meaningful addition: before this workflow existed,
         # nothing in CI ever actually compiled the firmware — only the
         # Android APK was built automatically. A broken firmware build was
         # only caught when someone happened to build locally.
         #
-        # clang-tidy has to run in this SAME step, inside the action's Docker
-        # container, not as a separate run: step on the bare runner. The
-        # action mounts the workspace at /app/${{ github.repository }} (see
-        # its action.yml), so build/compile_commands.json gets every file's
-        # "directory" field baked in as that container path. A later step
-        # running directly on the runner (workspace at
-        # /home/runner/work/<repo>/<repo>) can't resolve that path at all —
-        # clang-tidy aborts with "Cannot chdir into
-        # /app/<owner>/<repo>/build". Running it here keeps the path context
-        # identical to where the compile DB was generated.
-        #
-        # The path list below is hardcoded (not $OWN_FIRMWARE_PATHS) on
-        # purpose: this command string runs *inside* the action's Docker
-        # container, which only receives IDF_TARGET via an explicit `-e`
-        # flag (see espressif/esp-idf-ci-action's action.yml) — workflow-
-        # level `env:` vars are not forwarded into the container at all, so
-        # the variable would simply be empty/unset in there.
+        # No clang-tidy here (tried it, reverted): plain clang-tidy against
+        # a GCC-generated compile_commands.json doesn't work for Xtensa
+        # targets — clang's frontend rejects GCC/Xtensa-specific flags
+        # (-mlongcalls, -fstrict-volatile-bitfields, -mdisable-hardware-
+        # atomics, ...) as "unknown argument" errors, and can't find
+        # toolchain-specific headers like machine/endian.h. ESP-IDF's own
+        # fix for this is `idf.py clang-check`, which requires building the
+        # whole project with a separate esp-clang toolchain instead of GCC —
+        # meaningful extra CI complexity/time for a hobby project. cppcheck
+        # (in the static-analysis job above) already covers this gap.
         uses: espressif/esp-idf-ci-action@v1
         with:
           esp_idf_version: v5.3
           target: esp32s3
-          command: |
-            idf.py build && \
-            apt-get update && apt-get install -y clang-tidy && \
-            find main components/ble_chronos -name '*.c' | xargs clang-tidy -p build --quiet
+          command: idf.py build
 
       - name: Merge bootloader + partition table + app into one flashable image
         # idf.py build alone produces three separate .bin files (bootloader,
