@@ -92,30 +92,37 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Build firmware with ESP-IDF v5.3 (target esp32s3)
+      - name: Build firmware and run clang-tidy (ESP-IDF v5.3, target esp32s3)
         # This alone is a meaningful addition: before this workflow existed,
         # nothing in CI ever actually compiled the firmware — only the
         # Android APK was built automatically. A broken firmware build was
         # only caught when someone happened to build locally.
+        #
+        # clang-tidy has to run in this SAME step, inside the action's Docker
+        # container, not as a separate run: step on the bare runner. The
+        # action mounts the workspace at /app/${{ github.repository }} (see
+        # its action.yml), so build/compile_commands.json gets every file's
+        # "directory" field baked in as that container path. A later step
+        # running directly on the runner (workspace at
+        # /home/runner/work/<repo>/<repo>) can't resolve that path at all —
+        # clang-tidy aborts with "Cannot chdir into
+        # /app/<owner>/<repo>/build". Running it here keeps the path context
+        # identical to where the compile DB was generated.
+        #
+        # The path list below is hardcoded (not $OWN_FIRMWARE_PATHS) on
+        # purpose: this command string runs *inside* the action's Docker
+        # container, which only receives IDF_TARGET via an explicit `-e`
+        # flag (see espressif/esp-idf-ci-action's action.yml) — workflow-
+        # level `env:` vars are not forwarded into the container at all, so
+        # the variable would simply be empty/unset in there.
         uses: espressif/esp-idf-ci-action@v1
         with:
           esp_idf_version: v5.3
           target: esp32s3
-          command: idf.py build
-
-      - name: Install clang-tidy
-        run: sudo apt-get update && sudo apt-get install -y clang-tidy
-
-      - name: Run clang-tidy on our own firmware code
-        # idf.py build (previous step) generates build/compile_commands.json
-        # with the exact include paths/defines ESP-IDF used, which clang-tidy
-        # needs to parse the code correctly. We still explicitly list only
-        # our own .c files here (-p points at the compile DB, the file list
-        # is the actual analysis scope) so vendored/managed_components code
-        # is never analyzed, even though it's technically in the same DB.
-        run: |
-          find $OWN_FIRMWARE_PATHS -name '*.c' | \
-            xargs clang-tidy -p build --quiet
+          command: |
+            idf.py build && \
+            apt-get update && apt-get install -y clang-tidy && \
+            find main components/ble_chronos -name '*.c' | xargs clang-tidy -p build --quiet
 
       - name: Merge bootloader + partition table + app into one flashable image
         # idf.py build alone produces three separate .bin files (bootloader,
