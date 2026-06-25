@@ -1,0 +1,33 @@
+# detekt baseline config — overrides on top of the default ruleset
+# (buildUponDefaultConfig = true in app/build.gradle).
+#
+# First rollout used pure defaults with no overrides; the first real CI run
+# surfaced 42 weighted issues, almost all from two rules that don't fit this
+# codebase's actual style:
+
+style:
+  MagicNumber:
+    # ~30 of the 42 findings. Fires on the Chronos BLE protocol's icon byte
+    # codes (BleManager.packageToIcon, e.g. 0x0A for WhatsApp) and similar
+    # lookup-table literals in NavigationAccessibilityService/
+    # NotificationService/MainActivity. These are meaningful protocol/pixel
+    # values whose meaning is already documented by the surrounding `when`
+    # branch or a comment — extracting ~15 single-use named constants for a
+    # byte lookup table would add boilerplate without adding clarity.
+    active: false
+
+  ReturnCount:
+    # Default max is 2. NotificationService.onNotificationPosted and
+    # NavigationAccessibilityService.handleWindowChange use early-return
+    # guard clauses (return on each filter condition) — idiomatic Kotlin,
+    # not a complexity problem. Raised instead of disabled so a function
+    # that's genuinely sprawling still gets flagged.
+    max: 4
+
+complexity:
+  TooManyFunctions:
+    # Default max is 11. BleManager (a singleton bundling scan/connect/
+    # send/compat-helper responsibilities for the whole BLE link) has 12 —
+    # one over. Raised slightly rather than suppressed on the class so a
+    # class that grows genuinely too large later still gets flagged.
+    thresholdInClasses: 15

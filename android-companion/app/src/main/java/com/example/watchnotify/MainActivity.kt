@@ -58,12 +58,7 @@ class MainActivity : AppCompatActivity() {
         // dropped, so the user would never see the connection status).
         requestNotificationPermissionIfNeeded()
 
-        // Start foreground service to keep process alive in background
-        try {
-            startForegroundService(Intent(this, WatchForegroundService::class.java))
-        } catch (e: Exception) {
-            android.util.Log.e("MainActivity", "Foreground service start failed: ${e.message}")
-        }
+        startForegroundServiceSafely()
 
         BleManager.instance.onStatusChange = { msg ->
             runOnUiThread { statusText.text = msg }
@@ -89,6 +84,25 @@ class MainActivity : AppCompatActivity() {
                 text        = "Hallo von der WatchNotify App! Dies ist eine längere Testnachricht."
             )
             logText.append("\n→ Test gesendet")
+        }
+    }
+
+    /**
+     * Starts [WatchForegroundService], logging and swallowing any failure
+     * instead of crashing the app.
+     *
+     * The catch is deliberately broad ([Exception], not a specific type):
+     * `startForegroundService` can fail in OS-version-specific ways (e.g.
+     * missing notification permission, background-start restrictions on
+     * newer Android versions) that aren't worth enumerating individually —
+     * any failure here should be logged, not fatal.
+     */
+    @Suppress("TooGenericExceptionCaught")
+    private fun startForegroundServiceSafely() {
+        try {
+            startForegroundService(Intent(this, WatchForegroundService::class.java))
+        } catch (e: Exception) {
+            android.util.Log.e("MainActivity", "Foreground service start failed: ${e.message}")
         }
     }
 

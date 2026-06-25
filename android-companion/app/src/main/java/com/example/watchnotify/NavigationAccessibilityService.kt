@@ -63,6 +63,7 @@ class NavigationAccessibilityService : AccessibilityService() {
     }
 
     /** Required override; navigation extraction doesn't need interrupt handling. */
+    @Suppress("EmptyFunctionBlock")
     override fun onInterrupt() {}
 
     // ── Notification event (heads-up, announced turns) ────────────────────
