@@ -1,0 +1,59 @@
+name: Feature Proposal
+description: Suggest a new feature or enhancement
+title: "Feature: "
+labels: ["feature"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What should be built? Short and concrete.
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why
+      description: Brief context on why this is worth the effort.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: Acceptance Criteria
+      description: How do you know the feature is done?
+      placeholder: |
+        - [ ] ...
+        - [ ] ...
+    validations:
+      required: true
+  - type: textarea
+    id: open-questions
+    attributes:
+      label: Open Questions (blocking)
+      description: >-
+        What needs to be clarified before/during implementation, because
+        the feature can't be built correctly without an answer? Don't list
+        scope extensions/new ideas here — those belong in their own issue.
+        Leave empty if none.
+    validations:
+      required: false
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      multiple: true
+      options:
+        - firmware
+        - android
+        - display
+        - touch
+        - pmu
+        - rtc
+        - imu
+        - audio
+        - storage
+        - ui
+        - ble
+    validations:
+      required: false

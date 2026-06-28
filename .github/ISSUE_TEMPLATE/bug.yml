@@ -1,0 +1,45 @@
+name: Bug Report
+description: Report a bug/unexpected behavior
+title: "Bug: "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+    validations:
+      required: true
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected Behavior
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      placeholder: |
+        1. ...
+        2. ...
+    validations:
+      required: false
+  - type: dropdown
+    id: area
+    attributes:
+      label: Affected Component
+      multiple: true
+      options:
+        - firmware
+        - android
+        - display
+        - touch
+        - pmu
+        - rtc
+        - imu
+        - audio
+        - storage
+        - ui
+        - ble
+    validations:
+      required: false
