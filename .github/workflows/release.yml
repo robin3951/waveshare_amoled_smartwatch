@@ -118,13 +118,13 @@ jobs:
           fetch-depth: 0   # full tag history needed to compute the next patch version
 
       - name: Download firmware artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: firmware
           path: artifacts/firmware
 
       - name: Download APK artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: apk
           path: artifacts/apk
