@@ -35,6 +35,8 @@ void ui_update_battery(int percent, bool charging, float voltage) {
   screens_set_battery(percent, charging, voltage);
 }
 
+void ui_update_steps(uint32_t steps) { screens_set_steps(steps); }
+
 /**
  * @brief Adds a new notification to the display
  *
