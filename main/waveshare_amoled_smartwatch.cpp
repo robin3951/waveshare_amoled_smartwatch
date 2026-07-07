@@ -6,24 +6,10 @@
 #include "freertos/FreeRTOS.h"  // IWYU pragma: keep
 #include "freertos/task.h"
 #include "hardware.h"
+#include "tasks/clock_task.h"
 #include "ui.h"
 
 static const char* TAG = "main";
-
-// ─── Clock task ──────────────────────────────────────────────────────────────
-
-static void clock_task(void* arg) {
-  while (1) {
-    RTC_DateTime dt = rtc.getDateTime();
-
-    bsp_display_lock(0);
-    ui_update_clock(dt.getHour(), dt.getMinute(), dt.getSecond(), dt.getDay(),
-                    dt.getMonth(), dt.getYear());
-    bsp_display_unlock();
-
-    vTaskDelay(pdMS_TO_TICKS(1000));
-  }
-}
 
 // ─── Battery / step-counter task ─────────────────────────────────────────────
 
