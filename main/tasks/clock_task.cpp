@@ -1,3 +1,10 @@
+/**
+ * @file clock_task.cpp
+ * @author @robin3951
+ * @brief Implementation of the clock display update task.
+ * @date 2026-07-07
+ */
+
 #include "clock_task.h"
 
 #include "bsp/esp-bsp.h"
@@ -5,7 +12,7 @@
 #include "ui.h"
 
 void clock_task(void* arg) {
-  while (1) {
+  while (true) {
     RTC_DateTime dt = rtc.getDateTime();
 
     bsp_display_lock(0);
@@ -13,6 +20,6 @@ void clock_task(void* arg) {
                     dt.getMonth(), dt.getYear());
     bsp_display_unlock();
 
-    vTaskDelay(pdMS_TO_TICKS(1000));
+    vTaskDelay(pdMS_TO_TICKS(CLOCK_TASK_PERIOD_MS));
   }
 }
