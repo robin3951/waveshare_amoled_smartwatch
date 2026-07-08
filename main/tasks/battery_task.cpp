@@ -20,16 +20,8 @@ void battery_task(void* arg) {
     bool charging = pmu.isCharging();
     float voltage = pmu.getBattVoltage() / 1000.0f;
 
-    IMUdata acc;
-    if (qmi.getAccelerometer(acc.x, acc.y, acc.z)) {
-      ESP_LOGI(TAG, "Accel: x=%.2f y=%.2f z=%.2f", acc.x, acc.y, acc.z);
-    } else {
-      ESP_LOGI(TAG, "Accel: read failed");
-    }
-
     bsp_display_lock(0);
     ui_update_battery(percent, charging, voltage);
-    // ui_update_steps(steps);
     bsp_display_unlock();
 
     vTaskDelay(pdMS_TO_TICKS(BATTERY_TASK_PERIOD_MS));

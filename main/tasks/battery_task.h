@@ -16,7 +16,7 @@ static constexpr uint32_t BATTERY_TASK_STACK_DEPTH = 4096;
 static constexpr UBaseType_t BATTERY_TASK_PRIORITY = 3;
 
 /** @brief Battery display update interval in milliseconds. */
-static constexpr uint32_t BATTERY_TASK_PERIOD_MS = 1000;
+static constexpr uint32_t BATTERY_TASK_PERIOD_MS = 5000;
 
 /**
  * @brief FreeRTOS task for updating the battery display every second.

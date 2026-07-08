@@ -19,7 +19,8 @@
  * | Task          | Priority | Stack  | Period  | Responsibility          |
  * |---------------|----------|--------|---------|-------------------------|
  * | clock_task    | 5        | 4096 B | 1 s     | RTC read → UI clock     |
- * | battery_task  | 3        | 4096 B | 1 s     | PMU read → UI battery   |
+ * | battery_task  | 3        | 4096 B | 5 s     | PMU read → UI battery   |
+ * | pedometer_task| 3        | 4096 B | 20 ms   | IMU read → UI pedometer |
  *
  * @note app_main() must not block — FreeRTOS scheduler starts after it returns.
  */
@@ -32,6 +33,7 @@
 #include "hardware.h"
 #include "tasks/battery_task.h"
 #include "tasks/clock_task.h"
+#include "tasks/pedometer_task.h"
 #include "ui.h"
 
 static const char* TAG = "main";
@@ -66,6 +68,7 @@ extern "C" void app_main(void) {
               CLOCK_TASK_PRIORITY, NULL);
   xTaskCreate(battery_task, "battery", BATTERY_TASK_STACK_DEPTH, NULL,
               BATTERY_TASK_PRIORITY, NULL);
-
+  xTaskCreate(pedometer_task, "pedometer", PEDOMETER_TASK_STACK_DEPTH, NULL,
+              PEDOMETER_TASK_PRIORITY, NULL);
   ESP_LOGI(TAG, "Tasks started!");
 }

@@ -4,6 +4,7 @@ idf_component_register(
         "hardware.cpp"
         "tasks/battery_task.cpp"
         "tasks/clock_task.cpp"
+        "tasks/pedometer_task.cpp"
     INCLUDE_DIRS "."
     REQUIRES
         waveshare__esp32_s3_touch_amoled_2_06
