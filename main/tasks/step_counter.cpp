@@ -32,16 +32,14 @@ StepCounter::StepCounter()
 
 void StepCounter::update(float ax, float ay, float az) {
   ++_tick;
-  float mag      = computeMagnitude(ax, ay, az);
-  float dc       = applyDCRemoval(mag);
+  float mag = computeMagnitude(ax, ay, az);
+  float dc = applyDCRemoval(mag);
   float filtered = applyLowPass(dc);
   detectPeak(filtered);
 
 #ifdef PEDOMETER_SIGNAL_CAPTURE
   // CSV output for SerialPlot: mag, dc-removed, low-pass, state (0-2), steps
-  printf("%.4f,%.4f,%.4f,%d,%lu\n",
-         mag, dc, filtered,
-         static_cast<int>(_state),
+  printf("%.4f,%.4f,%.4f,%d,%lu\n", mag, dc, filtered, static_cast<int>(_state),
          static_cast<unsigned long>(_steps));
 #endif
 }
@@ -83,9 +81,9 @@ void StepCounter::detectPeak(float filtered) {
   switch (_state) {
     case PeakState::IDLE:
       if (filtered > THRESHOLD_HIGH) {
-        _last_extremum   = filtered;
+        _last_extremum = filtered;
         _last_event_tick = _tick;
-        _state           = PeakState::AFTER_PEAK;
+        _state = PeakState::AFTER_PEAK;
         ESP_LOGD(TAG, "IDLE → AFTER_PEAK  lp=%.3f", filtered);
       }
       break;
@@ -96,13 +94,14 @@ void StepCounter::detectPeak(float filtered) {
       }
       if (filtered < THRESHOLD_LOW && ticks_since >= MIN_HALF_PERIOD_TICKS) {
         float amplitude = _last_extremum - filtered;
-        if (ticks_since <= MAX_HALF_PERIOD_TICKS && amplitude >= MIN_AMPLITUDE) {
+        if (ticks_since <= MAX_HALF_PERIOD_TICKS &&
+            amplitude >= MIN_AMPLITUDE) {
           // Valid peak→valley half-cycle
           ESP_LOGD(TAG, "AFTER_PEAK → AFTER_VALLEY  amp=%.3f  Δt=%lums",
                    amplitude, static_cast<unsigned long>(ticks_since * 20));
-          _last_extremum   = filtered;
+          _last_extremum = filtered;
           _last_event_tick = _tick;
-          _state           = PeakState::AFTER_VALLEY;
+          _state = PeakState::AFTER_VALLEY;
         } else {
           ESP_LOGD(TAG, "AFTER_PEAK → IDLE  (amp=%.3f OR timeout %lums)",
                    amplitude, static_cast<unsigned long>(ticks_since * 20));
@@ -124,15 +123,16 @@ void StepCounter::detectPeak(float filtered) {
           // Full step cycle confirmed
           if (_entry_guard > 0) {
             --_entry_guard;
-            ESP_LOGD(TAG, "AFTER_VALLEY → AFTER_PEAK  entry_guard=%d (discarding)",
+            ESP_LOGD(TAG,
+                     "AFTER_VALLEY → AFTER_PEAK  entry_guard=%d (discarding)",
                      _entry_guard);
           } else {
             ++_steps;
             ESP_LOGI(TAG, "Step #%lu", static_cast<unsigned long>(_steps));
           }
-          _last_extremum   = filtered;
+          _last_extremum = filtered;
           _last_event_tick = _tick;
-          _state           = PeakState::AFTER_PEAK;
+          _state = PeakState::AFTER_PEAK;
         } else {
           ESP_LOGD(TAG, "AFTER_VALLEY → IDLE  (timeout %lums)",
                    static_cast<unsigned long>(ticks_since * 20));

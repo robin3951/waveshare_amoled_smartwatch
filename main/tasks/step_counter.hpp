@@ -15,7 +15,8 @@
  * @see docs/diagrams/step_counter_class.drawio    — class structure and
  *                                                    relationships
  * @see docs/diagrams/step_counter_pipeline.drawio — signal processing pipeline
- * @see docs/diagrams/step_counter_states.drawio   — peak detection state machine
+ * @see docs/diagrams/step_counter_states.drawio   — peak detection state
+ * machine
  * @see docs/diagrams/step_counter_signal.drawio   — annotated signal trace
  */
 
