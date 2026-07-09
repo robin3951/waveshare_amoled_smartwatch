@@ -34,7 +34,7 @@
 #include "hardware.h"
 #include "tasks/battery_task.h"
 #include "tasks/clock_task.h"
-#include "tasks/pedometer_task.hpp"
+#include "tasks/pedometer_task.h"
 #include "tasks/screen_timeout_task.hpp"
 #include "ui.h"
 
