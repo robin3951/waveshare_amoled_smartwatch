@@ -6,6 +6,7 @@ idf_component_register(
         "tasks/clock_task.cpp"
         "tasks/pedometer_task.cpp"
         "tasks/step_counter.cpp"
+        "tasks/screen_timeout_task.cpp"
     INCLUDE_DIRS "."
     REQUIRES
         waveshare__esp32_s3_touch_amoled_2_06
