@@ -32,8 +32,8 @@
 #include "freertos/FreeRTOS.h"  // IWYU pragma: keep
 #include "freertos/task.h"
 #include "hardware.h"
-#include "tasks/battery_task.hpp"
-#include "tasks/clock_task.hpp"
+#include "tasks/battery_task.h"
+#include "tasks/clock_task.h"
 #include "tasks/pedometer_task.hpp"
 #include "tasks/screen_timeout_task.hpp"
 #include "ui.h"
