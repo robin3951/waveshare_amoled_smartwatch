@@ -1,5 +1,11 @@
 idf_component_register(
-    SRCS "waveshare_amoled_smartwatch.cpp"
+    SRCS 
+        "waveshare_amoled_smartwatch.cpp"
+        "hardware.cpp"
+        "tasks/battery_task.cpp"
+        "tasks/clock_task.cpp"
+        "tasks/pedometer_task.cpp"
+        "tasks/step_counter.cpp"
     INCLUDE_DIRS "."
     REQUIRES
         waveshare__esp32_s3_touch_amoled_2_06

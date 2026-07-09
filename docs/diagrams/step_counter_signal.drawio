@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" version="21.0.0">
+  <diagram name="Signal Trace" id="step-counter-signal">
+    <mxGraphModel dx="1400" dy="700" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="1300" pageHeight="680" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- ── Title ──────────────────────────────────────────── -->
+        <mxCell id="2" value="StepCounter — Annotated Signal Trace  (entry_guard = 0, 2 confirmed steps)" style="text;html=1;align=center;verticalAlign=middle;fontSize=14;fontStyle=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="160" y="10" width="980" height="24" as="geometry" />
+        </mxCell>
+
+        <!-- ── Row labels ─────────────────────────────────────── -->
+        <mxCell id="3" value="mag [g]" style="text;html=1;align=right;verticalAlign=middle;strokeColor=none;fillColor=none;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="80" y="100" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="4" value="dc [g]" style="text;html=1;align=right;verticalAlign=middle;strokeColor=none;fillColor=none;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="80" y="220" width="80" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="5" value="lp [g]&lt;br&gt;&lt;font color=&quot;#999999&quot;&gt;(filtered)&lt;/font&gt;" style="text;html=1;align=right;verticalAlign=middle;strokeColor=none;fillColor=none;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="70" y="340" width="90" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="6" value="PeakState" style="text;html=1;align=right;verticalAlign=middle;strokeColor=none;fillColor=none;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="60" y="452" width="100" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- ── Row background bands ───────────────────────────── -->
+        <mxCell id="7" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f9f9f9;strokeColor=#cccccc;" vertex="1" parent="1">
+          <mxGeometry x="170" y="90" width="1050" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="8" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#cccccc;" vertex="1" parent="1">
+          <mxGeometry x="170" y="210" width="1050" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="9" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f9f9f9;strokeColor=#cccccc;" vertex="1" parent="1">
+          <mxGeometry x="170" y="320" width="1050" height="110" as="geometry" />
+        </mxCell>
+
+        <!-- ── Time axis ticks and labels ─────────────────────── -->
+        <!-- Tick x positions: 170=0ms, 380=200ms, 590=400ms, 800=600ms, 1010=800ms, 1220=1000ms -->
+        <mxCell id="11" value="0 ms" style="text;html=1;align=center;verticalAlign=top;strokeColor=none;fillColor=none;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="150" y="440" width="40" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="12" value="200 ms" style="text;html=1;align=center;verticalAlign=top;strokeColor=none;fillColor=none;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="360" y="440" width="50" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="13" value="400 ms" style="text;html=1;align=center;verticalAlign=top;strokeColor=none;fillColor=none;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="570" y="440" width="50" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="14" value="600 ms" style="text;html=1;align=center;verticalAlign=top;strokeColor=none;fillColor=none;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="780" y="440" width="50" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="15" value="800 ms" style="text;html=1;align=center;verticalAlign=top;strokeColor=none;fillColor=none;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="990" y="440" width="50" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="16" value="1000 ms" style="text;html=1;align=center;verticalAlign=top;strokeColor=none;fillColor=none;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1200" y="440" width="54" height="16" as="geometry" />
+        </mxCell>
+
+        <!-- ── Waveform: mag signal ────────────────────────────
+             Scale: x=170+t*1.05  (1000ms → 1220)
+             t=0→x=170, t=50→x=222, t=250→x=432, t=450→x=642, t=650→x=852, t=850→x=1062, t=1000→x=1220
+             y center=140, peak(1.4g)=y=100, valley(0.6g)=y=180
+        ─────────────────────────────────────────────────────── -->
+        <mxCell id="20" value="" style="edgeStyle=none;html=1;endArrow=none;startArrow=none;strokeColor=#0066CC;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="170" y="140" as="sourcePoint" />
+            <mxPoint x="1220" y="140" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="222" y="100" />
+              <mxPoint x="432" y="180" />
+              <mxPoint x="642" y="100" />
+              <mxPoint x="852" y="180" />
+              <mxPoint x="1062" y="100" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <!-- mag baseline label -->
+        <mxCell id="21" value="1.0 g" style="text;html=1;align=left;verticalAlign=middle;strokeColor=none;fillColor=none;fontSize=9;fontColor=#0066CC;" vertex="1" parent="1">
+          <mxGeometry x="1225" y="133" width="36" height="14" as="geometry" />
+        </mxCell>
+
+        <!-- ── Waveform: dc-removed signal ────────────────────
+             y center=250, peak(+0.4g)=y=210, valley(-0.4g)=y=290
+        ─────────────────────────────────────────────────────── -->
+        <mxCell id="30" value="" style="edgeStyle=none;html=1;endArrow=none;startArrow=none;strokeColor=#9900CC;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="170" y="250" as="sourcePoint" />
+            <mxPoint x="1220" y="250" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="222" y="210" />
+              <mxPoint x="432" y="290" />
+              <mxPoint x="642" y="210" />
+              <mxPoint x="852" y="290" />
+              <mxPoint x="1062" y="210" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <!-- dc baseline -->
+        <mxCell id="31" value="0 g" style="text;html=1;align=left;verticalAlign=middle;strokeColor=none;fillColor=none;fontSize=9;fontColor=#9900CC;" vertex="1" parent="1">
+          <mxGeometry x="1225" y="243" width="30" height="14" as="geometry" />
+        </mxCell>
+
+        <!-- ── Waveform: lp filtered signal ───────────────────
+             y center=375, peak(+0.35g)=y=340, valley(-0.35g)=y=410
+             Slightly delayed: peaks at t=80,480,880 / valleys at t=280,680
+        ─────────────────────────────────────────────────────── -->
+        <mxCell id="40" value="" style="edgeStyle=none;html=1;endArrow=none;startArrow=none;strokeColor=#CC6600;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="170" y="375" as="sourcePoint" />
+            <mxPoint x="1220" y="375" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="254" y="340" />
+              <mxPoint x="464" y="410" />
+              <mxPoint x="674" y="340" />
+              <mxPoint x="884" y="410" />
+              <mxPoint x="1094" y="340" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <!-- lp baseline -->
+        <mxCell id="41" value="0 g" style="text;html=1;align=left;verticalAlign=middle;strokeColor=none;fillColor=none;fontSize=9;fontColor=#CC6600;" vertex="1" parent="1">
+          <mxGeometry x="1225" y="368" width="30" height="14" as="geometry" />
+        </mxCell>
+
+        <!-- ── Threshold lines (for lp row) ───────────────────
+             +0.20g → y = 375 - (0.20/0.35)*35 = 355
+             −0.10g → y = 375 + (0.10/0.35)*35 = 385
+        ─────────────────────────────────────────────────────── -->
+        <mxCell id="50" value="+0.20 g" style="text;html=1;align=left;verticalAlign=middle;strokeColor=none;fillColor=none;fontSize=9;fontColor=#FF0000;" vertex="1" parent="1">
+          <mxGeometry x="1225" y="348" width="50" height="14" as="geometry" />
+        </mxCell>
+        <mxCell id="51" value="" style="edgeStyle=none;html=1;endArrow=none;startArrow=none;strokeColor=#FF0000;dashed=1;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="170" y="355" as="sourcePoint" />
+            <mxPoint x="1220" y="355" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="52" value="−0.10 g" style="text;html=1;align=left;verticalAlign=middle;strokeColor=none;fillColor=none;fontSize=9;fontColor=#FF6600;" vertex="1" parent="1">
+          <mxGeometry x="1225" y="382" width="50" height="14" as="geometry" />
+        </mxCell>
+        <mxCell id="53" value="" style="edgeStyle=none;html=1;endArrow=none;startArrow=none;strokeColor=#FF6600;dashed=1;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="170" y="390" as="sourcePoint" />
+            <mxPoint x="1220" y="390" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ── State timeline boxes ───────────────────────────
+             Events: t=50→x=222, t=250→x=432, t=450→x=642, t=650→x=852, t=850→x=1062
+        ─────────────────────────────────────────────────────── -->
+        <!-- IDLE -->
+        <mxCell id="60" value="IDLE" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="170" y="452" width="52" height="34" as="geometry" />
+        </mxCell>
+        <!-- AFTER_PEAK 1 -->
+        <mxCell id="61" value="AFTER_PEAK" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="222" y="452" width="210" height="34" as="geometry" />
+        </mxCell>
+        <!-- AFTER_VALLEY 1 -->
+        <mxCell id="62" value="AFTER_VALLEY" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="432" y="452" width="210" height="34" as="geometry" />
+        </mxCell>
+        <!-- AFTER_PEAK 2 -->
+        <mxCell id="63" value="AFTER_PEAK" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="642" y="452" width="210" height="34" as="geometry" />
+        </mxCell>
+        <!-- AFTER_VALLEY 2 -->
+        <mxCell id="64" value="AFTER_VALLEY" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="852" y="452" width="210" height="34" as="geometry" />
+        </mxCell>
+        <!-- AFTER_PEAK 3 -->
+        <mxCell id="65" value="AFTER_PEAK" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1062" y="452" width="158" height="34" as="geometry" />
+        </mxCell>
+
+        <!-- ── Step event markers ──────────────────────────────
+             Step #1 at t=450ms → x=642
+             Step #2 at t=850ms → x=1062
+        ─────────────────────────────────────────────────────── -->
+        <!-- Step #1 vertical marker -->
+        <mxCell id="70" value="" style="edgeStyle=none;html=1;endArrow=none;startArrow=none;strokeColor=#00AA00;strokeWidth=2;dashed=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="642" y="90" as="sourcePoint" />
+            <mxPoint x="642" y="452" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="71" value="Step #1" style="text;html=1;align=center;verticalAlign=bottom;strokeColor=none;fillColor=#d5e8d4;fontSize=10;fontStyle=1;fontColor=#006600;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="600" y="60" width="84" height="22" as="geometry" />
+        </mxCell>
+
+        <!-- Step #2 vertical marker -->
+        <mxCell id="72" value="" style="edgeStyle=none;html=1;endArrow=none;startArrow=none;strokeColor=#00AA00;strokeWidth=2;dashed=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1062" y="90" as="sourcePoint" />
+            <mxPoint x="1062" y="452" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="73" value="Step #2" style="text;html=1;align=center;verticalAlign=bottom;strokeColor=none;fillColor=#d5e8d4;fontSize=10;fontStyle=1;fontColor=#006600;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="1020" y="60" width="84" height="22" as="geometry" />
+        </mxCell>
+
+        <!-- ── Legend ─────────────────────────────────────────── -->
+        <mxCell id="80" value="&lt;b&gt;Legend&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#0066CC&quot;&gt;━━&lt;/font&gt; mag = √(ax²+ay²+az²)&lt;br&gt;&lt;font color=&quot;#9900CC&quot;&gt;━━&lt;/font&gt; dc-removed (high-pass)&lt;br&gt;&lt;font color=&quot;#CC6600&quot;&gt;━━&lt;/font&gt; lp filtered (low-pass)&lt;br&gt;&lt;font color=&quot;#FF0000&quot;&gt;╌╌&lt;/font&gt; THRESHOLD_HIGH +0.20 g&lt;br&gt;&lt;font color=&quot;#FF6600&quot;&gt;╌╌&lt;/font&gt; THRESHOLD_LOW  −0.10 g&lt;br&gt;&lt;font color=&quot;#00AA00&quot;&gt;╎ &lt;/font&gt; Step confirmed" style="rounded=1;whiteSpace=wrap;html=1;align=left;spacingLeft=8;fontSize=10;fillColor=#f9f9f9;strokeColor=#999999;" vertex="1" parent="1">
+          <mxGeometry x="30" y="90" width="130" height="140" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

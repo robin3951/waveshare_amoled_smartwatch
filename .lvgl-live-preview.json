@@ -8,7 +8,10 @@
     "components/ui/images.c",
     "components/ui/fonts/fonts.c",
     "components/ui/fonts/lv_font_montserrat_14_ext.c",
-    "components/ui/fonts/lv_font_montserrat_16_ext.c"
+    "components/ui/fonts/lv_font_montserrat_16_ext.c",
+    "components/ui/fonts/lv_font_montserrat_72_ext.c",
+    "components/ui/fonts/lv_font_montserrat_164.c",
+    "components/ui/fonts/lv_font_shoe_print_48.c"
   ],
   "includePaths": [
     "./components/ui",

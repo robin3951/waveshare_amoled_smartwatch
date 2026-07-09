@@ -35,6 +35,8 @@ void ui_update_battery(int percent, bool charging, float voltage) {
   screens_set_battery(percent, charging, voltage);
 }
 
+void ui_update_steps(uint32_t steps) { screens_set_steps(steps); }
+
 /**
  * @brief Adds a new notification to the display
  *
@@ -52,6 +54,7 @@ void lvgl_live_preview_init(void) {
   ui_init();
   ui_update_clock(14, 30, 0, 18, 6, 2026);
   ui_update_battery(75, false, 3.85f);
+  ui_update_steps(1234);
   ui_set_ble_status(true);
   ui_add_notification("WhatsApp", "Hey, wie geht's?");
   ui_add_notification("Gmail", "Neue Nachricht von Max Mustermann");

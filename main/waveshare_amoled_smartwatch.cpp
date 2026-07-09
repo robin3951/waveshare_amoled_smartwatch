@@ -1,66 +1,74 @@
-#include <stdio.h>
+/**
+ * @file waveshare_amoled_smartwatch.cpp
+ * @author @robin3951
+ * @brief Application entry point for the Waveshare ESP32-S3 AMOLED Smartwatch
+ *        firmware.
+ * @date 2026-07-07
+ *
+ * @details
+ * Orchestrates the startup sequence and launches all FreeRTOS tasks.
+ *
+ * ### Initialization order
+ * 1. Suppress SPI debug log flood (spi_master → WARN)
+ * 2. hardware_init()  — I2C bus, RTC (PCF85063), PMU (AXP2101), IMU (QMI8658A)
+ * 3. bsp_display_start() — QSPI panel, LVGL port
+ * 4. ui_init()        — LVGL screen setup (inside display lock)
+ * 5. ble_chronos_init() — NimBLE stack, Chronos NUS service
+ *
+ * ### FreeRTOS tasks
+ * | Task          | Priority | Stack  | Period  | Responsibility          |
+ * |---------------|----------|--------|---------|-------------------------|
+ * | clock_task    | 5        | 4096 B | 1 s     | RTC read → UI clock     |
+ * | battery_task  | 3        | 4096 B | 5 s     | PMU read → UI battery   |
+ * | pedometer_task| 3        | 4096 B | 20 ms   | IMU read → UI pedometer |
+ *
+ * @note app_main() must not block — FreeRTOS scheduler starts after it returns.
+ */
 
-#include "SensorPCF85063.hpp"
-#include "XPowersAXP2101.hpp"
 #include "ble_chronos.h"
-#include "bsp/esp-bsp.h"        // IWYU pragma: keep
+#include "bsp/esp-bsp.h"  // IWYU pragma: keep
+#include "esp_log.h"
 #include "freertos/FreeRTOS.h"  // IWYU pragma: keep
 #include "freertos/task.h"
+#include "hardware.h"
+#include "tasks/battery_task.h"
+#include "tasks/clock_task.h"
+#include "tasks/pedometer_task.h"
 #include "ui.h"
 
-static SensorPCF85063 rtc;
-static XPowersAXP2101 pmu;
+static const char* TAG = "main";
 
-static void clock_task(void* arg) {
-  while (1) {
-    RTC_DateTime dt = rtc.getDateTime();
-
-    bsp_display_lock(0);
-    ui_update_clock(dt.getHour(), dt.getMinute(), dt.getSecond(), dt.getDay(),
-                    dt.getMonth(), dt.getYear());
-    bsp_display_unlock();
-
-    vTaskDelay(pdMS_TO_TICKS(1000));
-  }
-}
-
-static void battery_task(void* arg) {
-  while (1) {
-    int percent = pmu.getBatteryPercent();
-    bool charging = pmu.isCharging();
-    float voltage = pmu.getBattVoltage() / 1000.0f;
-
-    bsp_display_lock(0);
-    ui_update_battery(percent, charging, voltage);
-    bsp_display_unlock();
-
-    vTaskDelay(pdMS_TO_TICKS(1000));
-  }
-}
-
+/**
+ * @brief ESP-IDF application entry point.
+ *
+ * Called once by the ESP-IDF startup code after FreeRTOS is initialized.
+ * Returns immediately after creating tasks — the scheduler takes over.
+ */
 extern "C" void app_main(void) {
-  bsp_i2c_init();
+  // Suppress SPI master debug flood so IMU diagnostic output is visible in logs
+  esp_log_level_set("spi_master", ESP_LOG_WARN);
 
-  i2c_master_bus_handle_t i2c = bsp_i2c_get_handle();
-
-  if (!rtc.begin(i2c)) {
-    printf("RTC init fehlgeschlagen!\n");
+  // Initialize hardware components (I2C, RTC, PMU, IMU)
+  if (!hardware_init()) {
+    ESP_LOGE(TAG, "Hardware initialization failed!");
+    return;
   }
 
-  if (!pmu.begin(i2c, AXP2101_SLAVE_ADDRESS)) {
-    printf("PMIC init fehlgeschlagen!\n");
-  }
-
+  // Start the display and initialize the UI (inside display lock)
   bsp_display_start();
-
   bsp_display_lock(0);
   ui_init();
   bsp_display_unlock();
 
+  // Initialize bluetooth connection service (NimBLE stack)
   ble_chronos_init();
 
-  xTaskCreate(clock_task, "clock", 4096, NULL, 5, NULL);
-  xTaskCreate(battery_task, "battery", 4096, NULL, 3, NULL);
-
-  printf("Tasks gestartet!\n");
+  // FreeRTOS tasks creation
+  xTaskCreate(clock_task, "clock", CLOCK_TASK_STACK_DEPTH, NULL,
+              CLOCK_TASK_PRIORITY, NULL);
+  xTaskCreate(battery_task, "battery", BATTERY_TASK_STACK_DEPTH, NULL,
+              BATTERY_TASK_PRIORITY, NULL);
+  xTaskCreate(pedometer_task, "pedometer", PEDOMETER_TASK_STACK_DEPTH, NULL,
+              PEDOMETER_TASK_PRIORITY, NULL);
+  ESP_LOGI(TAG, "Tasks started!");
 }

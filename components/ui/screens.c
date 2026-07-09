@@ -9,6 +9,10 @@
 // Custom fonts with full Latin-1 (0x20-0xFF) — includes ä ö ü Ä Ö Ü ß
 LV_FONT_DECLARE(lv_font_montserrat_14_ext);
 LV_FONT_DECLARE(lv_font_montserrat_16_ext);
+LV_FONT_DECLARE(lv_font_montserrat_72_ext);
+LV_FONT_DECLARE(lv_font_montserrat_164);
+LV_FONT_DECLARE(lv_font_montserrat_164);
+LV_FONT_DECLARE(lv_font_shoe_print_48);
 
 lv_obj_t* ui_tileview = NULL;
 lv_obj_t* ui_tile_clock = NULL;
@@ -19,8 +23,12 @@ static lv_obj_t* dot_container = NULL;
 static lv_obj_t* dots[UI_SCREEN_COUNT];
 
 // ── Clock ────────────────────────────────────────────────────────────
-static lv_obj_t* time_label = NULL;
+static lv_obj_t* time_hours_label = NULL;
+static lv_obj_t* time_minutes_label = NULL;
+static lv_obj_t* time_seconds_label = NULL;
 static lv_obj_t* date_label = NULL;
+static lv_obj_t* icon_shoe_print = NULL;
+static lv_obj_t* label_step_count = NULL;
 
 // ── Battery ──────────────────────────────────────────────────────────
 static lv_obj_t* bat_icon_label = NULL;
@@ -43,6 +51,12 @@ static const char* get_battery_icon(int pct, bool charging) {
   if (pct >= 45) return " 50";
   if (pct >= 20) return " 25";
   return "LOW";
+}
+
+const char* get_month_name(int month) {
+  static const char* month_names[] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                                      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+  return month_names[month - 1];
 }
 
 static void update_dots(int idx) {
@@ -72,41 +86,75 @@ static void tileview_changed_cb(lv_event_t* e) {
 
 /* ─── Tile 1: Clock ──────────────────────────────────────────────── */
 
-static void create_clock_tile(lv_obj_t* tile) {
-  lv_obj_set_style_bg_color(tile, lv_color_black(), LV_PART_MAIN);
-  lv_obj_set_style_bg_opa(tile, LV_OPA_COVER, LV_PART_MAIN);
-  lv_obj_set_style_border_width(tile, 0, LV_PART_MAIN);
-  lv_obj_set_style_pad_all(tile, 0, LV_PART_MAIN);
+static void create_clock_tile(lv_obj_t* clock_tile) {
+  lv_obj_set_style_bg_color(clock_tile, lv_color_black(), LV_PART_MAIN);
+  lv_obj_set_style_bg_opa(clock_tile, LV_OPA_COVER, LV_PART_MAIN);
+  lv_obj_set_style_border_width(clock_tile, 0, LV_PART_MAIN);
+  lv_obj_set_style_pad_all(clock_tile, 0, LV_PART_MAIN);
 
-  time_label = lv_label_create(tile);
-  lv_label_set_text(time_label, "--:--:--");
-  lv_obj_set_style_text_font(time_label, &lv_font_montserrat_48, LV_PART_MAIN);
-  lv_obj_set_style_text_color(time_label, lv_color_white(), LV_PART_MAIN);
-  lv_obj_align(time_label, LV_ALIGN_CENTER, 0, -10);
+  time_hours_label = lv_label_create(clock_tile);
+  lv_label_set_text(time_hours_label, "--");
+  lv_obj_set_style_text_font(time_hours_label, &lv_font_montserrat_164,
+                             LV_PART_MAIN);
+  lv_obj_set_style_text_color(time_hours_label, lv_color_white(), LV_PART_MAIN);
+  lv_obj_align(time_hours_label, LV_ALIGN_CENTER, 0, -110);
 
-  date_label = lv_label_create(tile);
+  time_minutes_label = lv_label_create(clock_tile);
+  lv_label_set_text(time_minutes_label, "--");
+  lv_obj_set_style_text_font(time_minutes_label, &lv_font_montserrat_164,
+                             LV_PART_MAIN);
+  lv_obj_set_style_text_color(time_minutes_label, lv_color_white(),
+                              LV_PART_MAIN);
+  lv_obj_align(time_minutes_label, LV_ALIGN_CENTER, 0, 30);
+
+  time_seconds_label = lv_label_create(clock_tile);
+  lv_label_set_text(time_seconds_label, "--");
+  lv_obj_set_style_text_font(time_seconds_label, &lv_font_montserrat_48,
+                             LV_PART_MAIN);
+  lv_obj_set_style_text_color(time_seconds_label, lv_color_white(),
+                              LV_PART_MAIN);
+  lv_obj_align(time_seconds_label, LV_ALIGN_RIGHT_MID, -40, 60);
+
+  date_label = lv_label_create(clock_tile);
   lv_label_set_text(date_label, "--.--.----");
-  lv_obj_set_style_text_font(date_label, &lv_font_montserrat_20, LV_PART_MAIN);
+  lv_obj_set_style_text_font(date_label, &lv_font_montserrat_32, LV_PART_MAIN);
   lv_obj_set_style_text_color(date_label, lv_color_hex(0x888888), LV_PART_MAIN);
-  lv_obj_align(date_label, LV_ALIGN_CENTER, 0, 55);
+  lv_obj_align(date_label, LV_ALIGN_BOTTOM_MID, 0, -110);
+
+  icon_shoe_print = lv_label_create(clock_tile);
+  lv_label_set_text(icon_shoe_print,
+                    "\xEF\x95\x8B");  // Unicode for shoe print icon
+  lv_obj_set_style_text_font(icon_shoe_print, &lv_font_shoe_print_48,
+                             LV_PART_MAIN);
+  lv_obj_set_style_text_color(icon_shoe_print, lv_color_hex(0x008000),
+                              LV_PART_MAIN);
+  lv_obj_align(icon_shoe_print, LV_ALIGN_BOTTOM_MID, -30, -50);
+
+  label_step_count = lv_label_create(clock_tile);
+  lv_label_set_text(label_step_count, "123");
+  lv_obj_set_style_text_font(label_step_count, &lv_font_montserrat_32,
+                             LV_PART_MAIN);
+  lv_obj_set_style_text_color(label_step_count, lv_color_hex(0x888888),
+                              LV_PART_MAIN);
+  lv_obj_align(label_step_count, LV_ALIGN_BOTTOM_MID, 30, -50);
 }
 
 /* ─── Tile 2: Battery ────────────────────────────────────────────── */
 
-static void create_battery_tile(lv_obj_t* tile) {
-  lv_obj_set_style_bg_color(tile, lv_color_black(), LV_PART_MAIN);
-  lv_obj_set_style_bg_opa(tile, LV_OPA_COVER, LV_PART_MAIN);
-  lv_obj_set_style_border_width(tile, 0, LV_PART_MAIN);
-  lv_obj_set_style_pad_all(tile, 0, LV_PART_MAIN);
+static void create_battery_tile(lv_obj_t* battery_tile) {
+  lv_obj_set_style_bg_color(battery_tile, lv_color_black(), LV_PART_MAIN);
+  lv_obj_set_style_bg_opa(battery_tile, LV_OPA_COVER, LV_PART_MAIN);
+  lv_obj_set_style_border_width(battery_tile, 0, LV_PART_MAIN);
+  lv_obj_set_style_pad_all(battery_tile, 0, LV_PART_MAIN);
 
-  bat_icon_label = lv_label_create(tile);
+  bat_icon_label = lv_label_create(battery_tile);
   lv_label_set_text(bat_icon_label, "---");
   lv_obj_set_style_text_font(bat_icon_label, &lv_font_montserrat_12,
                              LV_PART_MAIN);
   lv_obj_set_style_text_color(bat_icon_label, lv_color_white(), LV_PART_MAIN);
   lv_obj_align(bat_icon_label, LV_ALIGN_TOP_RIGHT, -10, 10);
 
-  bat_percent_label = lv_label_create(tile);
+  bat_percent_label = lv_label_create(battery_tile);
   lv_label_set_text(bat_percent_label, "--%");
   lv_obj_set_style_text_font(bat_percent_label, &lv_font_montserrat_48,
                              LV_PART_MAIN);
@@ -114,7 +162,7 @@ static void create_battery_tile(lv_obj_t* tile) {
                               LV_PART_MAIN);
   lv_obj_align(bat_percent_label, LV_ALIGN_CENTER, 0, -20);
 
-  bat_status_label = lv_label_create(tile);
+  bat_status_label = lv_label_create(battery_tile);
   lv_label_set_text(bat_status_label, "");
   lv_obj_set_style_text_font(bat_status_label, &lv_font_montserrat_16,
                              LV_PART_MAIN);
@@ -122,7 +170,7 @@ static void create_battery_tile(lv_obj_t* tile) {
                               LV_PART_MAIN);
   lv_obj_align(bat_status_label, LV_ALIGN_CENTER, 0, 45);
 
-  bat_voltage_label = lv_label_create(tile);
+  bat_voltage_label = lv_label_create(battery_tile);
   lv_label_set_text(bat_voltage_label, "-.-- V");
   lv_obj_set_style_text_font(bat_voltage_label, &lv_font_montserrat_20,
                              LV_PART_MAIN);
@@ -133,14 +181,14 @@ static void create_battery_tile(lv_obj_t* tile) {
 
 /* ─── Tile 3: Notifications ──────────────────────────────────────── */
 
-static void create_notif_tile(lv_obj_t* tile) {
-  lv_obj_set_style_bg_color(tile, lv_color_black(), LV_PART_MAIN);
-  lv_obj_set_style_bg_opa(tile, LV_OPA_COVER, LV_PART_MAIN);
-  lv_obj_set_style_border_width(tile, 0, LV_PART_MAIN);
-  lv_obj_set_style_pad_all(tile, 0, LV_PART_MAIN);
+static void create_notif_tile(lv_obj_t* notification_tile) {
+  lv_obj_set_style_bg_color(notification_tile, lv_color_black(), LV_PART_MAIN);
+  lv_obj_set_style_bg_opa(notification_tile, LV_OPA_COVER, LV_PART_MAIN);
+  lv_obj_set_style_border_width(notification_tile, 0, LV_PART_MAIN);
+  lv_obj_set_style_pad_all(notification_tile, 0, LV_PART_MAIN);
 
   // BLE status line at top (fixed, 30 px)
-  ble_status_label = lv_label_create(tile);
+  ble_status_label = lv_label_create(notification_tile);
   lv_obj_set_pos(ble_status_label, 0, 6);
   lv_obj_set_width(ble_status_label, 410);
   lv_obj_set_style_text_align(ble_status_label, LV_TEXT_ALIGN_CENTER,
@@ -152,7 +200,7 @@ static void create_notif_tile(lv_obj_t* tile) {
   lv_label_set_text(ble_status_label, "BLE: Getrennt");
 
   // Scrollable bubble container fills the remaining height (502 - 30 = 472 px)
-  notif_scroll_cont = lv_obj_create(tile);
+  notif_scroll_cont = lv_obj_create(notification_tile);
   lv_obj_set_pos(notif_scroll_cont, 0, 30);
   lv_obj_set_size(notif_scroll_cont, 410, 456);
   lv_obj_set_style_bg_color(notif_scroll_cont, lv_color_black(), LV_PART_MAIN);
@@ -240,12 +288,23 @@ void create_screens(void) {
 
 /* ─── Public: data update functions ─────────────────────────────── */
 
-void screens_set_time(int h, int m, int s) {
-  if (time_label) lv_label_set_text_fmt(time_label, "%02d:%02d:%02d", h, m, s);
+void screens_set_time(int hours, int minutes, int seconds) {
+  if (time_hours_label) lv_label_set_text_fmt(time_hours_label, "%02d", hours);
+  if (time_minutes_label)
+    lv_label_set_text_fmt(time_minutes_label, "%02d", minutes);
+  if (time_seconds_label)
+    lv_label_set_text_fmt(time_seconds_label, "%02d", seconds);
 }
 
-void screens_set_date(int d, int mo, int y) {
-  if (date_label) lv_label_set_text_fmt(date_label, "%02d.%02d.%04d", d, mo, y);
+void screens_set_date(int day, int month, int year) {
+  if (date_label)
+    lv_label_set_text_fmt(date_label, "%02d %s %04d", day,
+                          get_month_name(month), year);
+}
+
+void screens_set_steps(uint32_t steps) {
+  if (label_step_count)
+    lv_label_set_text_fmt(label_step_count, "%lu", (unsigned long)steps);
 }
 
 void screens_set_battery(int pct, bool charging, float voltage) {
