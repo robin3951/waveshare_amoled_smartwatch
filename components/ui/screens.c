@@ -126,7 +126,7 @@ static void create_clock_tile(lv_obj_t* clock_tile) {
                     "\xEF\x95\x8B");  // Unicode for shoe print icon
   lv_obj_set_style_text_font(icon_shoe_print, &lv_font_shoe_print_48,
                              LV_PART_MAIN);
-  lv_obj_set_style_text_color(icon_shoe_print, lv_color_hex(0x888888),
+  lv_obj_set_style_text_color(icon_shoe_print, lv_color_hex(0x008000),
                               LV_PART_MAIN);
   lv_obj_align(icon_shoe_print, LV_ALIGN_BOTTOM_MID, -30, -50);
 
@@ -303,7 +303,8 @@ void screens_set_date(int day, int month, int year) {
 }
 
 void screens_set_steps(uint32_t steps) {
-  if (label_step_count) lv_label_set_text_fmt(label_step_count, "%lu", (unsigned long)steps);
+  if (label_step_count)
+    lv_label_set_text_fmt(label_step_count, "%lu", (unsigned long)steps);
 }
 
 void screens_set_battery(int pct, bool charging, float voltage) {
