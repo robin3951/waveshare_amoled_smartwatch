@@ -5,6 +5,8 @@ docs/html
 
 # Serial monitor log files
 COM*.txt
+
+# log files for debugging
 logs
 
 

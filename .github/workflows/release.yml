@@ -10,6 +10,10 @@ name: Release
 on:
   push:
     branches: [ main ]
+    tags:
+      - 'v*.*.*'   # milestone-release.yml pushes a semver tag when a milestone
+                   # is closed; that tag push triggers this workflow to build
+                   # firmware + APK and publish the corresponding GitHub Release
   workflow_dispatch:
 
 # Needed to push the auto-bumped tag and create the GitHub Release.
@@ -17,7 +21,10 @@ permissions:
   contents: write
 
 concurrency:
-  group: release-main
+  # Branch pushes share one group (serialised); tag pushes each get their
+  # own group (e.g. release-v0.1.0) so a milestone release never blocks
+  # or is blocked by a regular patch release running at the same time.
+  group: release-${{ github.ref_name }}
   cancel-in-progress: false   # never cancel a release build mid-way
 
 env:
@@ -130,17 +137,28 @@ jobs:
           path: artifacts/apk
 
       - name: Bump patch version tag
-        # Auto-increments the patch component of the latest vX.Y.Z tag
-        # (e.g. v0.1.6 -> v0.1.7) and pushes it. Chosen over Conventional-
-        # Commits-based SemVer bumping to avoid depending on disciplined
-        # commit message prefixes, and over fully-manual tagging because
-        # we want a release on every successful main push.
-        id: tag
+        # Only runs on branch pushes (regular patch release after a PR merge).
+        # Skipped when triggered by a tag push from milestone-release.yml —
+        # the milestone tag already exists and must not be overwritten.
+        id: tag_bump
+        if: github.ref_type == 'branch'
         uses: anothrNick/github-tag-action@1.71.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WITH_V: true
           DEFAULT_BUMP: patch
+
+      - name: Resolve release tag name
+        # Unifies the tag name into a single output regardless of trigger:
+        #   branch push  → tag created by the step above (e.g. v0.1.1)
+        #   tag push     → the milestone tag that triggered this run (e.g. v0.1.0)
+        id: tag
+        run: |
+          if [ "${{ github.ref_type }}" = "tag" ]; then
+            echo "new_tag=${{ github.ref_name }}" >> $GITHUB_OUTPUT
+          else
+            echo "new_tag=${{ steps.tag_bump.outputs.new_tag }}" >> $GITHUB_OUTPUT
+          fi
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2

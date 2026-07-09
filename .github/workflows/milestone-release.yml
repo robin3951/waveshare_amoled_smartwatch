@@ -1,0 +1,50 @@
+name: Milestone Release
+
+# Triggered when a GitHub milestone is closed. If the milestone title
+# contains a semver string (e.g. "v0.1.0: Core Watch UX"), a git tag
+# for that version is created on HEAD of main and pushed. This in turn
+# triggers release.yml (which listens on push: tags: v*.*.*) to build
+# firmware + APK and publish a GitHub Release with that tag.
+#
+# Milestones whose titles contain no semver pattern are silently skipped.
+on:
+  milestone:
+    types: [ closed ]
+
+permissions:
+  contents: write
+
+jobs:
+  create-milestone-tag:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Extract semver from milestone title
+        id: version
+        run: |
+          VERSION=$(echo "${{ github.event.milestone.title }}" \
+            | grep -oP 'v[0-9]+\.[0-9]+\.[0-9]+' || true)
+          if [ -z "$VERSION" ]; then
+            echo "No semver pattern found in milestone title \
+          '${{ github.event.milestone.title }}' — skipping."
+            echo "skip=true" >> $GITHUB_OUTPUT
+          else
+            echo "Extracted version: $VERSION"
+            echo "version=$VERSION" >> $GITHUB_OUTPUT
+            echo "skip=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Checkout main
+        if: steps.version.outputs.skip != 'true'
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Create and push milestone version tag
+        if: steps.version.outputs.skip != 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag ${{ steps.version.outputs.version }}
+          git push origin ${{ steps.version.outputs.version }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
