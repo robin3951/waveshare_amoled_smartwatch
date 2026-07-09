@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" version="21.0.0">
+  <diagram name="Pipeline" id="step-counter-pipeline">
+    <mxGraphModel dx="1000" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="950" pageHeight="1000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- ── Title ──────────────────────────────────────────── -->
+        <mxCell id="2" value="StepCounter — Signal Processing Pipeline (50 Hz)" style="text;html=1;align=center;verticalAlign=middle;fontSize=15;fontStyle=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="160" y="14" width="560" height="26" as="geometry" />
+        </mxCell>
+
+        <!-- ── Input ──────────────────────────────────────────── -->
+        <mxCell id="10" value="&lt;b&gt;QMI8658A Accelerometer&lt;/b&gt;&lt;br&gt;@ 50 Hz (every 20 ms)&lt;br&gt;&lt;i&gt;ax, ay, az  [g]&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="280" y="58" width="300" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- ── Stage 1: Magnitude ─────────────────────────────── -->
+        <mxCell id="20" value="Stage 1 — Magnitude" style="swimlane;fontStyle=1;startSize=24;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;html=1;" vertex="1" parent="1">
+          <mxGeometry x="210" y="178" width="440" height="64" as="geometry" />
+        </mxCell>
+        <mxCell id="21" value="mag = √(ax² + ay² + az²)" style="text;html=1;align=center;verticalAlign=middle;strokeColor=none;fillColor=none;fontFamily=Courier New;fontSize=13;" vertex="1" parent="20">
+          <mxGeometry x="10" y="24" width="420" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- ── Stage 2: DC-Removal ────────────────────────────── -->
+        <mxCell id="30" value="Stage 2 — DC-Removal  (IIR High-Pass)" style="swimlane;fontStyle=1;startSize=24;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;html=1;" vertex="1" parent="1">
+          <mxGeometry x="210" y="312" width="440" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="31" value="dc[n] = α × (dc[n−1] + mag[n] − mag[n−1])" style="text;html=1;align=center;verticalAlign=middle;strokeColor=none;fillColor=none;fontFamily=Courier New;fontSize=12;" vertex="1" parent="30">
+          <mxGeometry x="10" y="24" width="420" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="32" value="α = 0.98 · τ ≈ 1 s · removes ~1 g gravity offset" style="text;html=1;align=center;verticalAlign=middle;strokeColor=none;fillColor=none;fontSize=11;fontColor=#666666;" vertex="1" parent="30">
+          <mxGeometry x="10" y="52" width="420" height="22" as="geometry" />
+        </mxCell>
+
+        <!-- ── Stage 3: Low-Pass ───────────────────────────────── -->
+        <mxCell id="40" value="Stage 3 — Low-Pass Filter  (IIR)" style="swimlane;fontStyle=1;startSize=24;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;html=1;" vertex="1" parent="1">
+          <mxGeometry x="210" y="466" width="440" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="41" value="lp[n] = β × dc[n] + (1 − β) × lp[n−1]" style="text;html=1;align=center;verticalAlign=middle;strokeColor=none;fillColor=none;fontFamily=Courier New;fontSize=12;" vertex="1" parent="40">
+          <mxGeometry x="10" y="24" width="420" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="42" value="β = 0.15 · fc ≈ 1.3 Hz · smooths high-frequency noise" style="text;html=1;align=center;verticalAlign=middle;strokeColor=none;fillColor=none;fontSize=11;fontColor=#666666;" vertex="1" parent="40">
+          <mxGeometry x="10" y="52" width="420" height="22" as="geometry" />
+        </mxCell>
+
+        <!-- ── Stage 4: Peak Detection ─────────────────────────── -->
+        <mxCell id="50" value="Stage 4 — Peak / Valley Detection  (State Machine)" style="swimlane;fontStyle=1;startSize=24;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;html=1;" vertex="1" parent="1">
+          <mxGeometry x="210" y="620" width="440" height="104" as="geometry" />
+        </mxCell>
+        <mxCell id="51" value="IDLE → AFTER_PEAK → AFTER_VALLEY → AFTER_PEAK …" style="text;html=1;align=center;verticalAlign=middle;strokeColor=none;fillColor=none;fontFamily=Courier New;fontSize=12;" vertex="1" parent="50">
+          <mxGeometry x="10" y="24" width="420" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="52" value="Thresholds: +0.20 g / −0.10 g · Min amplitude: 0.15 g" style="text;html=1;align=center;verticalAlign=middle;strokeColor=none;fillColor=none;fontSize=11;fontColor=#666666;" vertex="1" parent="50">
+          <mxGeometry x="10" y="52" width="420" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="53" value="Timing window: 100 ms … 800 ms · Entry guard: N = 4" style="text;html=1;align=center;verticalAlign=middle;strokeColor=none;fillColor=none;fontSize=11;fontColor=#666666;" vertex="1" parent="50">
+          <mxGeometry x="10" y="76" width="420" height="22" as="geometry" />
+        </mxCell>
+
+        <!-- ── Output ─────────────────────────────────────────── -->
+        <mxCell id="60" value="&lt;b&gt;_steps++&lt;/b&gt; → g_step_count (atomic)&lt;br&gt;ui_update_steps() @ 1 Hz" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="280" y="790" width="300" height="56" as="geometry" />
+        </mxCell>
+
+        <!-- ── Arrows ─────────────────────────────────────────── -->
+        <mxCell id="70" value="ax, ay, az [g]" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;fontStyle=2;" edge="1" source="10" target="20" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="71" value="mag [g]" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;fontStyle=2;" edge="1" source="20" target="30" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="72" value="dc [g], centred ≈ 0" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;fontStyle=2;" edge="1" source="30" target="40" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="73" value="filtered [g], smooth" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;fontStyle=2;" edge="1" source="40" target="50" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="74" value="step event" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;fontStyle=2;" edge="1" source="50" target="60" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ── State variable notes ───────────────────────────── -->
+        <mxCell id="80" value="State:&lt;br&gt;_prev_mag&lt;br&gt;_prev_dc" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;size=12;fillColor=#fff2cc;strokeColor=#d6b656;align=left;fontSize=10;spacingLeft=6;" vertex="1" parent="1">
+          <mxGeometry x="700" y="318" width="130" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="81" value="" style="edgeStyle=none;html=1;dashed=1;endArrow=none;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" source="30" target="80" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="82" value="State:&lt;br&gt;_prev_lp" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;size=12;fillColor=#fff2cc;strokeColor=#d6b656;align=left;fontSize=10;spacingLeft=6;" vertex="1" parent="1">
+          <mxGeometry x="700" y="472" width="130" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="83" value="" style="edgeStyle=none;html=1;dashed=1;endArrow=none;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" source="40" target="82" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="84" value="State:&lt;br&gt;_state&lt;br&gt;_last_extremum&lt;br&gt;_last_event_tick&lt;br&gt;_entry_guard&lt;br&gt;_steps, _tick" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;size=12;fillColor=#fff2cc;strokeColor=#d6b656;align=left;fontSize=10;spacingLeft=6;" vertex="1" parent="1">
+          <mxGeometry x="700" y="626" width="130" height="92" as="geometry" />
+        </mxCell>
+        <mxCell id="85" value="" style="edgeStyle=none;html=1;dashed=1;endArrow=none;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" source="50" target="84" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

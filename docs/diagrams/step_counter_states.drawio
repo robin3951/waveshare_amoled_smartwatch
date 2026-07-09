@@ -1,0 +1,76 @@
+<mxfile host="65bd71144e">
+    <diagram name="State Machine" id="step-counter-states">
+        <mxGraphModel dx="1163" dy="873" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="1100" pageHeight="1000" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="2" value="StepCounter — Peak Detection State Machine" style="text;html=1;align=center;verticalAlign=middle;fontSize=15;fontStyle=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
+                    <mxGeometry x="150" y="14" width="700" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#000000;strokeColor=#000000;" parent="1" vertex="1">
+                    <mxGeometry x="330" y="56" width="20" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="20" value="IDLE" style="rounded=1;whiteSpace=wrap;html=1;arcSize=20;fontSize=13;fontStyle=1;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" parent="1" vertex="1">
+                    <mxGeometry x="220" y="106" width="240" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="30" value="AFTER_PEAK" style="rounded=1;whiteSpace=wrap;html=1;arcSize=20;fontSize=13;fontStyle=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+                    <mxGeometry x="220" y="290" width="240" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="31" value="do / [filtered &gt; _last_extremum]:&lt;br&gt;_last_extremum ← filtered&lt;br&gt;&lt;i&gt;(track true peak)&lt;/i&gt;" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;size=12;fillColor=#dae8fc;strokeColor=#6c8ebf;align=left;fontSize=10;spacingLeft=6;" parent="1" vertex="1">
+                    <mxGeometry x="500" y="232" width="210" height="58" as="geometry"/>
+                </mxCell>
+                <mxCell id="32" value="" style="edgeStyle=none;html=1;dashed=1;endArrow=none;" parent="1" source="30" target="31" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="40" value="AFTER_VALLEY" style="rounded=1;whiteSpace=wrap;html=1;arcSize=20;fontSize=13;fontStyle=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
+                    <mxGeometry x="220" y="550" width="240" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="41" value="do / [filtered &lt; _last_extremum]:&lt;br&gt;_last_extremum ← filtered&lt;br&gt;&lt;i&gt;(track true valley)&lt;/i&gt;" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;size=12;fillColor=#ffe6cc;strokeColor=#d79b00;align=left;fontSize=10;spacingLeft=6;" parent="1" vertex="1">
+                    <mxGeometry x="510" y="510" width="210" height="58" as="geometry"/>
+                </mxCell>
+                <mxCell id="42" value="" style="edgeStyle=none;html=1;dashed=1;endArrow=none;" parent="1" source="40" target="41" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="60" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;" parent="1" source="10" target="20" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="61" value="[filtered &gt; +0.20 g]&lt;br&gt;/ _last_extremum ← filtered&lt;br&gt;/ _last_event_tick ← _tick" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;fontSize=10;align=left;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="20" target="30" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="390" y="200" as="sourcePoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="62" value="[filtered &lt; −0.10 g&lt;br&gt;AND Δt ∈ [100..800 ms]&lt;br&gt;AND amplitude ≥ 0.15 g]&lt;br&gt;/ _last_extremum ← filtered&lt;br&gt;/ _last_event_tick ← _tick" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;fontSize=10;align=left;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="30" target="40" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="63" value="[amplitude &lt; 0.15 g&lt;br&gt;OR Δt &gt; 800 ms]" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;fontSize=10;align=right;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="30" target="20" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="840" y="325"/>
+                            <mxPoint x="840" y="136"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="64" value="[filtered &gt; +0.20 g&lt;br&gt;AND Δt ∈ [100..800 ms]]&lt;br&gt;/ if entry_guard &gt; 0: entry_guard−−&lt;br&gt;/ else: steps++&lt;br&gt;/ _last_extremum ← filtered&lt;br&gt;/ _last_event_tick ← _tick" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;fontSize=10;align=right;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="40" target="30" edge="1">
+                    <mxGeometry x="-0.06" y="50" relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="100" y="585"/>
+                            <mxPoint x="100" y="325"/>
+                        </Array>
+                        <mxPoint y="-1" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="65" value="[Δt &gt; 800 ms]&lt;br&gt;(timeout)" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;fontSize=10;align=right;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="40" target="20" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="900" y="585"/>
+                            <mxPoint x="900" y="136"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="70" value="&lt;b&gt;Timing constants&lt;/b&gt;&lt;br&gt;MIN_HALF_PERIOD = 100 ms (5 ticks)&lt;br&gt;MAX_HALF_PERIOD = 800 ms (40 ticks)&lt;br&gt;&lt;br&gt;&lt;b&gt;Threshold constants&lt;/b&gt;&lt;br&gt;THRESHOLD_HIGH = +0.20 g&lt;br&gt;THRESHOLD_LOW  = −0.10 g&lt;br&gt;MIN_AMPLITUDE  =  0.15 g&lt;br&gt;&lt;br&gt;&lt;b&gt;Entry guard&lt;/b&gt;&lt;br&gt;ENTRY_GUARD_COUNT = 4&lt;br&gt;(first 4 cycles discarded)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f9f9f9;strokeColor=#999999;align=left;spacingLeft=10;fontSize=10;" parent="1" vertex="1">
+                    <mxGeometry x="-50" y="60" width="170" height="210" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

@@ -1,0 +1,167 @@
+<mxfile host="65bd71144e">
+    <diagram name="Class Diagram" id="step-counter-class">
+        <mxGraphModel dx="534" dy="611" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="1000" pageHeight="1200" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="2" value="StepCounter — UML Class Diagram" style="text;html=1;align=center;verticalAlign=middle;fontSize=15;fontStyle=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
+                    <mxGeometry x="120" y="10" width="680" height="28" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" value="«enumeration»&#xa;PeakState" style="swimlane;fontStyle=3;align=center;startSize=40;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
+                    <mxGeometry x="490" y="50" width="240" height="96" as="geometry">
+                        <mxRectangle x="490" y="50" width="120" height="40" as="alternateBounds"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="11" value="IDLE" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;html=1;" parent="10" vertex="1">
+                    <mxGeometry y="40" width="240" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="12" value="AFTER_PEAK" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;html=1;" parent="10" vertex="1">
+                    <mxGeometry y="60" width="240" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="13" value="AFTER_VALLEY" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;html=1;" parent="10" vertex="1">
+                    <mxGeometry y="80" width="240" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="20" value="StepCounter" style="swimlane;fontStyle=1;align=center;startSize=26;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="110" y="220" width="460" height="626" as="geometry"/>
+                </mxCell>
+                <mxCell id="21" value="«static constexpr»" style="text;strokeColor=none;fillColor=#f5f5f5;fontColor=#333333;align=center;verticalAlign=middle;spacingLeft=4;html=1;fontStyle=2;" parent="20" vertex="1">
+                    <mxGeometry y="26" width="460" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="22" value="− DC_ALPHA : float = 0.98" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;html=1;" parent="20" vertex="1">
+                    <mxGeometry y="44" width="460" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="23" value="− LP_BETA : float = 0.15" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;html=1;" parent="20" vertex="1">
+                    <mxGeometry y="64" width="460" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="24" value="− THRESHOLD_HIGH : float = +0.20" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;html=1;" parent="20" vertex="1">
+                    <mxGeometry y="84" width="460" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="25" value="− THRESHOLD_LOW : float = −0.10" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;html=1;" parent="20" vertex="1">
+                    <mxGeometry y="104" width="460" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="26" value="− MIN_AMPLITUDE : float = 0.15" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;html=1;" parent="20" vertex="1">
+                    <mxGeometry y="124" width="460" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="27" value="− MIN_HALF_PERIOD_TICKS : uint32_t = 5" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;html=1;" parent="20" vertex="1">
+                    <mxGeometry y="144" width="460" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="28" value="− MAX_HALF_PERIOD_TICKS : uint32_t = 40" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;html=1;" parent="20" vertex="1">
+                    <mxGeometry y="164" width="460" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="29" value="− ENTRY_GUARD_COUNT : int = 4" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;html=1;" parent="20" vertex="1">
+                    <mxGeometry y="184" width="460" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="30" value="" style="line;strokeWidth=1;fillColor=none;html=1;" parent="20" vertex="1">
+                    <mxGeometry y="204" width="460" height="6" as="geometry"/>
+                </mxCell>
+                <mxCell id="31" value="«private members»" style="text;strokeColor=none;fillColor=#f5f5f5;fontColor=#333333;align=center;verticalAlign=middle;spacingLeft=4;html=1;fontStyle=2;" parent="20" vertex="1">
+                    <mxGeometry y="210" width="460" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="32" value="− _prev_mag : float" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;html=1;" parent="20" vertex="1">
+                    <mxGeometry y="228" width="460" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="33" value="− _prev_dc : float" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;html=1;" parent="20" vertex="1">
+                    <mxGeometry y="248" width="460" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="34" value="− _prev_lp : float" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;html=1;" parent="20" vertex="1">
+                    <mxGeometry y="268" width="460" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="35" value="− _state : PeakState" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;html=1;" parent="20" vertex="1">
+                    <mxGeometry y="288" width="460" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="36" value="− _last_extremum : float" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;html=1;" parent="20" vertex="1">
+                    <mxGeometry y="308" width="460" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="37" value="− _last_event_tick : uint32_t" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;html=1;" parent="20" vertex="1">
+                    <mxGeometry y="328" width="460" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="38" value="− _entry_guard : int" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;html=1;" parent="20" vertex="1">
+                    <mxGeometry y="348" width="460" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="39" value="− _steps : uint32_t" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;html=1;" parent="20" vertex="1">
+                    <mxGeometry y="368" width="460" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="40" value="− _tick : uint32_t" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;html=1;" parent="20" vertex="1">
+                    <mxGeometry y="388" width="460" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="41" value="" style="line;strokeWidth=1;fillColor=none;html=1;" parent="20" vertex="1">
+                    <mxGeometry y="408" width="460" height="6" as="geometry"/>
+                </mxCell>
+                <mxCell id="42" value="«public»" style="text;strokeColor=none;fillColor=#dae8fc;fontColor=#333333;align=center;verticalAlign=middle;html=1;fontStyle=2;" parent="20" vertex="1">
+                    <mxGeometry y="414" width="460" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="43" value="+ StepCounter()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;html=1;" parent="20" vertex="1">
+                    <mxGeometry y="432" width="460" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="44" value="+ update(ax: float, ay: float, az: float) : void" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;html=1;" parent="20" vertex="1">
+                    <mxGeometry y="452" width="460" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="45" value="+ getSteps() : uint32_t" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;html=1;" parent="20" vertex="1">
+                    <mxGeometry y="472" width="460" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="46" value="+ reset() : void" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;html=1;" parent="20" vertex="1">
+                    <mxGeometry y="492" width="460" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="47" value="" style="line;strokeWidth=1;fillColor=none;html=1;" parent="20" vertex="1">
+                    <mxGeometry y="512" width="460" height="6" as="geometry"/>
+                </mxCell>
+                <mxCell id="48" value="«private»" style="text;strokeColor=none;fillColor=#fff2cc;fontColor=#333333;align=center;verticalAlign=middle;html=1;fontStyle=2;" parent="20" vertex="1">
+                    <mxGeometry y="518" width="460" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="49" value="− computeMagnitude(ax, ay, az : float) : float" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;html=1;" parent="20" vertex="1">
+                    <mxGeometry y="536" width="460" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="50" value="− applyDCRemoval(mag : float) : float" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;html=1;" parent="20" vertex="1">
+                    <mxGeometry y="556" width="460" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="51" value="− applyLowPass(signal : float) : float" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;html=1;" parent="20" vertex="1">
+                    <mxGeometry y="576" width="460" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="52" value="− detectPeak(filtered : float) : void" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;html=1;" parent="20" vertex="1">
+                    <mxGeometry y="596" width="460" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="60" value="pedometer_task" style="swimlane;fontStyle=1;align=center;startSize=26;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="110" y="920" width="460" height="162" as="geometry"/>
+                </mxCell>
+                <mxCell id="61" value="«global» g_step_count : std::atomic&lt;uint32_t&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;html=1;" parent="60" vertex="1">
+                    <mxGeometry y="26" width="460" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="62" value="" style="line;strokeWidth=1;fillColor=none;html=1;" parent="60" vertex="1">
+                    <mxGeometry y="46" width="460" height="6" as="geometry"/>
+                </mxCell>
+                <mxCell id="63" value="+ pedometer_task(arg : void*) : void" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;html=1;" parent="60" vertex="1">
+                    <mxGeometry y="52" width="460" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="64" value="+ pedometer_get_steps() : uint32_t" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;html=1;" parent="60" vertex="1">
+                    <mxGeometry y="72" width="460" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="65" value="+ pedometer_reset_steps() : void" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;html=1;" parent="60" vertex="1">
+                    <mxGeometry y="92" width="460" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="66" value="− counter : StepCounter  (stack, 1 instance)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;html=1;fontStyle=2;" parent="60" vertex="1">
+                    <mxGeometry y="112" width="460" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="67" value="− ui_tick : uint32_t" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;html=1;" parent="60" vertex="1">
+                    <mxGeometry y="132" width="460" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="70" value="SensorQMI8658" style="swimlane;fontStyle=1;align=center;startSize=26;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+                    <mxGeometry x="680" y="490" width="290" height="52" as="geometry">
+                        <mxRectangle x="680" y="490" width="130" height="30" as="alternateBounds"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="71" value="+ getAccelerometer(x, y, z : float&amp;) : bool" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;html=1;fontSize=11;" parent="70" vertex="1">
+                    <mxGeometry y="26" width="290" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="80" value="«nested»" style="edgeStyle=orthogonalEdgeStyle;dashed=1;endArrow=open;endFill=0;html=1;fontSize=10;" parent="1" source="10" target="20" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="81" value="«creates 1 instance»" style="edgeStyle=orthogonalEdgeStyle;dashed=1;endArrow=open;endFill=0;html=1;fontSize=10;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="60" target="20" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="82" value="reads via qmi" style="edgeStyle=orthogonalEdgeStyle;dashed=1;endArrow=open;endFill=0;html=1;fontSize=10;" parent="1" source="60" target="70" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
