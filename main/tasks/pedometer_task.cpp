@@ -7,7 +7,7 @@
 
 #include "pedometer_task.h"
 
-#include "bsp/esp-bsp.h"
+#include "bsp/esp-bsp.h"  // IWYU pragma: keep
 #include "esp_log.h"
 #include "hardware.h"  // qmi hardware
 #include "step_counter.hpp"

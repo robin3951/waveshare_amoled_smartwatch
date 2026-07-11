@@ -25,7 +25,7 @@
 #include <atomic>
 #include <cstdint>
 
-#include "freertos/FreeRTOS.h"
+#include "freertos/FreeRTOS.h"  // IWYU pragma: keep
 #include "freertos/task.h"
 
 /** @brief FreeRTOS stack depth for the pedometer task in bytes. */

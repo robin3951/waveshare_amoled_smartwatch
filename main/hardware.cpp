@@ -9,8 +9,8 @@
  */
 #include "hardware.h"
 
-#include "bsp/esp-bsp.h"  // IWYU pragma: keep
-#include "driver/i2c_master.h"
+#include "bsp/esp-bsp.h"        // IWYU pragma: keep
+#include "driver/i2c_master.h"  // IWYU pragma: keep
 #include "esp_log.h"
 
 static const char* TAG = "hardware";
