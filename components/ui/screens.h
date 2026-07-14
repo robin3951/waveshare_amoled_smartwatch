@@ -2,7 +2,7 @@
 #pragma once
 #include <stdbool.h>
 
-#include "lvgl.h"
+#include "lvgl.h"  // IWYU pragma: keep
 
 #ifdef __cplusplus
 extern "C" {
@@ -12,7 +12,6 @@ extern "C" {
 #define MAX_NOTIFICATIONS 20
 
 extern lv_obj_t* ui_tileview;
-extern lv_obj_t* ui_tile_clock;
 extern lv_obj_t* ui_tile_battery;
 extern lv_obj_t* ui_tile_notif;
 

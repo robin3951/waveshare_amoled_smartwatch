@@ -4,15 +4,8 @@
 
 #include <string.h>
 
-#include "lvgl.h"
-
-// Custom fonts with full Latin-1 (0x20-0xFF) — includes ä ö ü Ä Ö Ü ß
-LV_FONT_DECLARE(lv_font_montserrat_14_ext);
-LV_FONT_DECLARE(lv_font_montserrat_16_ext);
-LV_FONT_DECLARE(lv_font_montserrat_72_ext);
-LV_FONT_DECLARE(lv_font_montserrat_164);
-LV_FONT_DECLARE(lv_font_montserrat_164);
-LV_FONT_DECLARE(lv_font_shoe_print_48);
+#include "clock_screen.h"
+#include "lvgl.h"  // IWYU pragma: keep
 
 lv_obj_t* ui_tileview = NULL;
 lv_obj_t* ui_tile_clock = NULL;
@@ -21,14 +14,6 @@ lv_obj_t* ui_tile_notif = NULL;
 
 static lv_obj_t* dot_container = NULL;
 static lv_obj_t* dots[UI_SCREEN_COUNT];
-
-// ── Clock ────────────────────────────────────────────────────────────
-static lv_obj_t* time_hours_label = NULL;
-static lv_obj_t* time_minutes_label = NULL;
-static lv_obj_t* time_seconds_label = NULL;
-static lv_obj_t* date_label = NULL;
-static lv_obj_t* icon_shoe_print = NULL;
-static lv_obj_t* label_step_count = NULL;
 
 // ── Battery ──────────────────────────────────────────────────────────
 static lv_obj_t* bat_icon_label = NULL;
@@ -82,61 +67,6 @@ static void tileview_changed_cb(lv_event_t* e) {
   else if (act == ui_tile_notif)
     idx = 2;
   update_dots(idx);
-}
-
-/* ─── Tile 1: Clock ──────────────────────────────────────────────── */
-
-static void create_clock_tile(lv_obj_t* clock_tile) {
-  lv_obj_set_style_bg_color(clock_tile, lv_color_black(), LV_PART_MAIN);
-  lv_obj_set_style_bg_opa(clock_tile, LV_OPA_COVER, LV_PART_MAIN);
-  lv_obj_set_style_border_width(clock_tile, 0, LV_PART_MAIN);
-  lv_obj_set_style_pad_all(clock_tile, 0, LV_PART_MAIN);
-
-  time_hours_label = lv_label_create(clock_tile);
-  lv_label_set_text(time_hours_label, "--");
-  lv_obj_set_style_text_font(time_hours_label, &lv_font_montserrat_164,
-                             LV_PART_MAIN);
-  lv_obj_set_style_text_color(time_hours_label, lv_color_white(), LV_PART_MAIN);
-  lv_obj_align(time_hours_label, LV_ALIGN_CENTER, 0, -110);
-
-  time_minutes_label = lv_label_create(clock_tile);
-  lv_label_set_text(time_minutes_label, "--");
-  lv_obj_set_style_text_font(time_minutes_label, &lv_font_montserrat_164,
-                             LV_PART_MAIN);
-  lv_obj_set_style_text_color(time_minutes_label, lv_color_white(),
-                              LV_PART_MAIN);
-  lv_obj_align(time_minutes_label, LV_ALIGN_CENTER, 0, 30);
-
-  time_seconds_label = lv_label_create(clock_tile);
-  lv_label_set_text(time_seconds_label, "--");
-  lv_obj_set_style_text_font(time_seconds_label, &lv_font_montserrat_48,
-                             LV_PART_MAIN);
-  lv_obj_set_style_text_color(time_seconds_label, lv_color_white(),
-                              LV_PART_MAIN);
-  lv_obj_align(time_seconds_label, LV_ALIGN_RIGHT_MID, -40, 60);
-
-  date_label = lv_label_create(clock_tile);
-  lv_label_set_text(date_label, "--.--.----");
-  lv_obj_set_style_text_font(date_label, &lv_font_montserrat_32, LV_PART_MAIN);
-  lv_obj_set_style_text_color(date_label, lv_color_hex(0x888888), LV_PART_MAIN);
-  lv_obj_align(date_label, LV_ALIGN_BOTTOM_MID, 0, -110);
-
-  icon_shoe_print = lv_label_create(clock_tile);
-  lv_label_set_text(icon_shoe_print,
-                    "\xEF\x95\x8B");  // Unicode for shoe print icon
-  lv_obj_set_style_text_font(icon_shoe_print, &lv_font_shoe_print_48,
-                             LV_PART_MAIN);
-  lv_obj_set_style_text_color(icon_shoe_print, lv_color_hex(0x008000),
-                              LV_PART_MAIN);
-  lv_obj_align(icon_shoe_print, LV_ALIGN_BOTTOM_MID, -30, -50);
-
-  label_step_count = lv_label_create(clock_tile);
-  lv_label_set_text(label_step_count, "123");
-  lv_obj_set_style_text_font(label_step_count, &lv_font_montserrat_32,
-                             LV_PART_MAIN);
-  lv_obj_set_style_text_color(label_step_count, lv_color_hex(0x888888),
-                              LV_PART_MAIN);
-  lv_obj_align(label_step_count, LV_ALIGN_BOTTOM_MID, 30, -50);
 }
 
 /* ─── Tile 2: Battery ────────────────────────────────────────────── */
