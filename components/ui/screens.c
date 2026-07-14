@@ -6,11 +6,12 @@
 
 #include "clock_screen.h"
 #include "lvgl.h"  // IWYU pragma: keep
+#include "notification_screen.h"
 
 lv_obj_t* ui_tileview = NULL;
 lv_obj_t* ui_tile_clock = NULL;
 lv_obj_t* ui_tile_battery = NULL;
-lv_obj_t* ui_tile_notif = NULL;
+lv_obj_t* ui_tile_notification = NULL;
 
 static lv_obj_t* dot_container = NULL;
 static lv_obj_t* dots[UI_SCREEN_COUNT];
@@ -20,12 +21,6 @@ static lv_obj_t* bat_icon_label = NULL;
 static lv_obj_t* bat_percent_label = NULL;
 static lv_obj_t* bat_status_label = NULL;
 static lv_obj_t* bat_voltage_label = NULL;
-
-// ── Notification tile ────────────────────────────────────────────────
-static lv_obj_t* ble_status_label = NULL;
-static lv_obj_t* notif_empty_label = NULL;
-static lv_obj_t* notif_scroll_cont = NULL;  // scrollable bubble container
-static int notif_count = 0;
 
 /* ─── Helpers ─────────────────────────────────────────────────────── */
 
@@ -109,57 +104,6 @@ static void create_battery_tile(lv_obj_t* battery_tile) {
   lv_obj_align(bat_voltage_label, LV_ALIGN_CENTER, 0, 85);
 }
 
-/* ─── Tile 3: Notifications ──────────────────────────────────────── */
-
-static void create_notif_tile(lv_obj_t* notification_tile) {
-  lv_obj_set_style_bg_color(notification_tile, lv_color_black(), LV_PART_MAIN);
-  lv_obj_set_style_bg_opa(notification_tile, LV_OPA_COVER, LV_PART_MAIN);
-  lv_obj_set_style_border_width(notification_tile, 0, LV_PART_MAIN);
-  lv_obj_set_style_pad_all(notification_tile, 0, LV_PART_MAIN);
-
-  // BLE status line at top (fixed, 30 px)
-  ble_status_label = lv_label_create(notification_tile);
-  lv_obj_set_pos(ble_status_label, 0, 6);
-  lv_obj_set_width(ble_status_label, 410);
-  lv_obj_set_style_text_align(ble_status_label, LV_TEXT_ALIGN_CENTER,
-                              LV_PART_MAIN);
-  lv_obj_set_style_text_font(ble_status_label, &lv_font_montserrat_12,
-                             LV_PART_MAIN);
-  lv_obj_set_style_text_color(ble_status_label, lv_color_hex(0x555555),
-                              LV_PART_MAIN);
-  lv_label_set_text(ble_status_label, "BLE: Getrennt");
-
-  // Scrollable bubble container fills the remaining height (502 - 30 = 472 px)
-  notif_scroll_cont = lv_obj_create(notification_tile);
-  lv_obj_set_pos(notif_scroll_cont, 0, 30);
-  lv_obj_set_size(notif_scroll_cont, 410, 456);
-  lv_obj_set_style_bg_color(notif_scroll_cont, lv_color_black(), LV_PART_MAIN);
-  lv_obj_set_style_bg_opa(notif_scroll_cont, LV_OPA_COVER, LV_PART_MAIN);
-  lv_obj_set_style_border_width(notif_scroll_cont, 0, LV_PART_MAIN);
-  lv_obj_set_style_pad_all(notif_scroll_cont, 10, LV_PART_MAIN);
-  lv_obj_set_style_pad_row(notif_scroll_cont, 10, LV_PART_MAIN);
-  lv_obj_set_scroll_dir(notif_scroll_cont, LV_DIR_VER);
-  lv_obj_set_scrollbar_mode(notif_scroll_cont, LV_SCROLLBAR_MODE_ACTIVE);
-  // Flex column: children stacked vertically, centered horizontally
-  lv_obj_set_flex_flow(notif_scroll_cont, LV_FLEX_FLOW_COLUMN);
-  lv_obj_set_flex_align(notif_scroll_cont,
-                        LV_FLEX_ALIGN_START,   // main axis: top-to-bottom
-                        LV_FLEX_ALIGN_CENTER,  // cross axis: centered
-                        LV_FLEX_ALIGN_START);
-
-  // "No notifications" placeholder — centered, hidden once first bubble arrives
-  notif_empty_label = lv_label_create(notif_scroll_cont);
-  lv_obj_set_style_text_font(notif_empty_label, &lv_font_montserrat_16,
-                             LV_PART_MAIN);
-  lv_obj_set_style_text_color(notif_empty_label, lv_color_hex(0x444444),
-                              LV_PART_MAIN);
-  lv_label_set_text(notif_empty_label, "Keine\nBenachrichtigungen");
-  lv_obj_set_style_text_align(notif_empty_label, LV_TEXT_ALIGN_CENTER,
-                              LV_PART_MAIN);
-  lv_obj_set_width(notif_empty_label, 410);
-  lv_obj_align(notif_empty_label, LV_ALIGN_CENTER, 0, 0);
-}
-
 /* ─── Dot indicator overlay ──────────────────────────────────────── */
 
 static void create_dot_indicator(lv_obj_t* screen) {
@@ -204,11 +148,11 @@ void create_screens(void) {
 
   ui_tile_clock = lv_tileview_add_tile(ui_tileview, 0, 0, LV_DIR_HOR);
   ui_tile_battery = lv_tileview_add_tile(ui_tileview, 1, 0, LV_DIR_HOR);
-  ui_tile_notif = lv_tileview_add_tile(ui_tileview, 2, 0, LV_DIR_HOR);
+  ui_tile_notification = lv_tileview_add_tile(ui_tileview, 2, 0, LV_DIR_HOR);
 
   create_clock_tile(ui_tile_clock);
   create_battery_tile(ui_tile_battery);
-  create_notif_tile(ui_tile_notif);
+  create_notification_tile(ui_tile_notification);
 
   create_dot_indicator(screen);
 
@@ -270,27 +214,27 @@ void screens_set_battery(int pct, bool charging, float voltage) {
 }
 
 void screens_add_notification(const char* app, const char* msg) {
-  if (!notif_scroll_cont) return;
+  if (!notification_scroll_content) return;
 
   // Hide "empty" placeholder once first notification arrives
-  if (notif_count == 0 && notif_empty_label) {
-    lv_obj_add_flag(notif_empty_label, LV_OBJ_FLAG_HIDDEN);
+  if (notification_count == 0 && notification_empty_label) {
+    lv_obj_add_flag(notification_empty_label, LV_OBJ_FLAG_HIDDEN);
   }
 
   // If limit reached, delete the oldest bubble (first real child after
   // placeholder)
-  if (notif_count >= MAX_NOTIFICATIONS) {
+  if (notification_count >= MAX_NOTIFICATIONS) {
     // Children: [0]=placeholder(hidden), [1]=oldest bubble …
-    uint32_t child_cnt = lv_obj_get_child_count(notif_scroll_cont);
+    uint32_t child_cnt = lv_obj_get_child_count(notification_scroll_content);
     if (child_cnt > 1) {
-      lv_obj_del(lv_obj_get_child(notif_scroll_cont, 1));
+      lv_obj_del(lv_obj_get_child(notification_scroll_content, 1));
     }
   } else {
-    notif_count++;
+    notification_count++;
   }
 
   // ── Create bubble ──────────────────────────────────────────────
-  lv_obj_t* bubble = lv_obj_create(notif_scroll_cont);
+  lv_obj_t* bubble = lv_obj_create(notification_scroll_content);
   lv_obj_set_width(bubble, 375);
   lv_obj_set_height(bubble, LV_SIZE_CONTENT);  // auto height — no clipping
   lv_obj_set_style_radius(bubble, 16, LV_PART_MAIN);
@@ -322,7 +266,7 @@ void screens_add_notification(const char* app, const char* msg) {
   lv_obj_set_style_text_color(msg_lbl, lv_color_white(), LV_PART_MAIN);
 
   // Scroll to bottom so newest notification is always visible
-  lv_obj_scroll_to_y(notif_scroll_cont, LV_COORD_MAX, LV_ANIM_OFF);
+  lv_obj_scroll_to_y(notification_scroll_content, LV_COORD_MAX, LV_ANIM_OFF);
 }
 
 void screens_set_ble_status(bool connected) {

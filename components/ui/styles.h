@@ -13,8 +13,12 @@
 #include "fonts/fonts.h"  // IWYU pragma: keep
 #include "lvgl.h"         // IWYU pragma: keep
 
+/*── Shared Styles ──────────────────────────────────────────────*/
+
 /**@brief Basic background style for all tiles */
 extern lv_style_t _style_tile_bg;
+
+/*── Clock Tile Styles ──────────────────────────────────────────*/
 
 /**@brief Style for hours and minutes labels on clock tile */
 extern lv_style_t _style_time_hours_minutes_label;
@@ -31,16 +35,39 @@ extern lv_style_t _style_shoe_print_icon;
 /**@brief Style for step count label on clock tile */
 extern lv_style_t _style_step_count_label;
 
+/*── Notification Tile Styles ───────────────────────────────────*/
+
+/**@brief Style for BLE status label on notification tile */
+extern lv_style_t _style_ble_status_label;
+
+/**@brief Style for scrollable content container on notification tile */
+extern lv_style_t _style_notification_scroll_content;
+
+/**@brief Style for "no notifications" placeholder label on notification tile */
+extern lv_style_t _style_notification_empty_label;
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+/**@brief Initializes LVGL styles for the clock tile and its elements */
+void init_clock_styles(void);
+
+/**@brief Initializes LVGL styles for the notification tile and its elements */
+void init_notification_styles(void);
+
 /**@brief Initializes all LVGL styles used in the UI */
 void styles_init(void);
+
+/*── Getter Functions for Shared Styles
+ * ──────────────────────────────────────────────*/
 
 /**@brief Getter function for background style of all tiles
  * @return pointer to the basic tile background style */
 lv_style_t* styles_tile_bg(void);
+
+/*── Getter Functions for Clock Tile Styles
+ * ──────────────────────────────────────────*/
 
 /**@brief Getter function for hours and minutes label style
  * @return pointer to the hours and minutes label style */
@@ -61,6 +88,21 @@ lv_style_t* styles_shoe_print_icon(void);
 /**@brief Getter function for step count label style
  * @return pointer to the step count label style */
 lv_style_t* styles_step_count_label(void);
+
+/*── Getter Functions for Notification Tile Styles
+ * ──────────────────────────────────────────*/
+
+/**@brief Getter function for BLE status label style
+ * @return pointer to the BLE status label style */
+lv_style_t* styles_ble_status_label(void);
+
+/**@brief Getter function for scrollable content container style
+ * @return pointer to the scrollable content container style */
+lv_style_t* styles_notification_scroll_content(void);
+
+/**@brief Getter function for "no notifications" placeholder label style
+ * @return pointer to the "no notifications" placeholder label style */
+lv_style_t* styles_notification_empty_label(void);
 
 #ifdef __cplusplus
 }
