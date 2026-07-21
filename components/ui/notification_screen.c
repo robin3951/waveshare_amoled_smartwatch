@@ -12,10 +12,11 @@
 #include "lvgl.h"  // IWYU pragma: keep
 #include "styles.h"
 
-lv_obj_t* ui_tile_notification = NULL;
+lv_obj_t* notification_tile = NULL;
 lv_obj_t* ble_status_label = NULL;
 lv_obj_t* notification_empty_label = NULL;
 lv_obj_t* notification_scroll_content = NULL;  // scrollable bubble container
+
 int notification_count = 0;  // number of active notification bubbles
 
 void create_notification_tile(lv_obj_t* notification_tile) {

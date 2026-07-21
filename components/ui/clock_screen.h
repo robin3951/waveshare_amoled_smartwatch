@@ -11,35 +11,6 @@
 #include "styles.h"
 
 /**
- * @brief LVGL object representing the clock tile.
- *
- * This object serves as the container for all clock-related UI elements,
- * including time, date, and step count.
- */
-extern lv_obj_t* ui_tile_clock;
-
-/** @brief LVGL label for displaying hours.
- */
-extern lv_obj_t* time_hours_label;
-
-/** @brief LVGL label for displaying minutes.
- */
-extern lv_obj_t* time_minutes_label;
-
-/** @brief LVGL label for displaying seconds.
- */
-extern lv_obj_t* time_seconds_label;
-
-/** @brief LVGL label for displaying date.*/
-extern lv_obj_t* date_label;
-
-/** @brief LVGL label for displaying shoe print icon.*/
-extern lv_obj_t* icon_shoe_print;
-
-/** @brief LVGL label for displaying step count.*/
-extern lv_obj_t* label_step_count;
-
-/**
  * @brief Creates the clock tile UI component.
  *
  * This function initializes and configures the clock tile, which includes
@@ -51,3 +22,22 @@ extern lv_obj_t* label_step_count;
  * created.
  */
 void create_clock_tile(lv_obj_t* clock_tile);
+
+/**
+ * @brief Returns the name of the month corresponding to the given month
+ * number.
+ *
+ * @param month The month number (1-12).
+ * @return A string representing the name of the month, or "Invalid" if the
+ * month number is out of range.
+ */
+const char* get_month_name(int month);
+
+/**
+ * @brief Sets the curent rtc time values to the labels
+ *
+ * @param hours current hour digits
+ * @param minutes current minute digits
+ * @param seconds current second digits
+ */
+void clock_screen_set_time(int hours, int minutes, int seconds);

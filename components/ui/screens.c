@@ -4,9 +4,11 @@
 
 #include <string.h>
 
+#include "battery_screen.h"
 #include "clock_screen.h"
 #include "lvgl.h"  // IWYU pragma: keep
 #include "notification_screen.h"
+#include "styles.h"
 
 lv_obj_t* ui_tileview = NULL;
 lv_obj_t* ui_tile_clock = NULL;
@@ -16,39 +18,14 @@ lv_obj_t* ui_tile_notification = NULL;
 static lv_obj_t* dot_container = NULL;
 static lv_obj_t* dots[UI_SCREEN_COUNT];
 
-// ── Battery ──────────────────────────────────────────────────────────
-static lv_obj_t* bat_icon_label = NULL;
-static lv_obj_t* bat_percent_label = NULL;
-static lv_obj_t* bat_status_label = NULL;
-static lv_obj_t* bat_voltage_label = NULL;
-
-/* ─── Helpers ─────────────────────────────────────────────────────── */
-
-static const char* get_battery_icon(int pct, bool charging) {
-  if (charging) return "CHG";
-  if (pct >= 90) return "100";
-  if (pct >= 70) return " 75";
-  if (pct >= 45) return " 50";
-  if (pct >= 20) return " 25";
-  return "LOW";
-}
-
-const char* get_month_name(int month) {
-  static const char* month_names[] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun",
-                                      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
-  return month_names[month - 1];
-}
-
 static void update_dots(int idx) {
   for (int i = 0; i < UI_SCREEN_COUNT; i++) {
     if (i == idx) {
       lv_obj_set_size(dots[i], 10, 10);
-      lv_obj_set_style_bg_color(dots[i], lv_color_white(), LV_PART_MAIN);
-      lv_obj_set_style_bg_opa(dots[i], LV_OPA_COVER, LV_PART_MAIN);
+      lv_obj_add_style(dots[i], styles_dot_active(), LV_PART_MAIN);
     } else {
       lv_obj_set_size(dots[i], 8, 8);
-      lv_obj_set_style_bg_color(dots[i], lv_color_hex(0x444444), LV_PART_MAIN);
-      lv_obj_set_style_bg_opa(dots[i], LV_OPA_COVER, LV_PART_MAIN);
+      lv_obj_add_style(dots[i], styles_dot_inactive(), LV_PART_MAIN);
     }
   }
 }
@@ -59,59 +36,16 @@ static void tileview_changed_cb(lv_event_t* e) {
   int idx = 0;
   if (act == ui_tile_battery)
     idx = 1;
-  else if (act == ui_tile_notif)
+  else if (act == ui_tile_notification)
     idx = 2;
   update_dots(idx);
-}
-
-/* ─── Tile 2: Battery ────────────────────────────────────────────── */
-
-static void create_battery_tile(lv_obj_t* battery_tile) {
-  lv_obj_set_style_bg_color(battery_tile, lv_color_black(), LV_PART_MAIN);
-  lv_obj_set_style_bg_opa(battery_tile, LV_OPA_COVER, LV_PART_MAIN);
-  lv_obj_set_style_border_width(battery_tile, 0, LV_PART_MAIN);
-  lv_obj_set_style_pad_all(battery_tile, 0, LV_PART_MAIN);
-
-  bat_icon_label = lv_label_create(battery_tile);
-  lv_label_set_text(bat_icon_label, "---");
-  lv_obj_set_style_text_font(bat_icon_label, &lv_font_montserrat_12,
-                             LV_PART_MAIN);
-  lv_obj_set_style_text_color(bat_icon_label, lv_color_white(), LV_PART_MAIN);
-  lv_obj_align(bat_icon_label, LV_ALIGN_TOP_RIGHT, -10, 10);
-
-  bat_percent_label = lv_label_create(battery_tile);
-  lv_label_set_text(bat_percent_label, "--%");
-  lv_obj_set_style_text_font(bat_percent_label, &lv_font_montserrat_48,
-                             LV_PART_MAIN);
-  lv_obj_set_style_text_color(bat_percent_label, lv_color_white(),
-                              LV_PART_MAIN);
-  lv_obj_align(bat_percent_label, LV_ALIGN_CENTER, 0, -20);
-
-  bat_status_label = lv_label_create(battery_tile);
-  lv_label_set_text(bat_status_label, "");
-  lv_obj_set_style_text_font(bat_status_label, &lv_font_montserrat_16,
-                             LV_PART_MAIN);
-  lv_obj_set_style_text_color(bat_status_label, lv_color_hex(0x00ff88),
-                              LV_PART_MAIN);
-  lv_obj_align(bat_status_label, LV_ALIGN_CENTER, 0, 45);
-
-  bat_voltage_label = lv_label_create(battery_tile);
-  lv_label_set_text(bat_voltage_label, "-.-- V");
-  lv_obj_set_style_text_font(bat_voltage_label, &lv_font_montserrat_20,
-                             LV_PART_MAIN);
-  lv_obj_set_style_text_color(bat_voltage_label, lv_color_hex(0x555555),
-                              LV_PART_MAIN);
-  lv_obj_align(bat_voltage_label, LV_ALIGN_CENTER, 0, 85);
 }
 
 /* ─── Dot indicator overlay ──────────────────────────────────────── */
 
 static void create_dot_indicator(lv_obj_t* screen) {
   dot_container = lv_obj_create(screen);
-  lv_obj_set_style_bg_opa(dot_container, LV_OPA_TRANSP, LV_PART_MAIN);
-  lv_obj_set_style_border_width(dot_container, 0, LV_PART_MAIN);
-  lv_obj_set_style_pad_all(dot_container, 4, LV_PART_MAIN);
-  lv_obj_set_style_pad_column(dot_container, 8, LV_PART_MAIN);
+  lv_obj_add_style(dot_container, styles_dot_container(), LV_PART_MAIN);
   lv_obj_set_layout(dot_container, LV_LAYOUT_FLEX);
   lv_obj_set_flex_flow(dot_container, LV_FLEX_FLOW_ROW);
   lv_obj_set_flex_align(dot_container, LV_FLEX_ALIGN_CENTER,
@@ -123,10 +57,8 @@ static void create_dot_indicator(lv_obj_t* screen) {
 
   for (int i = 0; i < UI_SCREEN_COUNT; i++) {
     dots[i] = lv_obj_create(dot_container);
+    lv_obj_add_style(dots[i], styles_dot_inactive(), LV_PART_MAIN);
     lv_obj_set_size(dots[i], 8, 8);
-    lv_obj_set_style_radius(dots[i], LV_RADIUS_CIRCLE, LV_PART_MAIN);
-    lv_obj_set_style_border_width(dots[i], 0, LV_PART_MAIN);
-    lv_obj_set_style_pad_all(dots[i], 0, LV_PART_MAIN);
     lv_obj_clear_flag(dots[i], LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);
   }
   update_dots(0);
@@ -163,11 +95,7 @@ void create_screens(void) {
 /* ─── Public: data update functions ─────────────────────────────── */
 
 void screens_set_time(int hours, int minutes, int seconds) {
-  if (time_hours_label) lv_label_set_text_fmt(time_hours_label, "%02d", hours);
-  if (time_minutes_label)
-    lv_label_set_text_fmt(time_minutes_label, "%02d", minutes);
-  if (time_seconds_label)
-    lv_label_set_text_fmt(time_seconds_label, "%02d", seconds);
+  clock_screen_set_time(hours, minutes, seconds);
 }
 
 void screens_set_date(int day, int month, int year) {
@@ -181,39 +109,11 @@ void screens_set_steps(uint32_t steps) {
     lv_label_set_text_fmt(label_step_count, "%lu", (unsigned long)steps);
 }
 
-void screens_set_battery(int pct, bool charging, float voltage) {
-  if (!bat_percent_label) return;
-
-  lv_color_t color;
-  if (charging)
-    color = lv_color_hex(0x00ff88);
-  else if (pct < 20)
-    color = lv_color_hex(0xff3333);
-  else if (pct < 50)
-    color = lv_color_hex(0xffaa00);
-  else
-    color = lv_color_white();
-
-  lv_label_set_text(bat_icon_label, get_battery_icon(pct, charging));
-  lv_obj_set_style_text_color(bat_icon_label, color, LV_PART_MAIN);
-
-  lv_label_set_text_fmt(bat_percent_label, "%d%%", pct);
-  lv_obj_set_style_text_color(bat_percent_label, color, LV_PART_MAIN);
-
-  if (charging) {
-    lv_label_set_text(bat_status_label, "Laden");
-    lv_obj_set_style_text_color(bat_status_label, lv_color_hex(0x00ff88),
-                                LV_PART_MAIN);
-  } else {
-    lv_label_set_text(bat_status_label, "");
-  }
-
-  lv_label_set_text_fmt(bat_voltage_label, "%.2f V", voltage);
-  lv_obj_set_style_text_color(bat_voltage_label, lv_color_hex(0x555555),
-                              LV_PART_MAIN);
+void screens_set_battery(int percent, bool charging, float voltage) {
+  battery_screen_set_battery(percent, charging, voltage);
 }
 
-void screens_add_notification(const char* app, const char* msg) {
+void screens_add_notification(const char* app, const char* message) {
   if (!notification_scroll_content) return;
 
   // Hide "empty" placeholder once first notification arrives
@@ -259,7 +159,7 @@ void screens_add_notification(const char* app, const char* msg) {
 
   // Message body (white, full wrap, extended font for umlauts)
   lv_obj_t* msg_lbl = lv_label_create(bubble);
-  lv_label_set_text(msg_lbl, msg);
+  lv_label_set_text(msg_lbl, message);
   lv_label_set_long_mode(msg_lbl, LV_LABEL_LONG_WRAP);
   lv_obj_set_width(msg_lbl, LV_PCT(100));
   lv_obj_set_style_text_font(msg_lbl, &lv_font_montserrat_16_ext, LV_PART_MAIN);

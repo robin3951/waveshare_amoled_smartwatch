@@ -2,6 +2,8 @@
   "mainFile": "components/ui/ui.c",
   "dependencies": [
     "components/ui/screens.c",
+    "components/ui/clock_screen.c",
+    "components/ui/notification_screen.c",
     "components/ui/styles.c",
     "components/ui/actions.c",
     "components/ui/vars.c",

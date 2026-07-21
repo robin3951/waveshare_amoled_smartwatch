@@ -13,7 +13,6 @@ extern "C" {
 
 extern lv_obj_t* ui_tileview;
 extern lv_obj_t* ui_tile_battery;
-extern lv_obj_t* ui_tile_notif;
 
 void create_screens(void);
 

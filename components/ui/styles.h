@@ -18,6 +18,10 @@
 /**@brief Basic background style for all tiles */
 extern lv_style_t _style_tile_bg;
 
+extern lv_style_t _style_dot_container;
+extern lv_style_t _style_dot_inactive;
+extern lv_style_t _style_dot_active;
+
 /*── Clock Tile Styles ──────────────────────────────────────────*/
 
 /**@brief Style for hours and minutes labels on clock tile */
@@ -34,6 +38,11 @@ extern lv_style_t _style_shoe_print_icon;
 
 /**@brief Style for step count label on clock tile */
 extern lv_style_t _style_step_count_label;
+
+extern lv_style_t _style_battery_icon_label;
+extern lv_style_t _style_battery_percent_label;
+extern lv_style_t _style_battery_status_label;
+extern lv_style_t _style_battery_voltage_label;
 
 /*── Notification Tile Styles ───────────────────────────────────*/
 
@@ -53,6 +62,8 @@ extern "C" {
 /**@brief Initializes LVGL styles for the clock tile and its elements */
 void init_clock_styles(void);
 
+void init_dot_indicator_styles(void);
+
 /**@brief Initializes LVGL styles for the notification tile and its elements */
 void init_notification_styles(void);
 
@@ -65,6 +76,10 @@ void styles_init(void);
 /**@brief Getter function for background style of all tiles
  * @return pointer to the basic tile background style */
 lv_style_t* styles_tile_bg(void);
+
+lv_style_t* styles_dot_container(void);
+lv_style_t* styles_dot_inactive(void);
+lv_style_t* styles_dot_active(void);
 
 /*── Getter Functions for Clock Tile Styles
  * ──────────────────────────────────────────*/
@@ -88,6 +103,11 @@ lv_style_t* styles_shoe_print_icon(void);
 /**@brief Getter function for step count label style
  * @return pointer to the step count label style */
 lv_style_t* styles_step_count_label(void);
+
+lv_style_t* styles_battery_icon_label(void);
+lv_style_t* styles_battery_percent_label(void);
+lv_style_t* styles_battery_status_label(void);
+lv_style_t* styles_battery_voltage_label(void);
 
 /*── Getter Functions for Notification Tile Styles
  * ──────────────────────────────────────────*/

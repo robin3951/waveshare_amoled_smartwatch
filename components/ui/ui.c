@@ -2,8 +2,12 @@
 #include "ui.h"
 
 #include "screens.h"
+#include "styles.h"
 
-void ui_init(void) { create_screens(); }
+void ui_init(void) {
+  styles_init();
+  create_screens();
+}
 
 void ui_tick(void) {
   // LVGL timer handles animation
