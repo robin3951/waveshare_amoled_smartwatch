@@ -41,3 +41,19 @@ const char* get_month_name(int month);
  * @param seconds current second digits
  */
 void clock_screen_set_time(int hours, int minutes, int seconds);
+
+/**
+ * @brief
+ *
+ * @param day
+ * @param month
+ * @param year
+ */
+void clock_screen_set_date(int day, int month, int year);
+
+/**
+ * @brief
+ *
+ * @param steps
+ */
+void clock_screen_set_steps(uint32_t steps);

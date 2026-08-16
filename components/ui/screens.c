@@ -10,9 +10,10 @@
 #include "notification_screen.h"
 #include "styles.h"
 
-lv_obj_t* ui_tileview = NULL;
-lv_obj_t* ui_tile_clock = NULL;
-lv_obj_t* ui_tile_battery = NULL;
+static lv_obj_t* ui_tileview = NULL;
+
+static lv_obj_t* ui_tile_clock = NULL;
+static lv_obj_t* ui_tile_battery = NULL;
 lv_obj_t* ui_tile_notification = NULL;
 
 static lv_obj_t* dot_container = NULL;
@@ -68,15 +69,11 @@ static void create_dot_indicator(lv_obj_t* screen) {
 
 void create_screens(void) {
   lv_obj_t* screen = lv_scr_act();
-  lv_obj_set_style_bg_color(screen, lv_color_black(), LV_PART_MAIN);
-  lv_obj_set_style_bg_opa(screen, LV_OPA_COVER, LV_PART_MAIN);
+  lv_obj_add_style(screen, styles_tile_bg(), LV_PART_MAIN);
 
   ui_tileview = lv_tileview_create(screen);
   lv_obj_set_scrollbar_mode(ui_tileview, LV_SCROLLBAR_MODE_OFF);
-  lv_obj_set_style_bg_color(ui_tileview, lv_color_black(), LV_PART_MAIN);
-  lv_obj_set_style_bg_opa(ui_tileview, LV_OPA_COVER, LV_PART_MAIN);
-  lv_obj_set_style_pad_all(ui_tileview, 0, LV_PART_MAIN);
-  lv_obj_set_style_border_width(ui_tileview, 0, LV_PART_MAIN);
+  lv_obj_add_style(screen, styles_tile_bg(), LV_PART_MAIN);
 
   ui_tile_clock = lv_tileview_add_tile(ui_tileview, 0, 0, LV_DIR_HOR);
   ui_tile_battery = lv_tileview_add_tile(ui_tileview, 1, 0, LV_DIR_HOR);
@@ -99,85 +96,19 @@ void screens_set_time(int hours, int minutes, int seconds) {
 }
 
 void screens_set_date(int day, int month, int year) {
-  if (date_label)
-    lv_label_set_text_fmt(date_label, "%02d %s %04d", day,
-                          get_month_name(month), year);
+  clock_screen_set_date(day, month, year);
 }
 
-void screens_set_steps(uint32_t steps) {
-  if (label_step_count)
-    lv_label_set_text_fmt(label_step_count, "%lu", (unsigned long)steps);
-}
+void screens_set_steps(uint32_t steps) { clock_screen_set_steps(steps); }
 
 void screens_set_battery(int percent, bool charging, float voltage) {
   battery_screen_set_battery(percent, charging, voltage);
 }
 
 void screens_add_notification(const char* app, const char* message) {
-  if (!notification_scroll_content) return;
-
-  // Hide "empty" placeholder once first notification arrives
-  if (notification_count == 0 && notification_empty_label) {
-    lv_obj_add_flag(notification_empty_label, LV_OBJ_FLAG_HIDDEN);
-  }
-
-  // If limit reached, delete the oldest bubble (first real child after
-  // placeholder)
-  if (notification_count >= MAX_NOTIFICATIONS) {
-    // Children: [0]=placeholder(hidden), [1]=oldest bubble …
-    uint32_t child_cnt = lv_obj_get_child_count(notification_scroll_content);
-    if (child_cnt > 1) {
-      lv_obj_del(lv_obj_get_child(notification_scroll_content, 1));
-    }
-  } else {
-    notification_count++;
-  }
-
-  // ── Create bubble ──────────────────────────────────────────────
-  lv_obj_t* bubble = lv_obj_create(notification_scroll_content);
-  lv_obj_set_width(bubble, 375);
-  lv_obj_set_height(bubble, LV_SIZE_CONTENT);  // auto height — no clipping
-  lv_obj_set_style_radius(bubble, 16, LV_PART_MAIN);
-  lv_obj_set_style_bg_color(bubble, lv_color_hex(0x1A1B2E), LV_PART_MAIN);
-  lv_obj_set_style_bg_opa(bubble, LV_OPA_COVER, LV_PART_MAIN);
-  lv_obj_set_style_border_color(bubble, lv_color_hex(0x2A2B50), LV_PART_MAIN);
-  lv_obj_set_style_border_width(bubble, 1, LV_PART_MAIN);
-  lv_obj_set_style_pad_all(bubble, 14, LV_PART_MAIN);
-  lv_obj_set_style_pad_row(bubble, 8, LV_PART_MAIN);
-  lv_obj_clear_flag(bubble, LV_OBJ_FLAG_SCROLLABLE | LV_OBJ_FLAG_CLICKABLE);
-  lv_obj_set_flex_flow(bubble, LV_FLEX_FLOW_COLUMN);
-  lv_obj_set_flex_align(bubble, LV_FLEX_ALIGN_START, LV_FLEX_ALIGN_START,
-                        LV_FLEX_ALIGN_START);
-
-  // App / sender label (blue) — extended font covers ä ö ü in names
-  lv_obj_t* app_lbl = lv_label_create(bubble);
-  lv_label_set_text(app_lbl, app);
-  lv_label_set_long_mode(app_lbl, LV_LABEL_LONG_WRAP);
-  lv_obj_set_width(app_lbl, LV_PCT(100));
-  lv_obj_set_style_text_font(app_lbl, &lv_font_montserrat_14_ext, LV_PART_MAIN);
-  lv_obj_set_style_text_color(app_lbl, lv_color_hex(0x00aaff), LV_PART_MAIN);
-
-  // Message body (white, full wrap, extended font for umlauts)
-  lv_obj_t* msg_lbl = lv_label_create(bubble);
-  lv_label_set_text(msg_lbl, message);
-  lv_label_set_long_mode(msg_lbl, LV_LABEL_LONG_WRAP);
-  lv_obj_set_width(msg_lbl, LV_PCT(100));
-  lv_obj_set_style_text_font(msg_lbl, &lv_font_montserrat_16_ext, LV_PART_MAIN);
-  lv_obj_set_style_text_color(msg_lbl, lv_color_white(), LV_PART_MAIN);
-
-  // Scroll to bottom so newest notification is always visible
-  lv_obj_scroll_to_y(notification_scroll_content, LV_COORD_MAX, LV_ANIM_OFF);
+  notification_screen_add_notification(app, message);
 }
 
 void screens_set_ble_status(bool connected) {
-  if (!ble_status_label) return;
-  if (connected) {
-    lv_label_set_text(ble_status_label, "BLE: Verbunden");
-    lv_obj_set_style_text_color(ble_status_label, lv_color_hex(0x00ff88),
-                                LV_PART_MAIN);
-  } else {
-    lv_label_set_text(ble_status_label, "BLE: Getrennt");
-    lv_obj_set_style_text_color(ble_status_label, lv_color_hex(0x555555),
-                                LV_PART_MAIN);
-  }
+  notification_screen_set_ble_status(connected);
 }

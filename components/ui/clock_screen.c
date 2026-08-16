@@ -70,3 +70,14 @@ void clock_screen_set_time(int hours, int minutes, int seconds) {
   if (time_seconds_label)
     lv_label_set_text_fmt(time_seconds_label, "%02d", seconds);
 }
+
+void clock_screen_set_date(int day, int month, int year) {
+  if (date_label)
+    lv_label_set_text_fmt(date_label, "%02d %s %04d", day,
+                          get_month_name(month), year);
+}
+
+void clock_screen_set_steps(uint32_t steps) {
+  if (label_step_count)
+    lv_label_set_text_fmt(label_step_count, "%lu", (unsigned long)steps);
+}

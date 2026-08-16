@@ -54,3 +54,18 @@ extern int notification_count;
  * will be created.
  */
 void create_notification_tile(lv_obj_t* notification_tile);
+
+/**
+ * @brief
+ *
+ * @param app
+ * @param message
+ */
+void notification_screen_add_notification(const char* app, const char* message);
+
+/**
+ * @brief
+ *
+ * @param connected
+ */
+void notification_screen_set_ble_status(bool connected);

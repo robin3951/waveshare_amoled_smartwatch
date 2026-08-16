@@ -11,9 +11,6 @@ extern "C" {
 #define UI_SCREEN_COUNT 3
 #define MAX_NOTIFICATIONS 20
 
-extern lv_obj_t* ui_tileview;
-extern lv_obj_t* ui_tile_battery;
-
 void create_screens(void);
 
 // Clock / battery update (called from FreeRTOS tasks under LVGL lock)
