@@ -2,6 +2,9 @@ idf_component_register(
     SRCS
         "ui.c"
         "screens.c"
+        "clock_screen.c"
+        "battery_screen.c"
+        "notification_screen.c"
         "actions.c"
         "vars.c"
         "images.c"

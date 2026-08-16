@@ -23,47 +23,53 @@ void create_clock_tile(lv_obj_t* clock_tile) {
   lv_obj_add_style(clock_tile, styles_tile_bg(), LV_PART_MAIN);
 
   time_hours_label = lv_label_create(clock_tile);
-  lv_label_set_text(time_hours_label, "--");
+  lv_label_set_text(time_hours_label, CLOCK_TIME_DEFAULT_PLACEHOLDER);
   lv_obj_add_style(time_hours_label, styles_time_hours_minutes_label(),
                    LV_PART_MAIN);
-  lv_obj_align(time_hours_label, LV_ALIGN_CENTER, 0, -110);
+  lv_obj_align(time_hours_label, LV_ALIGN_CENTER, 0,
+               CLOCK_TIME_HOURS_LABEL_Y_OFFSET);
 
   time_minutes_label = lv_label_create(clock_tile);
-  lv_label_set_text(time_minutes_label, "--");
+  lv_label_set_text(time_minutes_label, CLOCK_TIME_DEFAULT_PLACEHOLDER);
   lv_obj_add_style(time_minutes_label, styles_time_hours_minutes_label(),
                    LV_PART_MAIN);
-  lv_obj_align(time_minutes_label, LV_ALIGN_CENTER, 0, 30);
+  lv_obj_align(time_minutes_label, LV_ALIGN_CENTER, 0,
+               CLOCK_TIME_MINUTES_LABEL_Y_OFFSET);
 
   time_seconds_label = lv_label_create(clock_tile);
-  lv_label_set_text(time_seconds_label, "--");
+  lv_label_set_text(time_seconds_label, CLOCK_TIME_DEFAULT_PLACEHOLDER);
   lv_obj_add_style(time_seconds_label, styles_time_seconds_label(),
                    LV_PART_MAIN);
-  lv_obj_align(time_seconds_label, LV_ALIGN_RIGHT_MID, -40, 60);
+  lv_obj_align(time_seconds_label, LV_ALIGN_RIGHT_MID,
+               CLOCK_TIME_SECONDS_LABEL_X_OFFSET,
+               CLOCK_TIME_SECONDS_LABEL_Y_OFFSET);
 
   date_label = lv_label_create(clock_tile);
-  lv_label_set_text(date_label, "--.--.----");
+  lv_label_set_text(date_label, CLOCK_TIME_DEFAULT_PLACEHOLDER);
   lv_obj_add_style(date_label, styles_date_label(), LV_PART_MAIN);
-  lv_obj_align(date_label, LV_ALIGN_BOTTOM_MID, 0, -110);
+  lv_obj_align(date_label, LV_ALIGN_BOTTOM_MID, 0, CLOCK_DATE_LABEL_Y_OFFSET);
 
   icon_shoe_print = lv_label_create(clock_tile);
-  lv_label_set_text(icon_shoe_print,
-                    "\xEF\x95\x8B");  // Unicode for shoe print icon
+  lv_label_set_text(icon_shoe_print, ICON_SHOE_PRINT_UNICODE);
   lv_obj_add_style(icon_shoe_print, styles_shoe_print_icon(), LV_PART_MAIN);
-  lv_obj_align(icon_shoe_print, LV_ALIGN_BOTTOM_MID, -30, -50);
+  lv_obj_align(icon_shoe_print, LV_ALIGN_BOTTOM_MID, ICON_SHOE_PRINT_X_OFFSET,
+               ICON_SHOE_PRINT_Y_OFFSET);
 
   label_step_count = lv_label_create(clock_tile);
-  lv_label_set_text(label_step_count, "---");
+  lv_label_set_text(label_step_count, STEP_COUNT_DEFAULT_PLACEHOLDER);
   lv_obj_add_style(label_step_count, styles_step_count_label(), LV_PART_MAIN);
-  lv_obj_align(label_step_count, LV_ALIGN_BOTTOM_MID, 30, -50);
+  lv_obj_align(label_step_count, LV_ALIGN_BOTTOM_MID, STEP_COUNT_LABEL_X_OFFSET,
+               STEP_COUNT_LABEL_Y_OFFSET);
 }
 
-const char* get_month_name(int month) {
+const char* get_month_name(uint8_t month) {
   static const char* month_names[] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun",
                                       "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+  if (month < 1 || month > 12) return "Invalid";
   return month_names[month - 1];
 }
 
-void clock_screen_set_time(int hours, int minutes, int seconds) {
+void clock_screen_set_time(uint8_t hours, uint8_t minutes, uint8_t seconds) {
   if (time_hours_label) lv_label_set_text_fmt(time_hours_label, "%02d", hours);
   if (time_minutes_label)
     lv_label_set_text_fmt(time_minutes_label, "%02d", minutes);
@@ -71,7 +77,7 @@ void clock_screen_set_time(int hours, int minutes, int seconds) {
     lv_label_set_text_fmt(time_seconds_label, "%02d", seconds);
 }
 
-void clock_screen_set_date(int day, int month, int year) {
+void clock_screen_set_date(uint8_t day, uint8_t month, uint16_t year) {
   if (date_label)
     lv_label_set_text_fmt(date_label, "%02d %s %04d", day,
                           get_month_name(month), year);

@@ -10,6 +10,25 @@
 #include "lvgl.h"  // IWYU pragma: keep
 #include "styles.h"
 
+#define CLOCK_TIME_HOURS_LABEL_Y_OFFSET -110
+
+#define CLOCK_TIME_MINUTES_LABEL_Y_OFFSET -80
+
+#define CLOCK_TIME_SECONDS_LABEL_X_OFFSET -40
+#define CLOCK_TIME_SECONDS_LABEL_Y_OFFSET 60
+
+#define CLOCK_DATE_LABEL_Y_OFFSET -110
+
+#define ICON_SHOE_PRINT_UNICODE "\xEF\x95\x8B"
+#define ICON_SHOE_PRINT_X_OFFSET -30
+#define ICON_SHOE_PRINT_Y_OFFSET -50
+
+#define STEP_COUNT_LABEL_X_OFFSET 30
+#define STEP_COUNT_LABEL_Y_OFFSET -50
+
+#define CLOCK_TIME_DEFAULT_PLACEHOLDER "--"
+#define STEP_COUNT_DEFAULT_PLACEHOLDER "---"
+
 /**
  * @brief Creates the clock tile UI component.
  *
@@ -31,7 +50,7 @@ void create_clock_tile(lv_obj_t* clock_tile);
  * @return A string representing the name of the month, or "Invalid" if the
  * month number is out of range.
  */
-const char* get_month_name(int month);
+const char* get_month_name(uint8_t month);
 
 /**
  * @brief Sets the curent rtc time values to the labels
@@ -40,20 +59,20 @@ const char* get_month_name(int month);
  * @param minutes current minute digits
  * @param seconds current second digits
  */
-void clock_screen_set_time(int hours, int minutes, int seconds);
+void clock_screen_set_time(uint8_t hours, uint8_t minutes, uint8_t seconds);
 
 /**
- * @brief
+ * @brief Sets the curent rtc time values to the labels
  *
- * @param day
- * @param month
- * @param year
+ * @param day current day digits
+ * @param month current month digits
+ * @param year current year digits
  */
-void clock_screen_set_date(int day, int month, int year);
+void clock_screen_set_date(uint8_t day, uint8_t month, uint16_t year);
 
 /**
- * @brief
+ * @brief Sets the step count value to the label
  *
- * @param steps
+ * @param steps current step count
  */
 void clock_screen_set_steps(uint32_t steps);

@@ -11,29 +11,34 @@
 #include "fonts/fonts.h"
 
 // styles shared across all tiles
-lv_style_t _style_tile_bg = {0};
+static lv_style_t _style_tile_bg = {0};
 
-lv_style_t _style_dot_container = {0};
-lv_style_t _style_dot_inactive = {0};
-lv_style_t _style_dot_active = {0};
+static lv_style_t _style_dot_container = {0};
+static lv_style_t _style_dot_inactive = {0};
+static lv_style_t _style_dot_active = {0};
 
 // styles specific to clock tile
-lv_style_t _style_time_hours_minutes_label = {0};
-lv_style_t _style_time_seconds_label = {0};
-lv_style_t _style_date_label = {0};
-lv_style_t _style_shoe_print_icon = {0};
-lv_style_t _style_step_count_label = {0};
+static lv_style_t _style_time_hours_minutes_label = {0};
+static lv_style_t _style_time_seconds_label = {0};
+static lv_style_t _style_date_label = {0};
+static lv_style_t _style_shoe_print_icon = {0};
+static lv_style_t _style_step_count_label = {0};
 
 // styles specific to battery tile
-lv_style_t _style_battery_icon_label = {0};
-lv_style_t _style_battery_percent_label = {0};
-lv_style_t _style_battery_status_label = {0};
-lv_style_t _style_battery_voltage_label = {0};
+static lv_style_t _style_battery_icon_label = {0};
+static lv_style_t _style_battery_percent_label = {0};
+static lv_style_t _style_battery_status_label = {0};
+static lv_style_t _style_battery_voltage_label = {0};
 
 // styles specific to notification tile
-lv_style_t _style_ble_status_label = {0};
-lv_style_t _style_notification_scroll_content = {0};
-lv_style_t _style_notification_empty_label = {0};
+static lv_style_t _style_ble_status_label = {0};
+static lv_style_t _style_notification_scroll_content = {0};
+static lv_style_t _style_notification_empty_label = {0};
+static lv_style_t _style_notification_bubble = {0};
+static lv_style_t _style_notification_app_label = {0};
+static lv_style_t _style_notification_message_label = {0};
+static lv_style_t _style_ble_status_connected = {0};
+static lv_style_t _style_ble_status_disconnected = {0};
 
 void init_shared_styles(void) {
   lv_style_init(&_style_tile_bg);
@@ -47,12 +52,13 @@ void init_dot_indicator_styles(void) {
   lv_style_init(&_style_dot_container);
   lv_style_set_bg_opa(&_style_dot_container, LV_OPA_TRANSP);
   lv_style_set_border_width(&_style_dot_container, 0);
-  lv_style_set_pad_all(&_style_dot_container, 4);
-  lv_style_set_pad_column(&_style_dot_container, 8);
+  lv_style_set_pad_all(&_style_dot_container, DOT_INDICATOR_PAD_ALL);
+  lv_style_set_pad_column(&_style_dot_container, DOT_INDICATOR_PAD_COLUMN);
 
   lv_style_init(&_style_dot_inactive);
   lv_style_set_radius(&_style_dot_inactive, LV_RADIUS_CIRCLE);
-  lv_style_set_bg_color(&_style_dot_inactive, lv_color_hex(0x555555));
+  lv_style_set_bg_color(&_style_dot_inactive,
+                        lv_color_hex(DOT_INACTIVE_COLOR_HEX));
   lv_style_set_bg_opa(&_style_dot_inactive, LV_OPA_COVER);
   lv_style_set_border_width(&_style_dot_inactive, 0);
   lv_style_set_pad_all(&_style_dot_inactive, 0);
@@ -77,15 +83,18 @@ void init_clock_styles(void) {
 
   lv_style_init(&_style_date_label);
   lv_style_set_text_font(&_style_date_label, &lv_font_montserrat_32);
-  lv_style_set_text_color(&_style_date_label, lv_color_hex(0x888888));
+  lv_style_set_text_color(&_style_date_label,
+                          lv_color_hex(CLOCK_DATE_LABEL_COLOR_HEX));
 
   lv_style_init(&_style_shoe_print_icon);
   lv_style_set_text_font(&_style_shoe_print_icon, &lv_font_shoe_print_48);
-  lv_style_set_text_color(&_style_shoe_print_icon, lv_color_hex(0x008000));
+  lv_style_set_text_color(&_style_shoe_print_icon,
+                          lv_color_hex(CLOCK_SHOE_PRINT_ICON_COLOR_HEX));
 
   lv_style_init(&_style_step_count_label);
   lv_style_set_text_font(&_style_step_count_label, &lv_font_montserrat_32);
-  lv_style_set_text_color(&_style_step_count_label, lv_color_hex(0x888888));
+  lv_style_set_text_color(&_style_step_count_label,
+                          lv_color_hex(CLOCK_STEP_COUNT_LABEL_COLOR_HEX));
 }
 
 void init_battery_styles(void) {
@@ -99,31 +108,69 @@ void init_battery_styles(void) {
 
   lv_style_init(&_style_battery_status_label);
   lv_style_set_text_font(&_style_battery_status_label, &lv_font_montserrat_16);
-  lv_style_set_text_color(&_style_battery_status_label, lv_color_hex(0x00ff88));
+  lv_style_set_text_color(&_style_battery_status_label,
+                          lv_color_hex(BATTERY_STATUS_LABEL_COLOR_HEX));
 
   lv_style_init(&_style_battery_voltage_label);
   lv_style_set_text_font(&_style_battery_voltage_label, &lv_font_montserrat_20);
   lv_style_set_text_color(&_style_battery_voltage_label,
-                          lv_color_hex(0x555555));
+                          lv_color_hex(BATTERY_VOLTAGE_LABEL_COLOR_HEX));
 }
 
 void init_notification_styles(void) {
-  lv_style_init(&_style_ble_status_label);
-  lv_style_set_text_font(&_style_ble_status_label, &lv_font_montserrat_12);
-  lv_style_set_text_color(&_style_ble_status_label, lv_color_hex(0x555555));
-
   lv_style_init(&_style_notification_scroll_content);
   lv_style_set_bg_color(&_style_notification_scroll_content, lv_color_black());
   lv_style_set_bg_opa(&_style_notification_scroll_content, LV_OPA_COVER);
   lv_style_set_border_width(&_style_notification_scroll_content, 0);
-  lv_style_set_pad_all(&_style_notification_scroll_content, 10);
-  lv_style_set_pad_row(&_style_notification_scroll_content, 10);
+  lv_style_set_pad_all(&_style_notification_scroll_content,
+                       NOTIFICATION_SCROLL_CONTENT_PAD_ALL);
+  lv_style_set_pad_row(&_style_notification_scroll_content,
+                       NOTIFICATION_SCROLL_CONTENT_PAD_ROW);
 
   lv_style_init(&_style_notification_empty_label);
   lv_style_set_text_font(&_style_notification_empty_label,
                          &lv_font_montserrat_16);
   lv_style_set_text_color(&_style_notification_empty_label,
-                          lv_color_hex(0x444444));
+                          lv_color_hex(NOTIFICATION_EMPTY_LABEL_COLOR_HEX));
+
+  lv_style_init(&_style_notification_bubble);
+  lv_style_set_radius(&_style_notification_bubble, NOTIFICATION_BUBBLE_RADIUS);
+  lv_style_set_bg_color(&_style_notification_bubble,
+                        lv_color_hex(NOTIFICATION_BUBBLE_BG_COLOR_HEX));
+  lv_style_set_bg_opa(&_style_notification_bubble, LV_OPA_COVER);
+  lv_style_set_border_color(&_style_notification_bubble,
+                            lv_color_hex(NOTIFICATION_BUBBLE_BORDER_COLOR_HEX));
+  lv_style_set_border_width(&_style_notification_bubble,
+                            NOTIFICATION_BUBBLE_BORDER_WIDTH);
+  lv_style_set_pad_all(&_style_notification_bubble,
+                       NOTIFICATION_BUBBLE_PAD_ALL);
+  lv_style_set_pad_row(&_style_notification_bubble,
+                       NOTIFICATION_BUBBLE_PAD_ROW);
+
+  lv_style_init(&_style_notification_app_label);
+  lv_style_set_text_font(&_style_notification_app_label,
+                         &lv_font_montserrat_14);
+  lv_style_set_text_color(&_style_notification_app_label,
+                          lv_color_hex(NOTIFICATION_APP_LABEL_COLOR_HEX));
+
+  lv_style_init(&_style_notification_message_label);
+  lv_style_set_text_font(&_style_notification_message_label,
+                         &lv_font_montserrat_16_ext);
+  lv_style_set_text_color(&_style_notification_message_label,
+                          lv_color_hex(NOTIFICATION_MESSAGE_LABEL_COLOR_HEX));
+
+  lv_style_init(&_style_ble_status_label);
+  lv_style_set_text_font(&_style_ble_status_label, &lv_font_montserrat_12);
+  lv_style_set_text_color(&_style_ble_status_label,
+                          lv_color_hex(BLE_STATUS_LABEL_COLOR_HEX));
+
+  lv_style_init(&_style_ble_status_connected);
+  lv_style_set_text_color(&_style_ble_status_connected,
+                          lv_color_hex(BLE_STATUS_CONNECTED_COLOR_HEX));
+
+  lv_style_init(&_style_ble_status_disconnected);
+  lv_style_set_text_color(&_style_ble_status_disconnected,
+                          lv_color_hex(BLE_STATUS_DISCONNECTED_COLOR_HEX));
 }
 
 void styles_init(void) {
@@ -180,4 +227,24 @@ lv_style_t* styles_notification_scroll_content(void) {
 
 lv_style_t* styles_notification_empty_label(void) {
   return &_style_notification_empty_label;
+}
+
+lv_style_t* styles_notification_bubble(void) {
+  return &_style_notification_bubble;
+}
+
+lv_style_t* styles_notification_app_label(void) {
+  return &_style_notification_app_label;
+}
+
+lv_style_t* styles_notification_message_label(void) {
+  return &_style_notification_message_label;
+}
+
+lv_style_t* styles_ble_status_connected(void) {
+  return &_style_ble_status_connected;
+}
+
+lv_style_t* styles_ble_status_disconnected(void) {
+  return &_style_ble_status_disconnected;
 }

@@ -10,35 +10,42 @@ static lv_obj_t* battery_percent_label = NULL;
 static lv_obj_t* battery_status_label = NULL;
 static lv_obj_t* battery_voltage_label = NULL;
 
-static void create_battery_tile(lv_obj_t* battery_tile) {
+void create_battery_tile(lv_obj_t* battery_tile) {
   lv_obj_add_style(battery_tile, styles_tile_bg(), LV_PART_MAIN);
 
   battery_icon_label = lv_label_create(battery_tile);
-  lv_label_set_text(battery_icon_label, "---");
+  lv_label_set_text(battery_icon_label, BATTERY_ICON_LABEL_DEFAULT_PLACEHOLDER);
   lv_obj_add_style(battery_icon_label, styles_battery_icon_label(),
                    LV_PART_MAIN);
-  lv_obj_align(battery_icon_label, LV_ALIGN_TOP_RIGHT, -10, 10);
+  lv_obj_align(battery_icon_label, LV_ALIGN_TOP_RIGHT,
+               BATTERY_ICON_LABEL_X_OFFSET, BATTERY_ICON_LABEL_Y_OFFSET);
 
   battery_percent_label = lv_label_create(battery_tile);
-  lv_label_set_text(battery_percent_label, "--%");
+  lv_label_set_text(battery_percent_label,
+                    BATTERY_PERCENT_LABEL_DEFAULT_PLACEHOLDER);
   lv_obj_add_style(battery_percent_label, styles_battery_percent_label(),
                    LV_PART_MAIN);
-  lv_obj_align(battery_percent_label, LV_ALIGN_CENTER, 0, -20);
+  lv_obj_align(battery_percent_label, LV_ALIGN_CENTER, 0,
+               BATTERY_PERCENT_LABEL_Y_OFFSET);
 
   battery_status_label = lv_label_create(battery_tile);
-  lv_label_set_text(battery_status_label, "");
+  lv_label_set_text(battery_status_label,
+                    BATTERY_STATUS_LABEL_DEFAULT_PLACEHOLDER);
   lv_obj_add_style(battery_status_label, styles_battery_status_label(),
                    LV_PART_MAIN);
-  lv_obj_align(battery_status_label, LV_ALIGN_CENTER, 0, 45);
+  lv_obj_align(battery_status_label, LV_ALIGN_CENTER, 0,
+               BATTERY_STATUS_LABEL_Y_OFFSET);
 
   battery_voltage_label = lv_label_create(battery_tile);
-  lv_label_set_text(battery_voltage_label, "-.-- V");
+  lv_label_set_text(battery_voltage_label,
+                    BATTERY_VOLTAGE_LABEL_DEFAULT_PLACEHOLDER);
   lv_obj_add_style(battery_voltage_label, styles_battery_voltage_label(),
                    LV_PART_MAIN);
-  lv_obj_align(battery_voltage_label, LV_ALIGN_CENTER, 0, 85);
+  lv_obj_align(battery_voltage_label, LV_ALIGN_CENTER, 0,
+               BATTERY_VOLTAGE_LABEL_Y_OFFSET);
 }
 
-static const char* get_battery_icon(int percent, bool charging) {
+static const char* get_battery_icon(uint8_t percent, bool charging) {
   if (charging) return "CHG";
   if (percent >= 90) return "100";
   if (percent >= 70) return " 75";
@@ -47,16 +54,16 @@ static const char* get_battery_icon(int percent, bool charging) {
   return "LOW";
 }
 
-void battery_screen_set_battery(int percent, bool charging, float voltage) {
+void battery_screen_set_battery(uint8_t percent, bool charging, float voltage) {
   if (!battery_percent_label) return;
 
   lv_color_t color;
   if (charging)
-    color = lv_color_hex(0x00ff88);
+    color = lv_color_hex(BATTERY_CHARGING_COLOR_HEX);
   else if (percent < 20)
-    color = lv_color_hex(0xff3333);
+    color = lv_color_hex(BATTERY_LOW_COLOR_HEX);
   else if (percent < 50)
-    color = lv_color_hex(0xffaa00);
+    color = lv_color_hex(BATTERY_MEDIUM_COLOR_HEX);
   else
     color = lv_color_white();
 
@@ -67,14 +74,16 @@ void battery_screen_set_battery(int percent, bool charging, float voltage) {
   lv_obj_set_style_text_color(battery_percent_label, color, LV_PART_MAIN);
 
   if (charging) {
-    lv_label_set_text(battery_status_label, "Laden");
-    lv_obj_set_style_text_color(battery_status_label, lv_color_hex(0x00ff88),
+    lv_label_set_text(battery_status_label, BATTERY_STATUS_TEXT_CHARGING);
+    lv_obj_set_style_text_color(battery_status_label,
+                                lv_color_hex(BATTERY_CHARGING_COLOR_HEX),
                                 LV_PART_MAIN);
   } else {
     lv_label_set_text(battery_status_label, "");
   }
 
   lv_label_set_text_fmt(battery_voltage_label, "%.2f V", voltage);
-  lv_obj_set_style_text_color(battery_voltage_label, lv_color_hex(0x555555),
+  lv_obj_set_style_text_color(battery_voltage_label,
+                              lv_color_hex(BATTERY_VOLTAGE_COLOR_HEX),
                               LV_PART_MAIN);
 }

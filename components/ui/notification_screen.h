@@ -10,37 +10,22 @@
 #include "lvgl.h"  // IWYU pragma: keep
 #include "styles.h"
 
-/**
- * @brief LVGL object representing the notification tile.
- *
- * This object serves as the container for all notification-related UI elements,
- * including BLE status, notification bubbles, and an empty state label.
- */
-extern lv_obj_t* ui_tile_notification;
+#define MAX_NOTIFICATIONS 20
 
-/** @brief LVGL label for displaying BLE status.
- */
-extern lv_obj_t* ble_status_label;
+#define BLE_STATUS_LABEL_POS_Y 6
+#define BLE_STATUS_LABEL_WIDTH 410
+#define BLE_STATUS_LABEL_DISCONNECTED_TEXT "BLE: Disconnected"
+#define BLE_STATUS_LABEL_CONNECTED_TEXT "BLE: Connected"
 
-/** @brief LVGL label for displaying "no notifications" placeholder.*/
-extern lv_obj_t* notification_empty_label;
+#define NOTIFICATION_SCROLL_CONTENT_POS_Y 30
+#define NOTIFICATION_SCROLL_CONTENT_WIDTH 410
+#define NOTIFICATION_SCROLL_CONTENT_HEIGHT 456
 
-/** @brief LVGL object for the scrollable container holding notification
- * bubbles.
- *
- * This object is a scrollable container that holds individual notification
- * bubbles. It allows users to scroll through multiple notifications if they
- * exceed the visible area of the notification tile.
- */
-extern lv_obj_t* notification_scroll_content;
+#define NOTIFICATION_EMPTY_LABEL_TEXT "No new\nNotifications"
+#define NOTIFICATION_EMPTY_LABEL_WIDTH 410
+#define NOTIFICATION_EMPTY_LABEL_HEIGHT 456
 
-/** @brief Counter for the number of active notifications.
- *
- * This variable keeps track of the number of notification bubbles currently
- * displayed in the notification tile. It is used to manage the addition and
- * removal of notifications, ensuring that the maximum limit is not exceeded.
- */
-extern int notification_count;
+#define NOTIFICATION_BUBBLE_WIDTH 380
 
 /**
  * @brief Creates the notification tile UI component.
@@ -56,16 +41,17 @@ extern int notification_count;
 void create_notification_tile(lv_obj_t* notification_tile);
 
 /**
- * @brief
+ * @brief Adds a new notification bubble to the notification tile.
  *
- * @param app
- * @param message
+ * @param app The name of the application or sender of the notification.
+ * @param message The message content of the notification.
  */
 void notification_screen_add_notification(const char* app, const char* message);
 
 /**
- * @brief
+ * @brief Sets the BLE connection status on the notification tile.
  *
- * @param connected
+ * @param connected A boolean indicating whether BLE is connected (true) or
+ * disconnected (false).
  */
 void notification_screen_set_ble_status(bool connected);
