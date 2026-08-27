@@ -8,6 +8,7 @@
 #include "clock_screen.h"
 #include "lvgl.h"  // IWYU pragma: keep
 #include "notification_screen.h"
+#include "statusbar.h"
 #include "styles.h"
 
 static lv_obj_t* ui_tileview = NULL;
@@ -87,6 +88,7 @@ void create_screens(void) {
   create_notification_tile(ui_tile_notification);
 
   create_dot_indicator(screen);
+  create_statusbar();
 
   lv_obj_add_event_cb(ui_tileview, tileview_changed_cb, LV_EVENT_VALUE_CHANGED,
                       NULL);

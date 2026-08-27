@@ -5,6 +5,7 @@ idf_component_register(
         "clock_screen.c"
         "battery_screen.c"
         "notification_screen.c"
+        "statusbar.c"
         "actions.c"
         "vars.c"
         "images.c"

@@ -46,6 +46,15 @@ extern "C" {
 #define BLE_STATUS_CONNECTED_COLOR_HEX 0x00ff88
 #define BLE_STATUS_DISCONNECTED_COLOR_HEX 0x555555
 
+#define STATUSBAR_CONTAINER_PAD_LEFT 45
+#define STATUSBAR_CONTAINER_PAD_RIGHT 5
+
+#define STATUSBAR_CHARGING_ICON_COLOR 0x00ff00
+#define STATUSBAR_BLUETOOTH_ICON_COLOR 0x00ff00
+#define STATUSBAR_NOTIFICATION_ICON_COLOR 0xffdf00
+#define STATUSBAR_NOTIFICATION_COUNT_BG_COLOR 0x0000ff
+#define STATUSBAR_NOTIFICATION_COUNT_PAD_ALL 3
+
 /**@brief Initializes LVGL styles for the clock tile and its elements */
 void init_clock_styles(void);
 
@@ -89,6 +98,29 @@ lv_style_t* styles_notification_app_label(void);
 lv_style_t* styles_notification_message_label(void);
 lv_style_t* styles_ble_status_connected(void);
 lv_style_t* styles_ble_status_disconnected(void);
+
+/*── Getter Functions for Status Bar Styles
+ * ──────────────────────────────────────────*/
+lv_style_t* styles_statusbar_container(void);
+
+lv_style_t* styles_battery_status_container(void);
+lv_style_t* styles_battery_icon(void);
+lv_style_t* styles_battery_charging_icon(void);
+lv_style_t* styles_battery_percentage_label(void);
+
+lv_style_t* styles_bluetooth_status_container(void);
+lv_style_t* styles_bluetooth_icon(void);
+
+lv_style_t* styles_wifi_status_container(void);
+lv_style_t* styles_wifi_icon(void);
+
+lv_style_t* styles_speaker_status_container(void);
+lv_style_t* styles_speaker_icon(void);
+
+lv_style_t* styles_notification_status_container(void);
+lv_style_t* styles_notification_icon(void);
+lv_style_t* styles_notification_count_container(void);
+lv_style_t* styles_notification_count_label(void);
 
 #ifdef __cplusplus
 }
