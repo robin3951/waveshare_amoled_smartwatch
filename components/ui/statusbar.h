@@ -18,3 +18,8 @@ static lv_obj_t* create_wifi_status_container(lv_obj_t* parent);
 static lv_obj_t* create_speaker_status_container(lv_obj_t* parent);
 static lv_obj_t* create_notification_status_container(lv_obj_t* parent);
 void create_statusbar(void);
+void statusbar_set_battery_status(void);
+void statusbar_set_bluetooth_status(void);
+void statusbar_set_wifi_status(void);
+void statusbar_set_speaker_status(void);
+void statusbar_set_notification_status(void);

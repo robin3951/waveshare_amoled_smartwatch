@@ -7,6 +7,7 @@
  *
  */
 
+#include "clock_task.h"
 #include "lvgl.h"  // IWYU pragma: keep
 #include "styles.h"
 
@@ -59,7 +60,7 @@ const char* get_month_name(uint8_t month);
  * @param minutes current minute digits
  * @param seconds current second digits
  */
-void clock_screen_set_time(uint8_t hours, uint8_t minutes, uint8_t seconds);
+void clock_screen_set_time(const clock_time_t* time);
 
 /**
  * @brief Sets the curent rtc time values to the labels
@@ -68,7 +69,7 @@ void clock_screen_set_time(uint8_t hours, uint8_t minutes, uint8_t seconds);
  * @param month current month digits
  * @param year current year digits
  */
-void clock_screen_set_date(uint8_t day, uint8_t month, uint16_t year);
+void clock_screen_set_date(const date_time_t* date);
 
 /**
  * @brief Sets the step count value to the label

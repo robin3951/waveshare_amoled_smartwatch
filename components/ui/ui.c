@@ -1,6 +1,7 @@
 // Public UI entry points
 #include "ui.h"
 
+#include "clock_task.h"
 #include "screens.h"
 #include "styles.h"
 
@@ -23,9 +24,9 @@ void ui_tick(void) {
  * @param month Month (1-12)
  * @param year Year
  */
-void ui_update_clock(int hour, int min, int sec, int day, int month, int year) {
-  screens_set_time(hour, min, sec);
-  screens_set_date(day, month, year);
+void ui_update_clock(const clock_time_t* time, const date_time_t* date) {
+  screens_set_time(time);
+  screens_set_date(date);
 }
 
 /**
@@ -56,7 +57,11 @@ void ui_set_ble_status(bool connected) { screens_set_ble_status(connected); }
 #ifdef LVGL_LIVE_PREVIEW
 void lvgl_live_preview_init(void) {
   ui_init();
-  ui_update_clock(14, 30, 0, 18, 6, 2026);
+
+  clock_time_t time = {14, 30, 0};
+  date_time_t date = {2026, 6, 18};
+
+  ui_update_clock(&time, &date);
   ui_update_battery(75, false, 3.85f);
   ui_update_steps(1234);
   ui_set_ble_status(true);

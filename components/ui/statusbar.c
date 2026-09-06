@@ -150,3 +150,13 @@ void create_statusbar(void) {
   notification_status_container =
       create_notification_status_container(statusbar_container);
 }
+
+void statusbar_set_battery_status() {}
+
+void statusbar_set_bluetooth_status() {}
+
+void statusbar_set_wifi_status() {}
+
+void statusbar_set_speaker_status() {}
+
+void statusbar_set_notification_status() {}

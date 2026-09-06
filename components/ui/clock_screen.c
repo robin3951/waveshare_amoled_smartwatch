@@ -8,6 +8,7 @@
  */
 #include "clock_screen.h"
 
+#include "clock_task.h"
 #include "styles.h"
 
 static lv_obj_t* clock_tile = NULL;
@@ -69,18 +70,19 @@ const char* get_month_name(uint8_t month) {
   return month_names[month - 1];
 }
 
-void clock_screen_set_time(uint8_t hours, uint8_t minutes, uint8_t seconds) {
-  if (time_hours_label) lv_label_set_text_fmt(time_hours_label, "%02d", hours);
+void clock_screen_set_time(const clock_time_t* time) {
+  if (time_hours_label)
+    lv_label_set_text_fmt(time_hours_label, "%02d", time->hours);
   if (time_minutes_label)
-    lv_label_set_text_fmt(time_minutes_label, "%02d", minutes);
+    lv_label_set_text_fmt(time_minutes_label, "%02d", time->minutes);
   if (time_seconds_label)
-    lv_label_set_text_fmt(time_seconds_label, "%02d", seconds);
+    lv_label_set_text_fmt(time_seconds_label, "%02d", time->seconds);
 }
 
-void clock_screen_set_date(uint8_t day, uint8_t month, uint16_t year) {
+void clock_screen_set_date(const date_time_t* date) {
   if (date_label)
-    lv_label_set_text_fmt(date_label, "%02d %s %04d", day,
-                          get_month_name(month), year);
+    lv_label_set_text_fmt(date_label, "%02d %s %04d", date->day,
+                          get_month_name(date->month), date->year);
 }
 
 void clock_screen_set_steps(uint32_t steps) {

@@ -2,6 +2,7 @@
 #pragma once
 #include <stdbool.h>
 
+#include "clock_task.h"
 #include "lvgl.h"  // IWYU pragma: keep
 
 #ifdef __cplusplus
@@ -22,8 +23,8 @@ extern "C" {
 void create_screens(void);
 
 // Clock / battery update (called from FreeRTOS tasks under LVGL lock)
-void screens_set_time(uint8_t hours, uint8_t minutes, uint8_t seconds);
-void screens_set_date(uint8_t day, uint8_t month, uint16_t year);
+void screens_set_time(const clock_time_t* time);
+void screens_set_date(const date_time_t* date);
 void screens_set_battery(uint8_t percent, bool charging, float voltage);
 void screens_set_steps(uint32_t steps);
 

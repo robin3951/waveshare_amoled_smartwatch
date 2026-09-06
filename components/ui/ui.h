@@ -3,6 +3,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#include "clock_task.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -11,7 +13,7 @@ void ui_init(void);
 void ui_tick(void);
 
 // Clock/battery — called from FreeRTOS tasks (under bsp_display_lock)
-void ui_update_clock(int hour, int min, int sec, int day, int month, int year);
+void ui_update_clock(const clock_time_t* time, const date_time_t* date);
 void ui_update_battery(int percent, bool charging, float voltage);
 void ui_update_steps(uint32_t steps);
 

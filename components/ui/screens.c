@@ -96,13 +96,9 @@ void create_screens(void) {
 
 /* ─── Public: data update functions ─────────────────────────────── */
 
-void screens_set_time(uint8_t hours, uint8_t minutes, uint8_t seconds) {
-  clock_screen_set_time(hours, minutes, seconds);
-}
+void screens_set_time(const clock_time_t* time) { clock_screen_set_time(time); }
 
-void screens_set_date(uint8_t day, uint8_t month, uint16_t year) {
-  clock_screen_set_date(day, month, year);
-}
+void screens_set_date(const date_time_t* date) { clock_screen_set_date(date); }
 
 void screens_set_steps(uint32_t steps) { clock_screen_set_steps(steps); }
 
