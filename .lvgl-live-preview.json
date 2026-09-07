@@ -20,7 +20,8 @@
   ],
   "includePaths": [
     "./components/ui",
-    "./components/ui/fonts"
+    "./components/ui/fonts",
+    "./main/tasks"
   ],
   "defines": []
 }

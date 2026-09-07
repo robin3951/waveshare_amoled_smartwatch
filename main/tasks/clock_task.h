@@ -8,8 +8,10 @@
 #pragma once
 #include <stdint.h>
 
+#ifndef LVGL_LIVE_PREVIEW
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
+#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -40,7 +42,9 @@ typedef struct {
  * @brief FreeRTOS task for updating the clock display every second.
  * @param arg Unused parameter.
  */
+#ifndef LVGL_LIVE_PREVIEW
 void clock_task(void* arg);
+#endif
 
 #ifdef __cplusplus
 }
