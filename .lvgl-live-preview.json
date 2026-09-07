@@ -1,6 +1,7 @@
 {
   "mainFile": "components/ui/ui.c",
   "dependencies": [
+    "components/ui/ui_preview.c",
     "components/ui/screens.c",
     "components/ui/clock_screen.c",
     "components/ui/notification_screen.c",
