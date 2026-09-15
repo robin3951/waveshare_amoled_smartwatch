@@ -102,8 +102,8 @@ void screens_set_date(const date_time_t* date) { clock_screen_set_date(date); }
 
 void screens_set_steps(uint32_t steps) { clock_screen_set_steps(steps); }
 
-void screens_set_battery(uint8_t percent, bool charging, float voltage) {
-  battery_screen_set_battery(percent, charging, voltage);
+void screens_set_battery(const battery_status_t* status) {
+  battery_screen_set_battery(status);
 }
 
 void screens_add_notification(const char* app, const char* message) {

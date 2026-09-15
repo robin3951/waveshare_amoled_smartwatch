@@ -4,6 +4,7 @@
 #include <stdint.h>
 
 #include "clock_task.h"
+#include "battery_task.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -14,7 +15,7 @@ void ui_tick(void);
 
 // Clock/battery — called from FreeRTOS tasks (under bsp_display_lock)
 void ui_update_clock(const clock_time_t* time, const date_time_t* date);
-void ui_update_battery(int percent, bool charging, float voltage);
+void ui_update_battery(const battery_status_t* status);
 void ui_update_steps(uint32_t steps);
 
 // Notifications — called from BLE task (under lvgl_port_lock)

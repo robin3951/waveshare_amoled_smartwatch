@@ -3,6 +3,8 @@
 #include <stdbool.h>
 
 #include "clock_task.h"
+#include "battery_task.h"
+
 #include "lvgl.h"  // IWYU pragma: keep
 
 #ifdef __cplusplus
@@ -25,7 +27,7 @@ void create_screens(void);
 // Clock / battery update (called from FreeRTOS tasks under LVGL lock)
 void screens_set_time(const clock_time_t* time);
 void screens_set_date(const date_time_t* date);
-void screens_set_battery(uint8_t percent, bool charging, float voltage);
+void screens_set_battery(const battery_status_t* status);
 void screens_set_steps(uint32_t steps);
 
 // Notification tile (called from BLE task under LVGL lock)

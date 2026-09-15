@@ -2,6 +2,7 @@
 
 #include "clock_task.h"
 #include "screens.h"
+#include "statusbar.h"
 #include "styles.h"
 
 void ui_init(void) {
@@ -35,8 +36,8 @@ void ui_update_clock(const clock_time_t* time, const date_time_t* date) {
  * @param charging True if the device is currently charging, false otherwise
  * @param voltage Current battery voltage in volts (e.g., 3.85 for 3850mV)
  */
-void ui_update_battery(int percent, bool charging, float voltage) {
-  screens_set_battery(percent, charging, voltage);
+void ui_update_battery(const battery_status_t* status) {
+  statusbar_set_battery_status(status);
 }
 
 void ui_update_steps(uint32_t steps) { screens_set_steps(steps); }
