@@ -51,9 +51,11 @@ static lv_obj_t* create_battery_status_container(lv_obj_t* parent) {
   lv_label_set_text(battery_charging_icon, LV_SYMBOL_CHARGE);
   lv_obj_add_style(battery_charging_icon, styles_battery_charging_icon(),
                    LV_PART_MAIN);
+  lv_obj_add_flag(battery_charging_icon, LV_OBJ_FLAG_FLOATING);
+  lv_obj_align_to(battery_charging_icon, battery_icon, LV_ALIGN_CENTER, 0, 0);
 
   battery_percentage_label = lv_label_create(battery_status_container);
-  lv_label_set_text(battery_percentage_label, "100%");
+  lv_label_set_text(battery_percentage_label, "0%");
   lv_obj_add_style(battery_percentage_label, styles_battery_percentage_label(),
                    LV_PART_MAIN);
   return battery_status_container;
