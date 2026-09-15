@@ -23,5 +23,5 @@
     "./components/ui/fonts",
     "./main/tasks"
   ],
-  "defines": []
+  "defines": ["LV_FONT_MONTSERRAT_28=1"]
 }
