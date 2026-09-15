@@ -205,6 +205,8 @@ void init_statusbar_styles(void) {
   lv_style_set_pad_right(&_style_statusbar_container,
                          STATUSBAR_CONTAINER_PAD_RIGHT);
   lv_style_set_pad_ver(&_style_statusbar_container, 0);
+  lv_style_set_pad_top(&_style_statusbar_container,
+                       STATUSBAR_CONTAINER_PAD_TOP);
 
   lv_style_init(&_style_battery_status_container);
   lv_style_set_border_width(&_style_battery_status_container, 0);
@@ -214,25 +216,29 @@ void init_statusbar_styles(void) {
 
   lv_style_init(&_style_battery_icon);
   lv_style_set_text_color(&_style_battery_icon, lv_color_white());
+  lv_style_set_text_font(&_style_battery_icon, &lv_font_montserrat_28);
 
   lv_style_init(&_style_battery_charging_icon);
   lv_style_set_text_color(&_style_battery_charging_icon,
                           lv_color_hex(STATUSBAR_CHARGING_ICON_COLOR));
+  lv_style_set_text_font(&_style_battery_charging_icon, &lv_font_montserrat_20);
 
   lv_style_init(&_style_battery_percentage_label);
   lv_style_set_text_color(&_style_battery_percentage_label, lv_color_white());
   lv_style_set_text_font(&_style_battery_percentage_label,
-                         &lv_font_montserrat_12);
+                         &lv_font_montserrat_20);
 
   lv_style_init(&_style_bluetooth_status_container);
   lv_style_set_border_width(&_style_bluetooth_status_container, 0);
   lv_style_set_bg_color(&_style_bluetooth_status_container, lv_color_black());
   lv_style_set_bg_opa(&_style_bluetooth_status_container, LV_OPA_TRANSP);
-  lv_style_set_pad_all(&_style_bluetooth_status_container, 0);
+  lv_style_set_pad_left(&_style_bluetooth_status_container,
+                        BLUETOOTH_STATUS_CONTAINER_PAD_LEFT);
 
   lv_style_init(&_style_bluetooth_icon);
   lv_style_set_text_color(&_style_bluetooth_icon,
                           lv_color_hex(STATUSBAR_BLUETOOTH_ICON_COLOR));
+  lv_style_set_text_font(&_style_bluetooth_icon, &lv_font_montserrat_28);
 
   lv_style_init(&_style_wifi_status_container);
   lv_style_set_border_width(&_style_wifi_status_container, 0);
@@ -241,6 +247,7 @@ void init_statusbar_styles(void) {
 
   lv_style_init(&_style_wifi_icon);
   lv_style_set_text_color(&_style_wifi_icon, lv_color_white());
+  lv_style_set_text_font(&_style_wifi_icon, &lv_font_montserrat_28);
 
   lv_style_init(&_style_speaker_status_container);
   lv_style_set_border_width(&_style_speaker_status_container, 0);
@@ -249,6 +256,7 @@ void init_statusbar_styles(void) {
 
   lv_style_init(&_style_speaker_icon);
   lv_style_set_text_color(&_style_speaker_icon, lv_color_white());
+  lv_style_set_text_font(&_style_speaker_icon, &lv_font_montserrat_28);
 
   lv_style_init(&_style_notification_status_container);
   lv_style_set_border_width(&_style_notification_status_container, 0);
@@ -259,6 +267,7 @@ void init_statusbar_styles(void) {
   lv_style_init(&_style_notification_icon);
   lv_style_set_text_color(&_style_notification_icon,
                           lv_color_hex(STATUSBAR_NOTIFICATION_ICON_COLOR));
+  lv_style_set_text_font(&_style_notification_icon, &lv_font_montserrat_28);
 
   lv_style_init(&_style_notification_count_container);
   lv_style_set_radius(&_style_notification_count_container, LV_RADIUS_CIRCLE);
@@ -272,7 +281,7 @@ void init_statusbar_styles(void) {
   lv_style_init(&_style_notification_count_label);
   lv_style_set_text_color(&_style_notification_count_label, lv_color_white());
   lv_style_set_text_font(&_style_notification_count_label,
-                         &lv_font_montserrat_12);
+                         &lv_font_montserrat_20);
   lv_style_set_border_width(&_style_notification_count_label, 0);
 }
 
