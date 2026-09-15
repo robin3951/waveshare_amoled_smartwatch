@@ -151,7 +151,46 @@ void create_statusbar(void) {
       create_notification_status_container(statusbar_container);
 }
 
-void statusbar_set_battery_status() {}
+static const char* get_battery_icon(const battery_status_t* battery_status) {
+  uint8_t battery_percentage = battery_status->percent;
+  if (battery_percentage >= BATTERY_FULL_THRESHOLD)
+    return LV_SYMBOL_BATTERY_FULL;
+  if (battery_percentage >= BATTERY_HIGH_THRESHOLD) return LV_SYMBOL_BATTERY_3;
+  if (battery_percentage >= BATTERY_MEDIUM_THRESHOLD)
+    return LV_SYMBOL_BATTERY_2;
+  if (battery_percentage >= BATTERY_LOW_THRESHOLD) return LV_SYMBOL_BATTERY_1;
+  return LV_SYMBOL_BATTERY_EMPTY;
+}
+
+static lv_color_t get_battery_color(const battery_status_t* battery_status) {
+  uint8_t battery_percentage = battery_status->percent;
+  bool battery_is_charging = battery_status->charging;
+  if (battery_is_charging) return lv_color_hex(BATTERY_CHARGING_COLOR_HEX);
+  if (battery_percentage < BATTERY_LOW_THRESHOLD)
+    return lv_color_hex(BATTERY_LOW_COLOR_HEX);
+  if (battery_percentage < BATTERY_MEDIUM_THRESHOLD)
+    return lv_color_hex(BATTERY_MEDIUM_COLOR_HEX);
+  return lv_color_white();
+}
+
+void statusbar_set_battery_status(const battery_status_t* battery_status) {
+  if (!battery_status_container) return;
+
+  if (battery_status->charging) {
+    lv_obj_clear_flag(battery_charging_icon, LV_OBJ_FLAG_HIDDEN);
+  } else {
+    lv_obj_add_flag(battery_charging_icon, LV_OBJ_FLAG_HIDDEN);
+  }
+
+  uint8_t battery_percentage = battery_status->percent;
+  lv_label_set_text_fmt(battery_percentage_label, "%d%%", battery_percentage);
+  lv_obj_set_style_text_color(battery_percentage_label,
+                              get_battery_color(battery_status), LV_PART_MAIN);
+
+  lv_label_set_text(battery_icon, get_battery_icon(battery_status));
+  lv_obj_set_style_text_color(battery_icon, get_battery_color(battery_status),
+                              LV_PART_MAIN);
+}
 
 void statusbar_set_bluetooth_status() {}
 

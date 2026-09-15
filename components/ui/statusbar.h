@@ -17,6 +17,10 @@ static lv_obj_t* create_bluetooth_status_container(lv_obj_t* parent);
 static lv_obj_t* create_wifi_status_container(lv_obj_t* parent);
 static lv_obj_t* create_speaker_status_container(lv_obj_t* parent);
 static lv_obj_t* create_notification_status_container(lv_obj_t* parent);
+
+static const char* get_battery_icon(const battery_status_t* battery_status);
+static lv_color_t get_battery_color(const battery_status_t* battery_status);
+
 void create_statusbar(void);
 void statusbar_set_battery_status(void);
 void statusbar_set_bluetooth_status(void);
