@@ -139,6 +139,8 @@ void create_statusbar(void) {
   lv_obj_set_flex_flow(statusbar_container, LV_FLEX_FLOW_ROW);
   lv_obj_set_flex_align(statusbar_container, LV_FLEX_ALIGN_SPACE_AROUND,
                         LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER);
+  lv_obj_set_scrollbar_mode(statusbar_container, LV_SCROLLBAR_MODE_OFF);
+  lv_obj_clear_flag(statusbar_container, LV_OBJ_FLAG_SCROLLABLE);
 
   battery_status_container =
       create_battery_status_container(statusbar_container);
