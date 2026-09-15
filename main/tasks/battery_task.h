@@ -6,20 +6,33 @@
  */
 
 #pragma once
+#include <stdint.h>
+#include <stdbool.h>
+
+#ifndef LVGL_LIVE_PREVIEW
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
+#endif
 
-/** @brief FreeRTOS stack depth for the battery task in bytes. */
-static constexpr uint32_t BATTERY_TASK_STACK_DEPTH = 4096;
+  typedef struct {
+  uint8_t percent;
+  bool charging;
+  float voltage;
+} battery_status_t;
+
+/** @brief FreeRTOS stack depth for the battery task. */
+#define BATTERY_TASK_STACK_DEPTH 4096
 
 /** @brief FreeRTOS priority for the battery task. */
-static constexpr UBaseType_t BATTERY_TASK_PRIORITY = 3;
+#define BATTERY_TASK_PRIORITY 3
 
 /** @brief Battery display update interval in milliseconds. */
-static constexpr uint32_t BATTERY_TASK_PERIOD_MS = 5000;
+#define BATTERY_TASK_PERIOD_MS 5000
 
 /**
  * @brief FreeRTOS task for updating the battery display every second.
  * @param arg Unused parameter.
  */
+#ifndef LVGL_LIVE_PREVIEW
 void battery_task(void* arg);
+#endif
