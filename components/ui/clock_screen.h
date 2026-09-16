@@ -56,18 +56,14 @@ const char* get_month_name(uint8_t month);
 /**
  * @brief Sets the curent rtc time values to the labels
  *
- * @param hours current hour digits
- * @param minutes current minute digits
- * @param seconds current second digits
+ * @param time pointer to the time structure containing current time values
  */
 void clock_screen_set_time(const clock_time_t* time);
 
 /**
  * @brief Sets the curent rtc time values to the labels
  *
- * @param day current day digits
- * @param month current month digits
- * @param year current year digits
+ * @param date pointer to the date structure containing current date values
  */
 void clock_screen_set_date(const date_time_t* date);
 

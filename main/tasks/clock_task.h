@@ -29,7 +29,7 @@ typedef struct {
   uint8_t day;
 } date_time_t;
 
-/** @brief FreeRTOS stack depth for the clock task in bytes. */
+/** @brief FreeRTOS stack depth for the clock task. */
 #define CLOCK_TASK_STACK_DEPTH 4096
 
 /** @brief FreeRTOS priority for the clock task. */
