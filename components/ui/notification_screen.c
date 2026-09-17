@@ -14,7 +14,6 @@
 
 static lv_obj_t* notification_tile = NULL;
 
-static lv_obj_t* ble_status_label = NULL;
 static lv_obj_t* notification_empty_label = NULL;
 static lv_obj_t* notification_scroll_content = NULL;
 static lv_obj_t* notification_bubble = NULL;
@@ -25,12 +24,6 @@ uint8_t notification_count = 0;
 
 void create_notification_tile(lv_obj_t* notification_tile) {
   lv_obj_add_style(notification_tile, styles_tile_bg(), LV_PART_MAIN);
-
-  ble_status_label = lv_label_create(notification_tile);
-  lv_obj_set_pos(ble_status_label, 0, BLE_STATUS_LABEL_POS_Y);
-  lv_obj_set_width(ble_status_label, BLE_STATUS_LABEL_WIDTH);
-  lv_obj_add_style(ble_status_label, styles_ble_status_label(), LV_PART_MAIN);
-  lv_label_set_text(ble_status_label, BLE_STATUS_LABEL_DISCONNECTED_TEXT);
 
   notification_scroll_content = lv_obj_create(notification_tile);
   lv_obj_set_pos(notification_scroll_content, 0,
@@ -99,17 +92,4 @@ void notification_screen_add_notification(const char* app,
   lv_label_set_long_mode(notification_message_label, LV_LABEL_LONG_WRAP);
   lv_obj_set_width(notification_message_label, LV_PCT(100));
   lv_obj_scroll_to_y(notification_scroll_content, LV_COORD_MAX, LV_ANIM_OFF);
-}
-
-void notification_screen_set_ble_status(bool connected) {
-  if (!ble_status_label) return;
-  if (connected) {
-    lv_label_set_text(ble_status_label, BLE_STATUS_LABEL_CONNECTED_TEXT);
-    lv_obj_add_style(ble_status_label, styles_ble_status_connected(),
-                     LV_PART_MAIN);
-  } else {
-    lv_label_set_text(ble_status_label, BLE_STATUS_LABEL_DISCONNECTED_TEXT);
-    lv_obj_add_style(ble_status_label, styles_ble_status_disconnected(),
-                     LV_PART_MAIN);
-  }
 }

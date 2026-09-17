@@ -12,11 +12,6 @@
 
 #define MAX_NOTIFICATIONS 20
 
-#define BLE_STATUS_LABEL_POS_Y 6
-#define BLE_STATUS_LABEL_WIDTH 410
-#define BLE_STATUS_LABEL_DISCONNECTED_TEXT "BLE: Disconnected"
-#define BLE_STATUS_LABEL_CONNECTED_TEXT "BLE: Connected"
-
 #define NOTIFICATION_SCROLL_CONTENT_POS_Y 30
 #define NOTIFICATION_SCROLL_CONTENT_WIDTH 410
 #define NOTIFICATION_SCROLL_CONTENT_HEIGHT 456
@@ -47,11 +42,3 @@ void create_notification_tile(lv_obj_t* notification_tile);
  * @param message The message content of the notification.
  */
 void notification_screen_add_notification(const char* app, const char* message);
-
-/**
- * @brief Sets the BLE connection status on the notification tile.
- *
- * @param connected A boolean indicating whether BLE is connected (true) or
- * disconnected (false).
- */
-void notification_screen_set_ble_status(bool connected);
