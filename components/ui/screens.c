@@ -4,7 +4,6 @@
 
 #include <string.h>
 
-#include "battery_screen.h"
 #include "clock_screen.h"
 #include "lvgl.h"  // IWYU pragma: keep
 #include "notification_screen.h"
