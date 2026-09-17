@@ -5,7 +5,6 @@
     "components/ui/screens.c",
     "components/ui/clock_screen.c",
     "components/ui/notification_screen.c",
-    "components/ui/battery_screen.c",
     "components/ui/statusbar.c",
     "components/ui/styles.c",
     "components/ui/actions.c",

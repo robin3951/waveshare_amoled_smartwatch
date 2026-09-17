@@ -3,7 +3,6 @@ idf_component_register(
         "ui.c"
         "screens.c"
         "clock_screen.c"
-        "battery_screen.c"
         "notification_screen.c"
         "statusbar.c"
         "actions.c"
