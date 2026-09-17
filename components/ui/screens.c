@@ -84,7 +84,7 @@ void create_screens(void) {
       ui_tileview, UI_TILE_NOTIFICATION_IDX, 0, LV_DIR_HOR);
 
   create_clock_tile(ui_tile_clock);
-  create_battery_tile(ui_tile_battery);
+  // create_battery_tile(ui_tile_battery);
   create_notification_tile(ui_tile_notification);
 
   create_dot_indicator(screen);
@@ -103,7 +103,7 @@ void screens_set_date(const date_time_t* date) { clock_screen_set_date(date); }
 void screens_set_steps(uint32_t steps) { clock_screen_set_steps(steps); }
 
 void screens_set_battery(const battery_status_t* status) {
-  battery_screen_set_battery(status);
+  statusbar_set_battery_status(status);
 }
 
 void screens_add_notification(const char* app, const char* message) {
