@@ -4,6 +4,7 @@
 
 #include <string.h>
 
+#include "battery_screen.h"
 #include "clock_screen.h"
 #include "lvgl.h"  // IWYU pragma: keep
 #include "notification_screen.h"
@@ -110,5 +111,5 @@ void screens_add_notification(const char* app, const char* message) {
 }
 
 void screens_set_ble_status(bool connected) {
-  notification_screen_set_ble_status(connected);
+  statusbar_set_bluetooth_status();
 }
