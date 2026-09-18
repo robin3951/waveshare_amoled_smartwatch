@@ -119,26 +119,6 @@ void init_clock_styles(void) {
                           lv_color_hex(CLOCK_STEP_COUNT_LABEL_COLOR_HEX));
 }
 
-void init_battery_styles(void) {
-  lv_style_init(&_style_battery_icon_label);
-  lv_style_set_text_font(&_style_battery_icon_label, &lv_font_montserrat_12);
-  lv_style_set_text_color(&_style_battery_icon_label, lv_color_white());
-
-  lv_style_init(&_style_battery_percent_label);
-  lv_style_set_text_font(&_style_battery_percent_label, &lv_font_montserrat_48);
-  lv_style_set_text_color(&_style_battery_percent_label, lv_color_white());
-
-  lv_style_init(&_style_battery_status_label);
-  lv_style_set_text_font(&_style_battery_status_label, &lv_font_montserrat_16);
-  lv_style_set_text_color(&_style_battery_status_label,
-                          lv_color_hex(BATTERY_STATUS_LABEL_COLOR_HEX));
-
-  lv_style_init(&_style_battery_voltage_label);
-  lv_style_set_text_font(&_style_battery_voltage_label, &lv_font_montserrat_20);
-  lv_style_set_text_color(&_style_battery_voltage_label,
-                          lv_color_hex(BATTERY_VOLTAGE_LABEL_COLOR_HEX));
-}
-
 void init_notification_styles(void) {
   lv_style_init(&_style_notification_scroll_content);
   lv_style_set_bg_color(&_style_notification_scroll_content, lv_color_black());
@@ -180,11 +160,6 @@ void init_notification_styles(void) {
                          &lv_font_montserrat_16_ext);
   lv_style_set_text_color(&_style_notification_message_label,
                           lv_color_hex(NOTIFICATION_MESSAGE_LABEL_COLOR_HEX));
-
-  lv_style_init(&_style_ble_status_label);
-  lv_style_set_text_font(&_style_ble_status_label, &lv_font_montserrat_12);
-  lv_style_set_text_color(&_style_ble_status_label,
-                          lv_color_hex(BLE_STATUS_LABEL_COLOR_HEX));
 
   lv_style_init(&_style_ble_status_connected);
   lv_style_set_text_color(&_style_ble_status_connected,
@@ -289,7 +264,6 @@ void styles_init(void) {
   init_shared_styles();
   init_dot_indicator_styles();
   init_clock_styles();
-  init_battery_styles();
   init_notification_styles();
   init_statusbar_styles();
 }
