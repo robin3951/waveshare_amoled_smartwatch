@@ -8,7 +8,6 @@
  */
 
 #include "lvgl.h"  // IWYU pragma: keep
-#include "styles.h"
 
 #define MAX_NOTIFICATIONS 20
 
