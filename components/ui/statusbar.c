@@ -196,7 +196,19 @@ void statusbar_set_battery_status(const battery_status_t* battery_status) {
                               LV_PART_MAIN);
 }
 
-void statusbar_set_bluetooth_status() {}
+lv_color_t get_bluetooth_color(bool connected) {
+  if (connected) {
+    return lv_color_hex(BLE_STATUS_CONNECTED_COLOR_HEX);
+  } else {
+    return lv_color_hex(BLE_STATUS_DISCONNECTED_COLOR_HEX);
+  }
+}
+
+void statusbar_set_bluetooth_status(bool connected) {
+  if (!bluetooth_status_container) return;
+  lv_obj_set_style_text_color(bluetooth_icon, get_bluetooth_color(connected),
+                              LV_PART_MAIN);
+}
 
 void statusbar_set_wifi_status() {}
 

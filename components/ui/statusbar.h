@@ -29,7 +29,7 @@ static lv_color_t get_battery_color(const battery_status_t* battery_status);
 
 void create_statusbar(void);
 void statusbar_set_battery_status(const battery_status_t* battery_status);
-void statusbar_set_bluetooth_status(void);
+void statusbar_set_bluetooth_status(bool connected);
 void statusbar_set_wifi_status(void);
 void statusbar_set_speaker_status(void);
 void statusbar_set_notification_status(void);

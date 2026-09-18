@@ -110,5 +110,5 @@ void screens_add_notification(const char* app, const char* message) {
 }
 
 void screens_set_ble_status(bool connected) {
-  statusbar_set_bluetooth_status();
+  statusbar_set_bluetooth_status(connected);
 }
