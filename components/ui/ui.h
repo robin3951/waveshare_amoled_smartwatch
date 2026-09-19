@@ -24,6 +24,7 @@ void ui_set_ble_status(bool connected);
 
 void ui_set_wifi_status(uint8_t wifi_signal_strength);
 void ui_set_speaker_status(uint8_t speaker_volume);
+void ui_set_notification_status(uint8_t notification_count);
 
 #ifdef __cplusplus
 }

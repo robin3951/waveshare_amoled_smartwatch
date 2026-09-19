@@ -45,4 +45,4 @@ void statusbar_set_battery_status(const battery_status_t* battery_status);
 void statusbar_set_bluetooth_status(bool connected);
 void statusbar_set_wifi_status(uint8_t wifi_signal_strength);
 void statusbar_set_speaker_status(uint8_t speaker_volume);
-void statusbar_set_notification_status(void);
+void statusbar_set_notification_status(uint8_t notification_count);

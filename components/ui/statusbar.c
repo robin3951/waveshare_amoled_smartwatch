@@ -256,4 +256,7 @@ void statusbar_set_speaker_status(uint8_t speaker_volume) {
   }
 }
 
-void statusbar_set_notification_status() {}
+void statusbar_set_notification_status(uint8_t notification_count) {
+  if (!notification_status_container) return;
+  lv_label_set_text_fmt(notification_count_label, "%d", notification_count);
+}
