@@ -1,7 +1,11 @@
 {
   "mainFile": "components/ui/ui.c",
   "dependencies": [
+    "components/ui/ui_preview.c",
     "components/ui/screens.c",
+    "components/ui/clock_screen.c",
+    "components/ui/notification_screen.c",
+    "components/ui/statusbar.c",
     "components/ui/styles.c",
     "components/ui/actions.c",
     "components/ui/vars.c",
@@ -11,11 +15,13 @@
     "components/ui/fonts/lv_font_montserrat_16_ext.c",
     "components/ui/fonts/lv_font_montserrat_72_ext.c",
     "components/ui/fonts/lv_font_montserrat_164.c",
-    "components/ui/fonts/lv_font_shoe_print_48.c"
+    "components/ui/fonts/lv_font_shoe_print_48.c",
+    "components/ui/fonts/lv_font_wifi_symbol_28.c"
   ],
   "includePaths": [
     "./components/ui",
-    "./components/ui/fonts"
+    "./components/ui/fonts",
+    "./main/tasks"
   ],
-  "defines": []
+  "defines": ["LV_FONT_MONTSERRAT_28=1"]
 }

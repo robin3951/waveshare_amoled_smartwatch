@@ -8,8 +8,17 @@
 extern "C" {
 #endif
 
-/* Custom font declarations (externally visible const structs, no init needed) */
-/* No custom fonts */
+// Custom fonts with full Latin-1 (0x20-0xFF) — includes ä ö ü Ä Ö Ü ß
+LV_FONT_DECLARE(lv_font_montserrat_14_ext);
+LV_FONT_DECLARE(lv_font_montserrat_16_ext);
+LV_FONT_DECLARE(lv_font_montserrat_18);
+LV_FONT_DECLARE(lv_font_montserrat_20_ext);
+LV_FONT_DECLARE(lv_font_montserrat_24);
+LV_FONT_DECLARE(lv_font_montserrat_32_ext);
+LV_FONT_DECLARE(lv_font_montserrat_72_ext);
+LV_FONT_DECLARE(lv_font_montserrat_164);
+LV_FONT_DECLARE(lv_font_shoe_print_48);
+LV_FONT_DECLARE(lv_font_wifi_symbol_28);
 
 /* Get a custom font by name, returns NULL if not found */
 const lv_font_t* ui_get_font_by_name(const char* name);

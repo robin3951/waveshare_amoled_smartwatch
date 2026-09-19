@@ -2,6 +2,9 @@ idf_component_register(
     SRCS
         "ui.c"
         "screens.c"
+        "clock_screen.c"
+        "notification_screen.c"
+        "statusbar.c"
         "actions.c"
         "vars.c"
         "images.c"
@@ -12,6 +15,10 @@ idf_component_register(
         "fonts/lv_font_montserrat_72_ext.c"
         "fonts/lv_font_montserrat_164.c"
         "fonts/lv_font_shoe_print_48.c"
-    INCLUDE_DIRS "." "fonts"
+        "fonts/lv_font_wifi_symbol_28.c"
+    INCLUDE_DIRS 
+        "." 
+        "fonts" 
+        "${CMAKE_SOURCE_DIR}/main/tasks"
     REQUIRES lvgl
 )
