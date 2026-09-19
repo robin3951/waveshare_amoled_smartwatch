@@ -6,15 +6,15 @@
  */
 
 #pragma once
-#include <stdint.h>
 #include <stdbool.h>
+#include <stdint.h>
 
 #ifndef LVGL_LIVE_PREVIEW
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #endif
 
-  typedef struct {
+typedef struct {
   uint8_t percent;
   bool charging;
   float voltage;
