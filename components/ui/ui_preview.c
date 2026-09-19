@@ -20,6 +20,7 @@ void lvgl_live_preview_init(void) {
   ui_update_steps(1234);
   ui_set_ble_status(true);
   ui_set_wifi_status(0);
+  ui_set_speaker_status(0);
   ui_add_notification("WhatsApp", "Hey, wie geht's?");
   ui_add_notification("Gmail", "Neue Nachricht von Max Mustermann");
 }

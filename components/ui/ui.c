@@ -59,3 +59,7 @@ void ui_set_ble_status(bool connected) {
 void ui_set_wifi_status(uint8_t wifi_signal_strength) {
   statusbar_set_wifi_status(wifi_signal_strength);
 }
+
+void ui_set_speaker_status(uint8_t speaker_volume) {
+  statusbar_set_speaker_status(speaker_volume);
+}

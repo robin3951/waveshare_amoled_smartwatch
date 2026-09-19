@@ -243,6 +243,17 @@ void statusbar_set_wifi_status(uint8_t wifi_signal_strength) {
   }
 }
 
-void statusbar_set_speaker_status() {}
+void statusbar_set_speaker_status(uint8_t speaker_volume) {
+  if (!speaker_status_container) return;
+  if (speaker_volume == 0) {
+    lv_label_set_text(speaker_icon, LV_SYMBOL_MUTE);
+    lv_obj_set_style_text_color(speaker_icon, lv_color_hex(COLOR_DARK_GRAY_HEX),
+                                LV_PART_MAIN);
+  } else if (speaker_volume < 50) {
+    lv_label_set_text(speaker_icon, LV_SYMBOL_VOLUME_MID);
+  } else {
+    lv_label_set_text(speaker_icon, LV_SYMBOL_VOLUME_MAX);
+  }
+}
 
 void statusbar_set_notification_status() {}

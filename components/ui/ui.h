@@ -23,6 +23,7 @@ void ui_add_notification(const char* app, const char* msg);
 void ui_set_ble_status(bool connected);
 
 void ui_set_wifi_status(uint8_t wifi_signal_strength);
+void ui_set_speaker_status(uint8_t speaker_volume);
 
 #ifdef __cplusplus
 }
