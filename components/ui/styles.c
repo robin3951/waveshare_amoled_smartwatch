@@ -53,6 +53,7 @@ static lv_style_t _style_bluetooth_icon = {0};
 
 static lv_style_t _style_wifi_status_container = {0};
 static lv_style_t _style_wifi_icon = {0};
+static lv_style_t _style_wifi_icon_background = {0};
 
 static lv_style_t _style_speaker_status_container = {0};
 static lv_style_t _style_speaker_icon = {0};
@@ -222,7 +223,12 @@ void init_statusbar_styles(void) {
 
   lv_style_init(&_style_wifi_icon);
   lv_style_set_text_color(&_style_wifi_icon, lv_color_white());
-  lv_style_set_text_font(&_style_wifi_icon, &lv_font_montserrat_28);
+  lv_style_set_text_font(&_style_wifi_icon, &lv_font_wifi_symbol_28);
+
+  lv_style_init(&_style_wifi_icon_background);
+  lv_style_set_text_color(&_style_wifi_icon_background,
+                          lv_color_hex(COLOR_DARK_GRAY_HEX));
+  lv_style_set_text_font(&_style_wifi_icon_background, &lv_font_wifi_symbol_28);
 
   lv_style_init(&_style_speaker_status_container);
   lv_style_set_border_width(&_style_speaker_status_container, 0);
@@ -365,6 +371,10 @@ lv_style_t* styles_wifi_status_container(void) {
 }
 
 lv_style_t* styles_wifi_icon(void) { return &_style_wifi_icon; }
+
+lv_style_t* styles_wifi_icon_background(void) {
+  return &_style_wifi_icon_background;
+}
 
 lv_style_t* styles_speaker_status_container(void) {
   return &_style_speaker_status_container;

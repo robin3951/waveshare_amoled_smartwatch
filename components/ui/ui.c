@@ -52,4 +52,10 @@ void ui_add_notification(const char* app, const char* msg) {
   screens_add_notification(app, msg);
 }
 
-void ui_set_ble_status(bool connected) { screens_set_ble_status(connected); }
+void ui_set_ble_status(bool connected) {
+  statusbar_set_bluetooth_status(connected);
+}
+
+void ui_set_wifi_status(uint8_t wifi_signal_strength) {
+  statusbar_set_wifi_status(wifi_signal_strength);
+}

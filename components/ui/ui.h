@@ -3,8 +3,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#include "clock_task.h"
 #include "battery_task.h"
+#include "clock_task.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -21,6 +21,8 @@ void ui_update_steps(uint32_t steps);
 // Notifications — called from BLE task (under lvgl_port_lock)
 void ui_add_notification(const char* app, const char* msg);
 void ui_set_ble_status(bool connected);
+
+void ui_set_wifi_status(uint8_t wifi_signal_strength);
 
 #ifdef __cplusplus
 }

@@ -140,6 +140,7 @@ lv_style_t* styles_bluetooth_icon(void);
 
 lv_style_t* styles_wifi_status_container(void);
 lv_style_t* styles_wifi_icon(void);
+lv_style_t* styles_wifi_icon_background(void);
 
 lv_style_t* styles_speaker_status_container(void);
 lv_style_t* styles_speaker_icon(void);

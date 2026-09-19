@@ -24,6 +24,7 @@ static lv_obj_t* bluetooth_icon = NULL;
 
 static lv_obj_t* wifi_status_container = NULL;
 static lv_obj_t* wifi_icon = NULL;
+static lv_obj_t* wifi_icon_background = NULL;
 
 static lv_obj_t* speaker_status_container = NULL;
 static lv_obj_t* speaker_icon = NULL;
@@ -85,9 +86,15 @@ static lv_obj_t* create_wifi_status_container(lv_obj_t* parent) {
   lv_obj_set_flex_flow(wifi_status_container, LV_FLEX_FLOW_ROW);
   lv_obj_set_flex_align(wifi_status_container, LV_FLEX_ALIGN_CENTER,
                         LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER);
+  wifi_icon_background = lv_label_create(wifi_status_container);
+  lv_label_set_text(wifi_icon_background, WIFI_SYMBOL_3_BAR);
+  lv_obj_add_style(wifi_icon_background, styles_wifi_icon_background(),
+                   LV_PART_MAIN);
   wifi_icon = lv_label_create(wifi_status_container);
-  lv_label_set_text(wifi_icon, LV_SYMBOL_WIFI);
+  lv_label_set_text(wifi_icon, WIFI_SYMBOL_OFF);
   lv_obj_add_style(wifi_icon, styles_wifi_icon(), LV_PART_MAIN);
+  lv_obj_add_flag(wifi_icon, LV_OBJ_FLAG_FLOATING);
+  lv_obj_align_to(wifi_icon, wifi_icon_background, LV_ALIGN_CENTER, 0, 0);
   return wifi_status_container;
 }
 
@@ -210,7 +217,31 @@ void statusbar_set_bluetooth_status(bool connected) {
                               LV_PART_MAIN);
 }
 
-void statusbar_set_wifi_status() {}
+const char* get_wifi_symbol(uint8_t wifi_signal_strength) {
+  switch (wifi_signal_strength) {
+    case WIFI_SIGNAL_OFF:
+      return WIFI_SYMBOL_OFF;
+    case WIFI_SIGNAL_LOW:
+      return WIFI_SYMBOL_1_BAR;
+    case WIFI_SIGNAL_MEDIUM:
+      return WIFI_SYMBOL_2_BAR;
+    case WIFI_SIGNAL_HIGH:
+      return WIFI_SYMBOL_3_BAR;
+    default:
+      return WIFI_SYMBOL_OFF;
+  }
+}
+
+void statusbar_set_wifi_status(uint8_t wifi_signal_strength) {
+  if (!wifi_status_container) return;
+  lv_label_set_text(wifi_icon, get_wifi_symbol(wifi_signal_strength));
+  if (wifi_signal_strength == WIFI_SIGNAL_OFF) {
+    lv_obj_add_flag(wifi_icon, LV_OBJ_FLAG_HIDDEN);
+    lv_label_set_text(wifi_icon_background, WIFI_SYMBOL_OFF);
+  } else {
+    lv_obj_clear_flag(wifi_icon, LV_OBJ_FLAG_HIDDEN);
+  }
+}
 
 void statusbar_set_speaker_status() {}
 
