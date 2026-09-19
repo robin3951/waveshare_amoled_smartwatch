@@ -7,13 +7,20 @@
  *
  */
 
-#define STATUSBAR_CONTAINER_HEIGHT 30
-#define STATUSBAR_CONTAINER_WIDTH 380
+/* wifi symbol fonts from material symbols (lv_font_wifi_symbol_28) */
 
-#define BATTERY_FULL_THRESHOLD 90
-#define BATTERY_HIGH_THRESHOLD 70
+#define WIFI_SYMBOL_1_BAR "\uE4CA"  // codepoint e4ca
+#define WIFI_SYMBOL_2_BAR "\uE4D9"  // codepoint e4d9
+#define WIFI_SYMBOL_3_BAR "\uE63E"  // codepoint e63e
+#define WIFI_SYMBOL_OFF   "\uE648"  // codepoint e648
+
+#define STATUSBAR_CONTAINER_HEIGHT 30
+#define STATUSBAR_CONTAINER_WIDTH  380
+
+#define BATTERY_FULL_THRESHOLD   90
+#define BATTERY_HIGH_THRESHOLD   70
 #define BATTERY_MEDIUM_THRESHOLD 50
-#define BATTERY_LOW_THRESHOLD 20
+#define BATTERY_LOW_THRESHOLD    20
 
 #include "battery_task.h"
 #include "lvgl.h"  // IWYU pragma: keep
