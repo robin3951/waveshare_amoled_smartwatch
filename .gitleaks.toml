@@ -1,0 +1,10 @@
+title = "gitleaks config"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "sdkconfig.old is an auto-generated ESP-IDF backup file; the OpenThread key it contains is the public stock example default (CONFIG_OPENTHREAD_NETWORK_MASTERKEY=00112233445566778899aabbccddeeff), not a real secret. OpenThread is not used in this project."
+paths = [
+  '''sdkconfig\.old''',
+]
