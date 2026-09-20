@@ -75,6 +75,7 @@ jobs:
           esp_idf_version: v5.3
           target: esp32s3
           command: |
+            pip install "idf-component-manager==2.5.2" && \
             idf.py build && \
             idf.py merge-bin -o merged_firmware.bin && \
             idf.py size
