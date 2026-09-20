@@ -36,6 +36,7 @@
             "-I/workspaces/waveshare_amoled_smartwatch/components/XPowersLib/src"
         ],
         "C_Cpp.intelliSenseEngine": "disabled",
-        "cppcheck.cppcheckPath": "C:\\Program Files\\Cppcheck\\cppcheck.exe"
+        "cppcheck.cppcheckPath": "C:\\Program Files\\Cppcheck\\cppcheck.exe",
+        "remote.autoForwardPortsFallback": 0
     }
 }

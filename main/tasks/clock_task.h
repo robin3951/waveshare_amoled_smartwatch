@@ -6,20 +6,46 @@
  */
 
 #pragma once
+#include <stdint.h>
+
+#ifndef LVGL_LIVE_PREVIEW
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
+#endif
 
-/** @brief FreeRTOS stack depth for the clock task in bytes. */
-static constexpr uint32_t CLOCK_TASK_STACK_DEPTH = 4096;
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+typedef struct {
+  uint8_t hours;
+  uint8_t minutes;
+  uint8_t seconds;
+} clock_time_t;
+
+typedef struct {
+  uint8_t year;
+  uint8_t month;
+  uint8_t day;
+} date_time_t;
+
+/** @brief FreeRTOS stack depth for the clock task. */
+#define CLOCK_TASK_STACK_DEPTH 4096
 
 /** @brief FreeRTOS priority for the clock task. */
-static constexpr UBaseType_t CLOCK_TASK_PRIORITY = 5;
+#define CLOCK_TASK_PRIORITY 5
 
 /** @brief Clock display update interval in milliseconds. */
-static constexpr uint32_t CLOCK_TASK_PERIOD_MS = 1000;
+#define CLOCK_TASK_PERIOD_MS 1000
 
 /**
  * @brief FreeRTOS task for updating the clock display every second.
  * @param arg Unused parameter.
  */
+#ifndef LVGL_LIVE_PREVIEW
 void clock_task(void* arg);
+#endif
+
+#ifdef __cplusplus
+}
+#endif

@@ -1,9 +1,14 @@
-// Public UI entry points
 #include "ui.h"
 
+#include "clock_task.h"
 #include "screens.h"
+#include "statusbar.h"
+#include "styles.h"
 
-void ui_init(void) { create_screens(); }
+void ui_init(void) {
+  styles_init();
+  create_screens();
+}
 
 void ui_tick(void) {
   // LVGL timer handles animation
@@ -19,9 +24,9 @@ void ui_tick(void) {
  * @param month Month (1-12)
  * @param year Year
  */
-void ui_update_clock(int hour, int min, int sec, int day, int month, int year) {
-  screens_set_time(hour, min, sec);
-  screens_set_date(day, month, year);
+void ui_update_clock(const clock_time_t* time, const date_time_t* date) {
+  screens_set_time(time);
+  screens_set_date(date);
 }
 
 /**
@@ -31,8 +36,8 @@ void ui_update_clock(int hour, int min, int sec, int day, int month, int year) {
  * @param charging True if the device is currently charging, false otherwise
  * @param voltage Current battery voltage in volts (e.g., 3.85 for 3850mV)
  */
-void ui_update_battery(int percent, bool charging, float voltage) {
-  screens_set_battery(percent, charging, voltage);
+void ui_update_battery(const battery_status_t* status) {
+  statusbar_set_battery_status(status);
 }
 
 void ui_update_steps(uint32_t steps) { screens_set_steps(steps); }
@@ -47,16 +52,18 @@ void ui_add_notification(const char* app, const char* msg) {
   screens_add_notification(app, msg);
 }
 
-void ui_set_ble_status(bool connected) { screens_set_ble_status(connected); }
-
-#ifdef LVGL_LIVE_PREVIEW
-void lvgl_live_preview_init(void) {
-  ui_init();
-  ui_update_clock(14, 30, 0, 18, 6, 2026);
-  ui_update_battery(75, false, 3.85f);
-  ui_update_steps(1234);
-  ui_set_ble_status(true);
-  ui_add_notification("WhatsApp", "Hey, wie geht's?");
-  ui_add_notification("Gmail", "Neue Nachricht von Max Mustermann");
+void ui_set_ble_status(bool connected) {
+  statusbar_set_bluetooth_status(connected);
 }
-#endif
+
+void ui_set_wifi_status(uint8_t wifi_signal_strength) {
+  statusbar_set_wifi_status(wifi_signal_strength);
+}
+
+void ui_set_speaker_status(uint8_t speaker_volume) {
+  statusbar_set_speaker_status(speaker_volume);
+}
+
+void ui_set_notification_status(uint8_t notification_count) {
+  statusbar_set_notification_status(notification_count);
+}
