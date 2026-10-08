@@ -141,7 +141,7 @@ jobs:
           esptool.py image_info build/merged_firmware.bin
 
       - name: Upload firmware artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: firmware
           path: |
