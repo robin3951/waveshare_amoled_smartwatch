@@ -99,7 +99,7 @@ jobs:
           distribution: 'temurin'
 
       - name: Set up Gradle 8.4
-        uses: gradle/actions/setup-gradle@v4
+        uses: gradle/actions/setup-gradle@v5
         with:
           gradle-version: '8.4'
 
